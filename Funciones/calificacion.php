@@ -26,7 +26,7 @@ if (isset($_POST['action'])) {
         paso = '$paso',
         obs = '$obs' 
         WHERE id_calificacion ='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -38,7 +38,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "echo <script>
-            swal.fire('Error al editar! . $conn->error', 
+            swal.fire('Error al editar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             });
@@ -46,7 +46,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     //Editar un registro
@@ -60,15 +60,15 @@ if (isset($_POST['action'])) {
         FROM calificaciones
         JOIN materias ON calificaciones.id_materia = materias.id_materia
         WHERE materias.id_curso = $id";
-        $resultado = mysqli_query($conn, $sql);
+        $resultado = pg_query($conn, $sql);
 
-        if ($resultado->num_rows > 0) {
-            while ($fila = $resultado->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
             }
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     if ($action == 'sumar') {
         if (isset($_POST['num1']) && isset($_POST['num2']) && isset($_POST['num3'])) {
@@ -143,7 +143,7 @@ if (isset($_POST['action'])) {
             WHERE cursos.id_curso LIKE '%$curso%'
             AND materias.id_materia LIKE '%$materia%'
             ORDER by id_calificacion DESC LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
             $sql = "SELECT
@@ -173,10 +173,10 @@ if (isset($_POST['action'])) {
                 WHERE cursos.id_curso LIKE '%$id_curso%'
                 AND materias.id_materia LIKE '%$id_materia%'
                 ORDER by id_calificacion DESC LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
         }
 
-        if ($resultado->num_rows > 0) {
+        if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -196,7 +196,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_calificacion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
@@ -237,8 +237,8 @@ if (isset($_POST['action'])) {
             WHERE cursos.id_curso LIKE '%$curso%'
             AND materias.id_materia LIKE '%$materia%'";
 
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -254,6 +254,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
 }

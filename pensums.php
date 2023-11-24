@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 
@@ -248,12 +248,12 @@ if (!isset($_SESSION['usuario'])) {
                                         <?php
                                         include 'db_connect.php';
                                         $sql = "SELECT * FROM pensum_cab";
-                                        $resultado = $conn->query($sql);
-                                        if ($resultado->num_rows > 0) {
+                                        $resultado = pg_query($conn, $sql);
+                                        if (pg_num_rows($resultado) > 0) {
                                             echo "<label for='pensums'>Pensums</label>";
                                             echo "<select class='input-group-text w-100 keep'  name='curso' required>";
                                             echo "<option selected disabled>Seleccione pensum</option>";
-                                            while ($fila = $resultado->fetch_assoc()) {
+                                            while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['curso'] . "'>" . $fila['curso'] . "</option>";
                                             }
                                             echo "</select>";
@@ -286,33 +286,31 @@ if (!isset($_SESSION['usuario'])) {
                         <form id="formAgregarPensum">
                             <input class="input-group-text" type="hidden" name="action" value="agregar">
                             <div class="row">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="curso" placeholder="Nombre del curso" required>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col">
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="curso" placeholder="Nombre del curso" required>
+                                    <table class="table table-dark" id="tablaModulos">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Modulo</th>
+                                                <th scope="col">Horas teoricas</th>
+                                                <th scope="col">Horas practicas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary mr-2" onclick="agregarFila()">Agregar Fila</button>
+                                        <button type="button" class="btn btn-danger" onclick="eliminarFila()">Eliminar Fila</button>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <table class="table table-dark" id="tablaModulos">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Modulo</th>
-                                                    <th scope="col">Horas teoricas</th>
-                                                    <th scope="col">Horas practicas</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                        <div class="form-group">
-                                            <button type="button" class="btn btn-primary mr-2" onclick="agregarFila()">Agregar Fila</button>
-                                            <button type="button" class="btn btn-danger" onclick="eliminarFila()">Eliminar Fila</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </form>
                     </div>
@@ -367,11 +365,11 @@ if (!isset($_SESSION['usuario'])) {
                             <?php
                             include 'db_connect.php';
                             $sql = "SELECT * FROM pensum_cab";
-                            $resultado = $conn->query($sql);
-                            if ($resultado->num_rows > 0) {
+                            $resultado = pg_query($conn, $sql);
+                            if (pg_num_rows($resultado) > 0) {
                                 echo "<select id='editCab' class='input-group-text w-100' name='id_pensum' required>";
                                 echo "<option selected disabled>Seleccione cabecera</option>";
-                                while ($fila = $resultado->fetch_assoc()) {
+                                while ($fila = pg_fetch_assoc($resultado)) {
                                     echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
                                 }
                                 echo "</select>";

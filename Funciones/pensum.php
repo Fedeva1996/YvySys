@@ -7,9 +7,9 @@ if (isset($_POST['action'])) {
 
         $curso = $_POST['curso'];
 
-        $sql = "INSERT INTO pensum_cab(curso) 
-        VALUES ('$curso')";
-        if ($conn->query($sql) === TRUE) {
+        $sql = "INSERT INTO pensum_cab(id_pensum ,curso) 
+        VALUES ((SELECT MAX(id_pensum) +1 FROM pensum_cab), '$curso')";
+        if (pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -19,9 +19,9 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else {
+        } else if (!pg_query($conn, $sql)) {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -31,7 +31,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     // Agregar un nuevo registro
     if ($action == 'agregarDet') {
@@ -48,21 +48,24 @@ if (isset($_POST['action'])) {
             $horast = $detalle['horast'];
             $horasp = $detalle['horasp'];
 
-            $sql = "INSERT INTO pensum_det (
-                pensum_cab_id,
-                descri,
-                horas_t,
+            $sql = "INSERT INTO 
+                pensum_det ( 
+                id_pensum_det,
+                pensum_cab_id, 
+                descri, 
+                horas_t, 
                 horas_p) 
-            SELECT 
+                SELECT 
+                (SELECT MAX(id_pensum_det) +1 FROM pensum_det),
                 id_pensum, 
                 '$modulo', 
                 '$horast', 
                 '$horasp' 
-            FROM 
+                FROM
                 pensum_cab 
-            ORDER BY id_pensum DESC LIMIT 1;
+                ORDER BY id_pensum DESC LIMIT 1;
             ";
-            if ($conn->query($sql) === TRUE) {
+            if (pg_query($conn, $sql)) {
                 echo "<script>
                     Swal.fire(
                     'Agregado!',
@@ -72,9 +75,9 @@ if (isset($_POST['action'])) {
                         $('.sweetAlerts').empty();
                     });
                     </script>";
-            } else {
+            } else if (!pg_query($conn, $sql)) {
                 echo "<script>
-                swal.fire('Error al registrar! . $conn->error', 
+                swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
                 {
                     icon: 'error',
                 }).then((value) =>{
@@ -85,7 +88,7 @@ if (isset($_POST['action'])) {
             }
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     //Editar un registro
     if ($action == 'editarDet') {
@@ -98,7 +101,7 @@ if (isset($_POST['action'])) {
         $horas_p = $_POST['horasp'];
 
         $sql = "UPDATE pensum_det SET pensum_cab_id='$id_pensum', descri='$modulo', horas_t='$horas_t', horas_p='$horas_p' WHERE id_pensum_det ='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -108,9 +111,9 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else {
+        } else if (!pg_query($conn, $sql)) {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar!'" . pg_last_error($coon) . ", 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -119,7 +122,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        $conn->close();
+        pg_close($conn);
     }
     //Editar un registro
     if ($action == 'editarCab') {
@@ -129,7 +132,7 @@ if (isset($_POST['action'])) {
         $curso = $_POST['curso'];
 
         $sql = "UPDATE pensum_cab SET curso='$curso' WHERE id_pensum ='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -139,9 +142,9 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else {
+        } else  if (!pg_query($conn, $sql)) {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar!'" . pg_last_error($conn) . ", 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -150,7 +153,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        $conn->close();
+        pg_close($conn);
     }
 
 
@@ -161,49 +164,25 @@ if (isset($_POST['action'])) {
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $id_curso = isset($_POST['curso']) ? $_POST['curso'] : "";
+        $curso = isset($_POST['curso']) ? $_POST['curso'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
-
-        $curso = isset($_POST['id_curso']) ? $_POST['id_curso'] : $id_curso;
         if (isset($_POST['id_curso'])) {
             // Consulta para obtener los alumnos
-            $sql = "SELECT 
-        pensum_det.id_pensum_det,
-        pensum_det.descri,
-        pensum_det.horas_t,
-        pensum_det.horas_p,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        pensum_cab.total_horas_t,
-        pensum_cab.total_horas_p,
-        pensum_cab.estado
-        FROM pensum_det
-        JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum 
-        WHERE pensum_cab.curso LIKE '%$curso%'
-        ORDER by id_pensum_det LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
-            $cabecera = $conn->query($sql);
+            $sql = "SELECT * FROM public.pensum_v
+        WHERE curso LIKE '%$curso%'
+        ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
+            $resultado = pg_query($conn, $sql);
+            $cabecera = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
-            $sql = "SELECT 
-        pensum_det.id_pensum_det,
-        pensum_det.descri,
-        pensum_det.horas_t,
-        pensum_det.horas_p,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        pensum_cab.total_horas_t,
-        pensum_cab.total_horas_p,
-        pensum_cab.estado
-        FROM pensum_det
-        JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum 
-        WHERE pensum_cab.curso LIKE '%$id_curso'
-        ORDER by id_pensum_det LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
-            $cabecera = $conn->query($sql);
+            $sql = "SELECT * FROM public.pensum_v
+        WHERE curso LIKE '%$curso'
+        ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
+            $resultado = pg_query($conn, $sql);
+            $cabecera = pg_query($conn, $sql);
         }
-        if ($resultado->num_rows > 0) {
-            if ($cab = $cabecera->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row' data-bs-theme='dark'>";
                 echo "<div class='row'>";
@@ -237,7 +216,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_pensum_det'] . "</td>";
                 echo "<td class='id_cab' style='display:none;'>" . $fila['id_pensum'] . "</td>";
@@ -254,9 +233,10 @@ if (isset($_POST['action'])) {
 
             // Paginación
             $sql_total = "SELECT COUNT(*) as total FROM pensum_det
-            JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum
+            WHERE pensum_cab.curso LIKE '%$curso%'";
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -272,6 +252,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
 }

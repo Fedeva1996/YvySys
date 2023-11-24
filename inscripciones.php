@@ -333,11 +333,11 @@ if (!isset($_SESSION['usuario'])) {
                                         <?php
                                         include 'db_connect.php';
                                         $sql = "SELECT * FROM cursos";
-                                        $resultado = $conn->query($sql);
-                                        if ($resultado->num_rows > 0) {
+                                        $resultado = pg_query($conn, $sql);
+                                        if (pg_num_rows($resultado) > 0) {
                                             echo "<select class='input-group-text w-100' name='id_curso' required>";
                                             echo "<option selected disabled>Seleccione curso</option>";
-                                            while ($fila = $resultado->fetch_assoc()) {
+                                            while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                             }
                                             echo "</select>";
@@ -374,11 +374,11 @@ if (!isset($_SESSION['usuario'])) {
                                         <?php
                                         include 'db_connect.php';
                                         $sql = "SELECT * FROM cursos";
-                                        $resultado = $conn->query($sql);
-                                        if ($resultado->num_rows > 0) {
+                                        $resultado = pg_query($conn, $sql);
+                                        if (pg_num_rows($resultado) > 0) {
                                             echo "<select class='input-group-text w-100' id='id_curso' name='id_curso' required>";
                                             echo "<option selected disabled>Seleccione curso</option>";
-                                            while ($fila = $resultado->fetch_assoc()) {
+                                            while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                             }
                                             echo "</select>";
@@ -418,10 +418,10 @@ if (!isset($_SESSION['usuario'])) {
                                     <?php
                                     include 'db_connect.php';
                                     $sql = "SELECT * FROM cursos";
-                                    $resultado = $conn->query($sql);
-                                    if ($resultado->num_rows > 0) {
+                                    $resultado = pg_query($conn, $sql);
+                                    if (pg_num_rows($resultado) > 0) {
                                         echo "<select class='editCurso input-group-text w-100' id='editCurso' name='id_curso' required>";
-                                        while ($fila = $resultado->fetch_assoc()) {
+                                        while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                         }
                                         echo "</select>";

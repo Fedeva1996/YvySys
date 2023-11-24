@@ -1,15 +1,18 @@
 <?php
-// Datos de conexión a la base de datos
+// Connection data
 $hostname = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'yvysys';
+$dbname   = 'yvysys';
+$username = 'postgres';
+$password = 'Maitei.pg96';
 
-// Crear conexión
-$conn = new mysqli($hostname, $username, $password, $database);
+// Create connection string
+$conn_string = "host=$hostname dbname=$dbname user=$username password=$password";
 
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+// Create connection
+$conn = pg_connect($conn_string);
+
+// Check connection
+if (!$conn) {
+    die("Error in connection: " . pg_last_error());
 }
 ?>

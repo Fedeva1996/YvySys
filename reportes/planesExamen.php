@@ -160,9 +160,9 @@ ORDER by id_plan_examen_det";
 WHERE materias.id_materia = '$materia'
 ORDER by id_plan_examen_det";
 }
-$resultado = $conn->query($sql);
+$resultado = pg_query($conn, $sql);
 
-while ($fila = $resultado->fetch_assoc()) {
+while ($fila = pg_fetch_assoc($resultado)) {
     $pdf->Cell(30, 6, (date('m-d-Y', strtotime($fila['fecha']))), 1, 0, 'C');
     $pdf->Cell(30, 6, ($fila['puntaje']), 1, 0, 'C');
     $pdf->Cell(30, 6, ($fila['materia']), 1, 0, 'C');

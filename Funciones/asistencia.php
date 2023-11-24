@@ -26,11 +26,11 @@ if (isset($_POST['action'])) {
         JOIN docentes ON materias.docente_id = docentes.id_docente
         WHERE ('$date' BETWEEN plan_clase_cab.fecha_ini AND plan_clase_cab.fecha_fin)
         AND materias.descri LIKE '%$query%'";
-        $result = $conn->query($sql);
+        $resultado = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            while ($row = pg_fetch_assoc($resultado)) {
                 $id = $row['id_plan_clase'];
                 $id_materia = $row['id_materia'];
                 $materia = $row['materia'];
@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO asistencias_cab(plan_clase_cab_id, fecha, docente_asis, obs) 
         VALUES ('$plan_clase_cab_id','$fecha','$docente_asis','$obs')";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -66,7 +66,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -76,7 +76,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     //Editar un registro
     if ($action == 'editar') {
@@ -86,7 +86,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE asistencias_det SET estado='$estado' WHERE id_asistencia_det ='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -98,7 +98,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -107,7 +107,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        $conn->close();
+        pg_close($conn);
     }
 
     if ($action == 'buscarAsistencia') {
@@ -159,8 +159,8 @@ if (isset($_POST['action'])) {
             WHERE asistencias_cab.fecha BETWEEN '$fecha_p' AND '$fecha_p'
             AND cursos.id_curso LIKE '$curso'
             ORDER by id_asistencia_det DESC LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
-            $cabecera = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
+            $cabecera = pg_query($conn, $sql);
         } else {
             $sql = "SELECT 
             asistencias_det.id_asistencia_det,
@@ -196,12 +196,12 @@ if (isset($_POST['action'])) {
             WHERE asistencias_cab.fecha BETWEEN '$fecha' AND '$fecha'
             AND cursos.id_curso LIKE '$id_curso'
             ORDER by id_asistencia_det DESC LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
-            $cabecera = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
+            $cabecera = pg_query($conn, $sql);
         }
 
-        if ($resultado->num_rows > 0) {
-            if ($cab = $cabecera->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row g-3'>";
                 echo "<div class='col-md-6'>";
@@ -246,7 +246,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_asistencia_det'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
@@ -283,8 +283,8 @@ if (isset($_POST['action'])) {
             JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
             WHERE asistencias_cab.fecha BETWEEN '$fecha' AND '$fecha'
             AND cursos.id_curso LIKE '%$id_curso%'";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -300,6 +300,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
 }

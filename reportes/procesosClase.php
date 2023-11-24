@@ -169,9 +169,9 @@ if (isset($_POST['fecha'])) {
     AND cursos.id_curso LIKE '$id_curso'
     ORDER by id_procesos_clase_det";
 }
-$resultado = $conn->query($sql);
+$resultado = pg_query($conn, $sql);
 
-while ($fila = $resultado->fetch_assoc()) {
+while ($fila = pg_fetch_assoc($resultado)) {
     $pdf->Cell(20, 6, (date('m-d-Y', strtotime($fila['fecha_entrega']))), 1, 0, 'C');
     $pdf->Cell(20, 6, ($fila['materia']), 1, 0, 'C');
     $pdf->Cell(50, 6, ($fila['descripcion']), 1, 0, 'C');

@@ -14,7 +14,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO plan_clase_cab(fecha_ini, fecha_fin, materia_id, cronograma_id, obs, docente_reemplazo) 
         VALUES ('$fecha_ini','$fecha_fin','$materia_id','$cronograma_id','$obs','$docente_reemplazo')";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -26,7 +26,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -36,7 +36,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     if ($action == 'agregarDet') {
         include '../db_connect.php';
@@ -50,7 +50,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO plan_clase_det(plan_clase_cab_id, proceso_clase_cab_id, competencia, indicadores, contenido, actividad) 
         VALUES ('$id_plan_clase','$procesoClase','$competencia','$indicadores','$contenido','$actividad')";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -62,7 +62,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -72,7 +72,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
     //Editar un registro
     if ($action == 'editarCab') {
@@ -84,7 +84,7 @@ if (isset($_POST['action'])) {
         $fecha_fin = $_POST['fecha_fin'];
 
         $sql = "UPDATE plan_clase_cab SET fecha_ini = '$fecha_ini', fecha_fin = '$fecha_fin', materia_id = '$id_materia' WHERE id_plan_clase = '$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -96,7 +96,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -105,7 +105,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        $conn->close();
+        pg_close($conn);
     }
 
 
@@ -146,8 +146,8 @@ if (isset($_POST['action'])) {
         JOIN docentes ON materias.docente_id = docentes.id_docente
         WHERE '$fecha_p' BETWEEN plan_clase_cab.fecha_ini AND plan_clase_cab.fecha_fin
         ORDER by id_plan_clase_det LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
-            $cabecera = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
+            $cabecera = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
             $sql = "SELECT 
@@ -173,10 +173,10 @@ if (isset($_POST['action'])) {
             JOIN cursos ON materias.curso_id = cursos.id_curso
             JOIN docentes ON materias.docente_id = docentes.id_docente
         ORDER by id_plan_clase_det LIMIT $offset, $registros_por_pagina";
-            $resultado = $conn->query($sql);
+            $resultado = pg_query($conn, $sql);
         }
-        if ($resultado->num_rows > 0) {
-            if ($fecha_p != "" && $cab = $cabecera->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            if ($fecha_p != "" && $cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row g-3'>";
                 echo "<div class='col-md-6'>";
@@ -220,7 +220,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_clase_det'] . "</td>";
                 echo "<td class='idCab' style='display:none;'>" . $fila['id_plan_clase'] . "</td>";
@@ -247,8 +247,8 @@ if (isset($_POST['action'])) {
             JOIN materias ON plan_clase_cab.materia_id = materias.id_materia
             JOIN cursos ON materias.curso_id = cursos.id_curso
             JOIN docentes ON materias.docente_id = docentes.id_docente";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -264,6 +264,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
 }

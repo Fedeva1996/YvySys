@@ -10,11 +10,11 @@ if (isset($_POST['action'])) {
 
         // Realizar la consulta a la base de datos
         $sql = "SELECT id_alumno, nombre, apellido FROM alumnos WHERE ci LIKE '%$query%'";
-        $result = $conn->query($sql);
+        $resultado = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if (pg_num_rows($resultado) > 0) {
+            while ($row = pg_fetch_assoc($resultado)) {
                 $id = $row['id_alumno'];
                 $nombre = $row['nombre'];
                 $apellido = $row['apellido'];
@@ -34,7 +34,7 @@ if (isset($_POST['action'])) {
         $fecha = $_POST['fecha'];
 
         $sql = "INSERT INTO inscripciones(alumno_id, curso_id, fecha_inscri) VALUES ('$id_alumno','$id_curso','$fecha')";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -46,7 +46,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al registrar! . $conn->error', 
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -56,7 +56,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     // Eliminar un registro
@@ -66,7 +66,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM inscripciones WHERE id_inscripcion='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -78,7 +78,7 @@ if (isset($_POST['action'])) {
             </script>";
         } else {
             echo "<script>
-            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . $conn->error', 
+            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -88,7 +88,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     //Editar un registro
@@ -100,7 +100,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE inscripciones SET curso_id='$id_curso', estado=$estado WHERE id_inscripcion ='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -112,7 +112,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "<script>
-            swal.fire('Error al editar! . $conn->error', 
+            swal.fire('Error al editar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             });
@@ -120,7 +120,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     // Obtener la lista de registros
@@ -146,9 +146,9 @@ if (isset($_POST['action'])) {
         JOIN alumnos on inscripciones.alumno_id = alumnos.id_alumno 
         JOIN cursos on inscripciones.curso_id = cursos.id_curso 
         ORDER by id_inscripcion DESC LIMIT $offset, $registros_por_pagina";
-        $resultado = $conn->query($sql);
+        $resultado = pg_query($conn, $sql);
 
-        if ($resultado->num_rows > 0) {
+        if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -163,7 +163,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
@@ -190,8 +190,8 @@ if (isset($_POST['action'])) {
 
             // Paginación
             $sql_total = "SELECT COUNT(*) as total FROM alumnos";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -207,7 +207,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
     if ($action == 'buscar') {
         include '../db_connect.php';
@@ -234,9 +234,9 @@ if (isset($_POST['action'])) {
        JOIN cursos on inscripciones.id_curso = cursos.id_curso 
        WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%'
        ORDER by id_inscripcion DESC LIMIT $offset, $registros_por_pagina";
-        $resultado = $conn->query($sql);
+        $resultado = pg_query($conn, $sql);
 
-        if ($resultado->num_rows > 0) {
+        if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -251,7 +251,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
@@ -278,8 +278,8 @@ if (isset($_POST['action'])) {
 
             // Paginación
             $sql_total = "SELECT COUNT(*) as total FROM alumnos";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -295,6 +295,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
 }

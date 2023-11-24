@@ -24,9 +24,9 @@ if (isset($_POST['action'])) {
         $direccion = $_POST['direccion'];
         $telefono = $_POST['telefono'];
 
-        $sql = "INSERT INTO docentes (ci, nombre, apellido, edad, sexo, correo, nacionalidad, direccion, telefono) "
-            . "VALUES ('$ci','$nombre', '$apellido', '$edad', '$sexo', '$correo', '$nacionalidad', '$direccion', '$telefono')";
-        if ($conn->query($sql) === TRUE) {
+        $sql = "INSERT INTO docentes (rol_id, ci, nombre, apellido, edad, sexo, correo, nacionalidad, direccion, telefono) "
+            . "VALUES (3, '$ci','$nombre', '$apellido', '$edad', '$sexo', '$correo', '$nacionalidad', '$direccion', '$telefono')";
+        if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Agregado!',
@@ -36,9 +36,9 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else {
+        } else if(!pg_query($conn, $sql)) {
             echo "<script>
-                    swal.fire('Error al registrar! . $conn->error', 
+                    swal.fire('Error al registrar! .pg_last_error($conn)', 
                     {
                         icon: 'error',
                     }).then((value) =>{
@@ -48,7 +48,7 @@ if (isset($_POST['action'])) {
                     ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     // Eliminar un registro
@@ -58,7 +58,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM docentes WHERE id_docente='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -70,7 +70,7 @@ if (isset($_POST['action'])) {
             </script>";
         } else {
             echo "<script>
-            swal.fire('Error al eliminar: ! . $conn->error', 
+            swal.fire('Error al eliminar: ! . pg_last_error($conn)', 
             {
                 icon: 'error',
             }).then((value) =>{
@@ -80,7 +80,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     //Editar un registro
@@ -99,7 +99,7 @@ if (isset($_POST['action'])) {
         $telefono = $_POST['telefono'];
 
         $sql = "UPDATE docentes SET ci='$ci', nombre='$nombre', apellido='$apellido', edad=$edad, sexo='$sexo', correo='$correo', nacionalidad='$nacionalidad', direccion='$direccion', telefono='$telefono' WHERE id_docente='$id'";
-        if ($conn->query($sql) === TRUE) {
+        if (pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -111,7 +111,7 @@ if (isset($_POST['action'])) {
                 </script>";
         } else {
             echo "echo <script>
-            swal.fire('Error al editar! . $conn->error', 
+            swal.fire('Error al editar! . pg_last_error($conn)', 
             {
                 icon: 'error',
             });
@@ -119,7 +119,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 
     // Obtener la lista de registros
@@ -132,10 +132,10 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM docentes ORDER by id_docente LIMIT $offset, $registros_por_pagina";
-        $resultado = $conn->query($sql);
+        $sql = "SELECT * FROM public.docente_v ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
+        $resultado = pg_query($conn, $sql);
 
-        if ($resultado->num_rows > 0) {
+        if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -153,9 +153,9 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_docente'] . "</td>";
+                echo "<td class='id'>" . $fila['id_persona'] . "</td>";
                 echo "<td class='ci'>" . $fila['ci'] . "</td>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
                 echo "<td class='apellido'>" . $fila['apellido'] . "</td>";
@@ -165,18 +165,18 @@ if (isset($_POST['action'])) {
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_docente'] . "' 
+                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_docente"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM docentes";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $sql_total = "SELECT COUNT(*) as total FROM personas WHERE rol_id = 3";
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -192,7 +192,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        $conn->close();
+        pg_close($conn);
     }
     if ($action == 'buscar') {
         include '../db_connect.php';
@@ -204,10 +204,10 @@ if (isset($_POST['action'])) {
 
         $buscar = $_POST['buscar'];
 
-        $sql = "SELECT * FROM docentes WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%' ORDER by id_docente LIMIT $offset, $registros_por_pagina";
-        $resultado = $conn->query($sql);
+        $sql = "SELECT * FROM public.docente_v WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%' ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
+        $resultado = pg_query($conn, $sql);
 
-        if ($resultado->num_rows > 0) {
+        if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -225,9 +225,9 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = $resultado->fetch_assoc()) {
+            while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_docente'] . "</td>";
+                echo "<td class='id'>" . $fila['id_persona'] . "</td>";
                 echo "<td class='ci'>" . $fila['ci'] . "</td>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
                 echo "<td class='apellido'>" . $fila['apellido'] . "</td>";
@@ -237,17 +237,17 @@ if (isset($_POST['action'])) {
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_docente'] . "' 
+                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>| 
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_docente"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM alumnos";
-            $resultado_total = $conn->query($sql_total);
-            $fila_total = $resultado_total->fetch_assoc();
+            $sql_total = "SELECT COUNT(*) as total FROM personas WHERE rol_id = 3";
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
@@ -264,6 +264,6 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        $conn->close();
+        pg_close($conn);
     }
 }

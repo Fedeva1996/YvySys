@@ -164,12 +164,12 @@ if (!isset($_SESSION['usuario'])) {
                                     <?php
                                     include 'db_connect.php';
                                     $sql = "SELECT * FROM cursos";
-                                    $resultado = $conn->query($sql);
-                                    if ($resultado->num_rows > 0) {
+                                    $resultado = pg_query($conn, $sql);
+                                    if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Cursos</label>";
                                         echo "<select class='input-group-text w-100'  name='id_curso' required>";
                                         echo "<option selected disabled>Seleccione curso</option>";
-                                        while ($fila = $resultado->fetch_assoc()) {
+                                        while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                         }
                                         echo "</select>";

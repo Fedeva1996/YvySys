@@ -208,12 +208,12 @@ if (!isset($_SESSION['usuario'])) {
                                         <?php
                                         include 'db_connect.php';
                                         $sql = "SELECT * FROM materias";
-                                        $resultado = $conn->query($sql);
-                                        if ($resultado->num_rows > 0) {
+                                        $resultado = pg_query($conn, $sql);
+                                        if (pg_num_rows($resultado) > 0) {
                                             echo "<label for='materia'>Materias</label>";
                                             echo "<select class='input-group-text w-100'  name='materia' required>";
                                             echo "<option selected disabled>Seleccione materia</option>";
-                                            while ($fila = $resultado->fetch_assoc()) {
+                                            while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
                                             }
                                             echo "</select>";
@@ -256,11 +256,11 @@ if (!isset($_SESSION['usuario'])) {
                                 include 'db_connect.php';
                                 $sql = "SELECT *
                                         FROM examen";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select class='input-group-text w-100' name='id_examen' required>";
                                     echo "<option selected disabled>Seleccione examen</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_examen'] . "'>" . $fila['directorio'] . " |  " . $fila['tipo'] . "</option>";
                                     }
                                     echo "</select>";
@@ -277,11 +277,11 @@ if (!isset($_SESSION['usuario'])) {
                                         cursos.descri as curso
                                         FROM materias
                                         JOIN cursos ON materias.curso_id = cursos.id_curso";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select class='input-group-text w-100' name='id_materia' required>";
                                     echo "<option selected disabled>Seleccione materia</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . " | " . $fila['curso'] . "</option>";
                                     }
                                     echo "</select>";
@@ -336,11 +336,11 @@ if (!isset($_SESSION['usuario'])) {
                                 FROM
                                 plan_examen_cab
                                 JOIN materias ON plan_examen_cab.materia_id = materias.id_materia";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select id='keep' class='input-group-text w-100' name='id_plan_examen' required>";
                                     echo "<option selected disabled>Seleccione cabecera</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_plan_examen'] . "'>" . $fila['descri'] . " | Examen: " . $fila['fecha'] . " | Recuperatorio: " . $fila['recuperatorio'] . "</option>";
                                     }
                                     echo "</select>";
@@ -353,11 +353,11 @@ if (!isset($_SESSION['usuario'])) {
                                 $sql = "SELECT *
                                 FROM inscripciones
                                 JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select id='keep' class='input-group-text w-100' name='id_inscripcion' required>";
                                     echo "<option selected disabled>Seleccione alumno</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_inscripcion'] . "'>" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
                                     }
                                     echo "</select>";
@@ -393,11 +393,11 @@ if (!isset($_SESSION['usuario'])) {
                                     <?php
                                     include 'db_connect.php';
                                     $sql = "SELECT * FROM materias";
-                                    $resultado = $conn->query($sql);
-                                    if ($resultado->num_rows > 0) {
+                                    $resultado = pg_query($conn, $sql);
+                                    if (pg_num_rows($resultado) > 0) {
                                         echo "<select class='input-group-text w-100' id='id_materia' name='id_materia' required>";
                                         echo "<option selected disabled>Seleccione materia</option>";
-                                        while ($fila = $resultado->fetch_assoc()) {
+                                        while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
                                         }
                                         echo "</select>";
@@ -438,11 +438,11 @@ if (!isset($_SESSION['usuario'])) {
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM materias";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select class='input-group-text w-100' id='editMateria' name='id_materia' required>";
                                     echo "<option selected disabled>Seleccione materia</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
                                     }
                                     echo "</select>";
@@ -491,11 +491,11 @@ if (!isset($_SESSION['usuario'])) {
                                 FROM
                                 plan_examen_cab
                                 JOIN materias ON plan_examen_cab.materia_id = materias.id_materia";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select id='editIdCab' class='input-group-text w-100' name='id_plan_examen' required>";
                                     echo "<option selected disabled>Seleccione cabecera</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_plan_examen'] . "'>" . $fila['descri'] . " | Examen: " . $fila['fecha'] . " | Recuperatorio: " . $fila['recuperatorio'] . "</option>";
                                     }
                                     echo "</select>";
@@ -508,11 +508,11 @@ if (!isset($_SESSION['usuario'])) {
                                 $sql = "SELECT *
                                 FROM inscripciones
                                 JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno";
-                                $resultado = $conn->query($sql);
-                                if ($resultado->num_rows > 0) {
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
                                     echo "<select id='editIdAl' class='input-group-text w-100' name='id_inscripcion' required>";
                                     echo "<option selected disabled>Seleccione alumno</option>";
-                                    while ($fila = $resultado->fetch_assoc()) {
+                                    while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_inscripcion'] . "'>" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
                                     }
                                     echo "</select>";
