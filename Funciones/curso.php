@@ -157,28 +157,7 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT
-        cursos.id_curso,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        periodo.id_periodo,
-        periodo.ano,
-        periodo.descripcion,
-        turno.id_turno,
-        turno.descri AS turno,
-        turno.horario,
-        modalidad.id_modalidad,
-        modalidad.descri AS modalidad,
-        cursos.fecha_ini,
-        cursos.fecha_fin,
-        cursos.tipo,
-        cursos.estado
-        FROM
-        cursos
-        JOIN pensum_cab ON cursos.pensum_id = pensum_cab.id_pensum
-        JOIN periodo ON cursos.periodo_id = periodo.id_periodo
-        JOIN turno ON cursos.turno_id = turno.id_turno
-        JOIN modalidad ON cursos.modalidad_id = modalidad.id_modalidad ORDER by id_curso DESC LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * from curso_v ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -240,7 +219,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -266,28 +245,7 @@ if (isset($_POST['action'])) {
         $buscar = $_POST['buscar'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT
-        cursos.id_curso,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        periodo.id_periodo,
-        periodo.ano,
-        periodo.descripcion,
-        turno.id_turno,
-        turno.descri AS turno,
-        turno.horario,
-        modalidad.id_modalidad,
-        modalidad.descri AS modalidad,
-        cursos.fecha_ini,
-        cursos.fecha_fin,
-        cursos.tipo,
-        cursos.estado
-        FROM
-        cursos
-        JOIN pensum_cab ON cursos.pensum_id = pensum_cab.id_pensum
-        JOIN periodo ON cursos.periodo_id = periodo.id_periodo
-        JOIN turno ON cursos.turno_id = turno.id_turno
-        JOIN modalidad ON cursos.modalidad_id = modalidad.id_modalidad ORDER by id_curso DESC LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * from curso_v ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -350,7 +308,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

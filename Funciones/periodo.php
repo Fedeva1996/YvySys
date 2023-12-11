@@ -48,7 +48,6 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM periodo WHERE id_periodo='$id'";
-        $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
         if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
@@ -116,7 +115,7 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM periodo ORDER by id_periodo DESC LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * FROM periodo ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -160,7 +159,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -186,7 +185,7 @@ if (isset($_POST['action'])) {
         $buscar = $_POST['buscar'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM periodo WHERE ano LIKE '%$buscar%' ORDER by id_periodo DESC LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * FROM periodo WHERE ano LIKE '%$buscar%' ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -231,11 +230,11 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='  border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
+                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
             }
             echo "</ul>";
             echo "</nav>";

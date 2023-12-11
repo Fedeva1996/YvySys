@@ -142,7 +142,7 @@ if (isset($_POST['action'])) {
             JOIN cursos ON materias.id_curso = cursos.id_curso
             WHERE cursos.id_curso LIKE '%$curso%'
             AND materias.id_materia LIKE '%$materia%'
-            ORDER by id_calificacion DESC LIMIT $offset, $registros_por_pagina";
+            ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
@@ -172,7 +172,7 @@ if (isset($_POST['action'])) {
                 JOIN cursos ON materias.id_curso = cursos.id_curso
                 WHERE cursos.id_curso LIKE '%$id_curso%'
                 AND materias.id_materia LIKE '%$id_materia%'
-                ORDER by id_calificacion DESC LIMIT $offset, $registros_por_pagina";
+                ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
         }
 
@@ -220,7 +220,7 @@ if (isset($_POST['action'])) {
                     echo "<td style = 'color:#81c784'>Pasó</td>";
                 }
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_calificacion'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_calificacion'] . "' 
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }
@@ -242,7 +242,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

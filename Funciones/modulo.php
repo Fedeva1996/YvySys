@@ -49,7 +49,6 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM materias WHERE id_materia='$id'";
-        $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
         if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
@@ -119,22 +118,7 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT modulos.id_modulo, 
-        modulos.descri as modulo, 
-        pensum_det.id_pensum_det,
-        pensum_det.horas_t,
-        pensum_det.horas_p,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        personas.id_persona, 
-        personas.nombre, 
-        personas.apellido 
-        FROM modulos 
-        JOIN pensum_det ON modulos.pensum_det_id = pensum_det.id_pensum_det
-        JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum
-        JOIN personas on modulos.docente_id = personas.id_persona
-        WHERE personas.rol_id = 3 
-        LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * FROM modulos_v LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -175,7 +159,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -201,22 +185,7 @@ if (isset($_POST['action'])) {
         $buscar = $_POST['buscar'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT modulos.id_modulo, 
-        modulos.descri as modulo, 
-        pensum_det.id_pensum_det,
-        pensum_det.horas_t,
-        pensum_det.horas_p,
-        pensum_cab.id_pensum,
-        pensum_cab.curso,
-        personas.id_persona, 
-        personas.nombre, 
-        personas.apellido 
-        FROM modulos 
-        JOIN pensum_det ON modulos.pensum_det_id = pensum_det.id_pensum_det
-        JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum
-        JOIN personas on modulos.docente_id = personas.id_persona
-        WHERE personas.rol_id = 3 
-        LIMIT $offset, $registros_por_pagina";
+        $sql = "SELECT * FROM modulos_v LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -251,13 +220,13 @@ if (isset($_POST['action'])) {
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM cursos";
+            $sql_total = "SELECT COUNT(*) as total FROM modulos";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

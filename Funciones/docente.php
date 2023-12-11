@@ -132,14 +132,14 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM public.docente_v ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * FROM public.docente_v WHERE rol_id = 3 ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
-                . "<th></th>"
+                . "<th>ID</th>"
                 . "<th>Ci</th>"
                 . "<th>Nombre</th>"
                 . "<th>Apellido</th>"
@@ -165,7 +165,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
         <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
@@ -180,7 +180,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -204,14 +204,14 @@ if (isset($_POST['action'])) {
 
         $buscar = $_POST['buscar'];
 
-        $sql = "SELECT * FROM public.docente_v WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%' ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * FROM public.docente_v WHERE personas.rol_id = 3 AND nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%' ORDER by id_persona LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
             echo "<table class='table table-hover table-dark' style='width:100%';  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
-                . "<th></th>"
+                . "<th>ID</th>"
                 . "<th>Ci</th>"
                 . "<th>Nombre</th>"
                 . "<th>Apellido</th>"
@@ -237,7 +237,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>| 
         <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
@@ -251,7 +251,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

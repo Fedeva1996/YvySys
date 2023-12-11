@@ -27,6 +27,10 @@
             Referencias
           </a>
           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="personas.php">Personas</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
             <li><a class="dropdown-item" href="alumnos.php">Alumnos</a></li>
             <li><a class="dropdown-item" href="docentes.php">Docentes</a></li>
             <li>

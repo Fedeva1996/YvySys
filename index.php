@@ -29,7 +29,7 @@ if (isset($_SESSION['usuario'])) {
 </head>
 
 <body class="text-center">
-  <form class="form-signin" action="login.php" method="post">
+  <form class="form-signin" action="login.php" method="post" data-bs-theme="dark">
     <img class="mb-4" src="imagenes/Icono.png" alt="" width="144" height="144">
     <h1 class="h3 mb-3 font-weight-normal">Iniciar sesión</h1>
 

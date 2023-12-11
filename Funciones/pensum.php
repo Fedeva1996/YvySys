@@ -176,8 +176,8 @@ if (isset($_POST['action'])) {
         } else {
             // Consulta para obtener los alumnos
             $sql = "SELECT * FROM public.pensum_v
-        WHERE curso LIKE '%$curso'
-        ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
+            WHERE curso LIKE '%$curso'
+            ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         }

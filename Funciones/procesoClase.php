@@ -147,7 +147,7 @@ if (isset($_POST['action'])) {
             JOIN docentes ON materias.docente_id = docentes.id_docente
             WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha_p' AND '$fecha_p'
             AND cursos.id_curso LIKE '$curso'
-            ORDER by id_procesos_clase_det DESC LIMIT $offset, $registros_por_pagina";
+            ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         } else {
@@ -177,13 +177,13 @@ if (isset($_POST['action'])) {
             JOIN docentes ON materias.docente_id = docentes.id_docente
             WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha' AND '$fecha'
             AND cursos.id_curso LIKE '$id_curso'
-            ORDER by id_procesos_clase_det DESC LIMIT $offset, $registros_por_pagina";
+            ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         }
 
         if (pg_num_rows($resultado) > 0) {
-            if ($cab = $cabecera->fetch_assoc()) {
+            if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row g-3'>";
                 echo "<div class='col-md-6'>";
@@ -242,7 +242,7 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Presentado</td>";
                 }
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_procesos_clase_det'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_procesos_clase_det'] . "' 
            data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }
@@ -264,7 +264,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

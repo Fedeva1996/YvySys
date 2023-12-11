@@ -134,18 +134,19 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT inscripciones.id_inscripcion, 
-        alumnos.id_alumno, 
-        alumnos.nombre, 
-        alumnos.apellido, 
-        alumnos.ci, 
+        personas.id_persona, 
+        personas.nombre, 
+        personas.apellido, 
+        personas.ci, 
         cursos.id_curso, 
         cursos.tipo, 
         cursos.descri,
         inscripciones.estado
         FROM inscripciones 
-        JOIN alumnos on inscripciones.alumno_id = alumnos.id_alumno 
+        JOIN personas on inscripciones.alumno_id = personas.id_persona 
         JOIN cursos on inscripciones.curso_id = cursos.id_curso 
-        ORDER by id_inscripcion DESC LIMIT $offset, $registros_por_pagina";
+        WHERE personas.rol_id = 1
+        ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -180,7 +181,7 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
             data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
             <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_inscripcion"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
@@ -195,7 +196,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -233,7 +234,7 @@ if (isset($_POST['action'])) {
        JOIN alumnos on inscripciones.id_alumno = alumnos.id_alumno 
        JOIN cursos on inscripciones.id_curso = cursos.id_curso 
        WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%'
-       ORDER by id_inscripcion DESC LIMIT $offset, $registros_por_pagina";
+       ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -268,7 +269,7 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
             data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
             <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_inscripcion"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
@@ -283,7 +284,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

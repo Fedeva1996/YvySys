@@ -145,7 +145,7 @@ if (isset($_POST['action'])) {
         JOIN cursos ON materias.curso_id = cursos.id_curso
         JOIN docentes ON materias.docente_id = docentes.id_docente
         WHERE '$fecha_p' BETWEEN plan_clase_cab.fecha_ini AND plan_clase_cab.fecha_fin
-        ORDER by id_plan_clase_det LIMIT $offset, $registros_por_pagina";
+        ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         } else {
@@ -172,7 +172,7 @@ if (isset($_POST['action'])) {
             JOIN materias ON plan_clase_cab.materia_id = materias.id_materia
             JOIN cursos ON materias.curso_id = cursos.id_curso
             JOIN docentes ON materias.docente_id = docentes.id_docente
-        ORDER by id_plan_clase_det LIMIT $offset, $registros_por_pagina";
+        ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
         }
         if (pg_num_rows($resultado) > 0) {
@@ -232,7 +232,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='id_materia' style='display:none;'>" . $fila['id_materia'] . "</td>";
                 echo "<td class='fecha_ini' style='display:none;'>" . $fila['fecha_ini'] . "</td>";
                 echo "<td class='fecha_fin' style='display:none;'>" . $fila['fecha_fin'] . "</td>";
-                echo "<td><button class='btn btn-dark btn-editar btn-sm' data-id='" . $fila['id_plan_clase_det'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_plan_clase_det'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
         <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_plan_clase_det"] . "'><i class='bi bi-trash'></i></button>|
         <button class='btn btn-dark btn-editar-cab btn-sm' data-id='" . $fila['id_plan_clase'] . "' data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
@@ -252,7 +252,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion'>";
+            echo "<div style='width:100%';  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
