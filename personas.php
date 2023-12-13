@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
@@ -19,18 +19,18 @@ if (!isset($_SESSION['usuario'])) {
     <title>Personas</title>
     <?php include("head.php"); ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cargar la tabla al cargar la página
             loadPersonas();
 
             // Agregar nuevo
-            $('#formAgregarPersona').submit(function(e) {
+            $('#formAgregarPersona').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/persona.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarPersona')[0].reset();
                         loadPersonas();
                         $('#sweetAlerts').html(response);
@@ -39,40 +39,37 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var ci = $(this).closest('tr').find('.ci').text();
                 var nombre = $(this).closest('tr').find('.nombre').text();
                 var apellido = $(this).closest('tr').find('.apellido').text();
-                var edad = $(this).closest('tr').find('.edad').text();
+                var fecha_nac = $(this).closest('tr').find('.fecha_no_form').text();
                 var sexo = $(this).closest('tr').find('.sexo').text();
                 var correo = $(this).closest('tr').find('.correo').text();
                 var nacionalidad = $(this).closest('tr').find('.nacionalidad').text();
                 var direccion = $(this).closest('tr').find('.direccion').text();
                 var telefono = $(this).closest('tr').find('.telefono').text();
-                var id_rol = $(this).closest('tr').find('.rol_id').text();
 
                 $('#editId').val(id);
                 $('#editCi').val(ci);
                 $('#editNombre').val(nombre);
                 $('#editApellido').val(apellido);
-                $('#editEdad').val(edad);
+                $('#editFechaNac').val(fecha_nac);
                 $('#editSexo').val(sexo);
                 $('#editCorreo').val(correo);
                 $('#editNacionalidad').val(nacionalidad);
                 $('#editDireccion').val(direccion);
                 $('#editTelefono').val(telefono);
-                $("#editRol").val(id_rol);
-                $("select.editRol selected").val(id_rol).change();
             });
 
-            $('#formEditarPersona').submit(function(e) {
+            $('#formEditarPersona').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/persona.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         loadPersonas();
                         $('#sweetAlerts').html(response);
                     },
@@ -80,21 +77,21 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function() {
+            $(document).on('click', '.btn-eliminar', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                        title: "Estás seguro de que deseas eliminar este registro?",
-                        text: "Una vez eliminado no se podra recuperar!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Confirmar",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Cancelar"
-                    })
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             // Envío de la solicitud AJAX para eliminar el registro
@@ -105,7 +102,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     loadPersonas();
                                     $('#sweetAlerts').html(response);
                                 }
@@ -116,7 +113,7 @@ if (!isset($_SESSION['usuario'])) {
                     });
             });
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/persona.php',
@@ -125,26 +122,26 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaPersonas').html(response);
                         }
                     });
                 }
                 cargarPagina(1);
-                $(document).on('click', '.btn-pagina', function() {
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
                 });
 
             });
             // Buscar
-            $('#formBuscarPersona').submit(function(e) {
+            $('#formBuscarPersona').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/persona.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#tablaPersonas').html(response);
                     }
                 });
@@ -160,12 +157,12 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#tablaPersonas').html(response);
                 }
             });
         }
-        $(document).on('click', '.btn-inscripciones', function() {
+        $(document).on('click', '.btn-inscripciones', function () {
             var id = $(this).closest('tr').find('.id').text();
             $.ajax({
                 url: 'funciones/persona.php',
@@ -175,7 +172,7 @@ if (!isset($_SESSION['usuario'])) {
                     id: id
 
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#tablaInscripciones').html(response);
                 }
             });
@@ -192,25 +189,28 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Personas</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-person-add"></i> Agregar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+                    class="bi bi-person-add"></i> Agregar</button>
         </div>
 
         <!-- Formulario para buscar -->
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarPersona">
-                <input type="hidden" name="action" value="buscar">
+                <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
                 </div>
                 <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" type="reset" onclick="loadPersonas()"><i class="bi bi-eraser"></i> Limpiar</button>
+                <button class="btn btn-dark" type="reset" onclick="loadPersonas()"><i class="bi bi-eraser"></i>
+                    Limpiar</button>
             </form>
         </div>
         <!-- Tabla -->
         <div id="tablaPersonas"></div>
     </div>
     <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -223,19 +223,23 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="ci" placeholder="Documento de identidad" required>
+                                    <input class="input-group-text w-100" type="text" name="ci"
+                                        placeholder="Documento de identidad" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nombre" placeholder="Nombre" required>
+                                    <input class="input-group-text w-100" type="text" name="nombre" placeholder="Nombre"
+                                        required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="apellido" placeholder="Apellido" required>
+                                    <input class="input-group-text w-100" type="text" name="apellido"
+                                        placeholder="Apellido" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="date" name="edad" placeholder="Fecha nacimiento" required>
+                                    <input class="input-group-text w-100" type="date" name="fecha_nac"
+                                        placeholder="Fecha nacimiento" required>
                                 </div>
                                 <div class="mb-3">
-                                    <select class="input-group-text w-100" style="width: 95%;" name="sexo" required>
+                                    <select class="input-group-text w-100" name="sexo" required>
                                         <option selected disabled>Seleccione sexo</option>
                                         <option value="M">Masculino</option>
                                         <option value="F">Femenino</option>
@@ -244,35 +248,33 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="email" name="correo" placeholder="Correo" required>
+                                    <input class="input-group-text w-100" type="email" name="correo"
+                                        placeholder="Correo" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nacionalidad" placeholder="Nacionalidad" required>
+                                    <input class="input-group-text w-100" type="text" name="nacionalidad"
+                                        placeholder="Nacionalidad" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="direccion" placeholder="Dirección" required>
+                                    <input class="input-group-text w-100" type="text" name="direccion"
+                                        placeholder="Dirección" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="telefono" placeholder="Teléfono" required>
+                                    <input class="input-group-text w-100" type="text" name="telefono"
+                                        placeholder="Teléfono" required>
                                 </div>
                                 <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM roles_persona";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<select class='input-group-text w-100'  name='id_rol_persona' required>";
-                                        echo "<option selected disabled>Seleccione rol</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_rol_persona'] . "'>" . $fila['descripcion'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
+                                    <select class="input-group-text w-100" style="width: 95%;" name="rol" required>
+                                        <option selected disabled>Seleccione rol</option>
+                                        <option value="docentes">Docente</option>
+                                        <option value="alumnos">Alumno</option>
+                                        <option value="funcionarios">Funcionario</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                    cambios</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
@@ -282,7 +284,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -299,16 +302,19 @@ if (!isset($_SESSION['usuario'])) {
                                     <input class="input-group-text w-100" type="text" name="ci" id="editCi" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nombre" id="editNombre" required>
+                                    <input class="input-group-text w-100" type="text" name="nombre" id="editNombre"
+                                        required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="apellido" id="editApellido" required>
+                                    <input class="input-group-text w-100" type="text" name="apellido" id="editApellido"
+                                        required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="edad" id="editEdad" required>
+                                    <input class="input-group-text w-100" type="date" name="fecha_nac" id="editFechaNac"
+                                        required>
                                 </div>
                                 <div class="mb-3">
-                                    <select class="editSexo input-group-text w-100" id="editSexo" name="sexo" required>
+                                    <select class="input-group-text w-100" id="editSexo" name="sexo" required>
                                         <option selected disabled>Seleccione sexo</option>
                                         <option value="M">Masculino</option>
                                         <option value="F">Femenino</option>
@@ -318,36 +324,26 @@ if (!isset($_SESSION['usuario'])) {
 
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="email" name="correo" id="editCorreo" required>
+                                    <input class="input-group-text w-100" type="email" name="correo" id="editCorreo"
+                                        required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nacionalidad" id="editNacionalidad" required>
+                                    <input class="input-group-text w-100" type="text" name="nacionalidad"
+                                        id="editNacionalidad" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="direccion" id="editDireccion" required>
+                                    <input class="input-group-text w-100" type="text" name="direccion"
+                                        id="editDireccion" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="telefono" id="editTelefono" required>
-                                </div>
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM roles_persona";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<select class='input-group-text w-100'  name='id_rol_persona' id='editRol' required>";
-                                        echo "<option selected disabled>Seleccione rol</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_rol_persona'] . "'>" . $fila['descripcion'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
+                                    <input class="input-group-text w-100" type="text" name="telefono" id="editTelefono"
+                                        required>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -356,7 +352,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
 
-    <div class="modal fade" id="modalInscripciones" tabindex="-1" aria-labelledby="modalInscripcionesLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalInscripciones" tabindex="-1" aria-labelledby="modalInscripcionesLabel"
+        aria-hidden="true" data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

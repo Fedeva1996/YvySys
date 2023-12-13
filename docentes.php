@@ -181,9 +181,9 @@ if (!isset($_SESSION['usuario'])) {
         </div>
 
         <!-- Formulario para buscar -->
-        <div class="mb-3">
+        <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarDocente">
-                <input type="hidden" name="action" value="buscar">
+                <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
                 </div>
@@ -218,7 +218,7 @@ if (!isset($_SESSION['usuario'])) {
                                     <input class="input-group-text w-100" type="text" name="apellido" placeholder="Apellido" required>
                                 </div>
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="edad" placeholder="Edad" required>
+                                    <input class="input-group-text w-100" type="date" name="fecha_nac" placeholder="Fecha de nacimiento" required>
                                 </div>
                                 <div class="mb-3">
                                     <select class="input-group-text w-100" style="width: 95%;" name="sexo" required>

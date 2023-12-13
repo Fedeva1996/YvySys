@@ -13,4 +13,8 @@
         color: #eee;
         background: #121212;
     }
+    .container{
+        width: 90%;
+        max-width: 1600px;
+    }
 </style>
