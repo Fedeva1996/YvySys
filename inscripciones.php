@@ -92,7 +92,7 @@ if (!isset($_SESSION['usuario'])) {
                     $('#suggestions').hide();
                 });
             });
-            // Agregar nuevo
+            // Agregar existente
             $('#formAgregarInscripcion').submit(function(e) {
                 e.preventDefault();
                 $.ajax({

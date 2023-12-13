@@ -2,14 +2,6 @@
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    function calcularEdad($fecha_nacimiento)
-    {
-        $nacimiento = new DateTime($fecha_nacimiento);
-        $ahora = new DateTime(date("Y-m-d"));
-        $diferencia = $ahora->diff($nacimiento);
-        return $diferencia->format("%y");
-    }
-
     // Agregar un nuevo registro
     if ($action == 'agregar') {
         include '../db_connect.php';
@@ -66,7 +58,7 @@ if (isset($_POST['action'])) {
 
         $id = $_POST['id'];
 
-        $sql = "DELETE FROM personas WHERE id_persona='$id'";
+        $sql = "UPDATE personas SET estado = 0 WHERE id_persona='$id'";
         if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
@@ -77,7 +69,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -143,14 +135,15 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM persona_v 
-        WHERE nombre ILIKE '%$buscar%' 
+        WHERE estado = 1 
+        AND nombre ILIKE '%$buscar%' 
         OR apellido ILIKE '%$buscar%' 
         OR ci ILIKE '%$buscar%'  
         ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark' style='margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th scope='col'>ID</th>"
@@ -190,7 +183,7 @@ if (isset($_POST['action'])) {
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM persona_v";
+            $sql_total = "SELECT COUNT(*) as total FROM persona_v WHERE estado = 1";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -240,7 +233,8 @@ if (isset($_POST['action'])) {
                 . "<th>Curso</th>"
                 . "</tr>";
             echo "</thead>";
-            echo "<tbody class='table-group-divider'>";;
+            echo "<tbody class='table-group-divider'>";
+            ;
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
@@ -258,7 +252,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:90%;  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
+            echo "<div  class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

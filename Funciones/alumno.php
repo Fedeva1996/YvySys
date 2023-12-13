@@ -2,16 +2,8 @@
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    function calcularEdad($fecha_nacimiento)
-    {
-        $nacimiento = new DateTime($fecha_nacimiento);
-        $ahora = new DateTime(date("Y-m-d"));
-        $diferencia = $ahora->diff($nacimiento);
-        return $diferencia->format("%y");
-    }
-
     // Agregar un nuevo registro
-    if ($action == 'agregar') {
+    if ($action == 'agregarNuevo') {
         include '../db_connect.php';
 
         $ci = $_POST['ci'];
@@ -26,7 +18,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
         VALUES ((SELECT max(id_persona) + 1 FROM personas), '$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
-        $sql2 = "INSERT INTO $alumnos(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
+        $sql2 = "INSERT INTO alumnos(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
         if (pg_query($conn, $sql)) {
             if (pg_query($conn, $sql2)) {
                 echo "<script>
@@ -58,14 +50,48 @@ if (isset($_POST['action'])) {
 
         pg_close($conn);
     }
+    if ($action == 'agregarExistente') {
+        include '../db_connect.php';
 
+        $id = $_POST['id'];
+
+        $sql = "INSERT INTO alumnos(persona_id) VALUES ($id);";
+        if (pg_query($conn, $sql)) {
+            echo "<script>
+                    Swal.fire(
+                    'Agregado!',
+                    'Ha agregado el registro con exito!',
+                    'success')
+                    .then((value) =>{
+                        $('.sweetAlerts').empty();
+                    });
+                    </script>";
+        } else if (!pg_query($conn, $sql)) {
+            echo "<script>
+            swal.fire('Error al registrar! . pg_last_error($conn)', 
+            {
+                icon: 'error',
+            }).then((value) =>{
+                $('.sweetAlerts').empty();
+            });;
+            {
+                icon: 'error',
+            }).then((value) =>{
+                $('.sweetAlerts').empty();
+            });;
+            </script>
+            ";
+        }
+
+        pg_close($conn);
+    }
     // Eliminar un registro
     if ($action == 'eliminar') {
         include '../db_connect.php';
 
         $id = $_POST['id'];
 
-        $sql = "DELETE FROM personas WHERE id_persona='$id'";
+        $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
         if (pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
@@ -76,7 +102,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -137,26 +163,27 @@ if (isset($_POST['action'])) {
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $buscar = isset($_POST['buscar']) ?  $_POST['buscar'] : "";
+        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM alumno_v 
-        WHERE nombre ILIKE '%$buscar%' 
+        WHERE estado = 1 
+        AND nombre ILIKE '%$buscar%' 
         OR apellido ILIKE '%$buscar%' 
         OR ci ILIKE '%$buscar%' 
         ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark' style='width:90%;  margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th scope='col'>ID</th>"
                 . "<th scope='col'>Ci</th>"
                 . "<th scope='col'>Nombre</th>"
                 . "<th scope='col'>Apellido</th>"
-                . "<th scope='col'>Edad</th>"
+                . "<th scope='col'>Fecha de nacimiento</th>"
                 . "<th scope='col'>Sexo</th>"
                 . "<th scope='col'>Correo</th>"
                 . "<th scope='col'>Nacionalidad</th>"
@@ -168,32 +195,33 @@ if (isset($_POST['action'])) {
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<th  scope='row' class='id'>" . $fila['id_persona'] . "</td>";
+                echo "<th scope='row' class='id'>" . $fila['id_alumno'] . "</td>";
                 echo "<td class='ci'>" . $fila['ci'] . "</td>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
                 echo "<td class='apellido'>" . $fila['apellido'] . "</td>";
-                echo "<td class='edad'>" . calcularEdad($fila['fecha_nac']) . "</td>";
+                echo "<td class='fecha_nac'>" . $fila['fecha_nac'] . "</td>";
+                echo "<td class='fecha_no_form' style='display:none;'>" . $fila['fecha_no_form'] . "</td>";
                 echo "<td class='sexo'>" . $fila['sexo'] . "</td>";
                 echo "<td class='correo'>" . $fila['correo'] . "</td>";
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                          <button class='btn btn-dark btn-inscripciones btn-sm' data-id='" . $fila["id_persona"] . "' data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
-                          <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i> </button></td>";
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_alumno'] . "' data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                          <button class='btn btn-dark btn-inscripciones btn-sm' data-id='" . $fila["id_alumno"] . "' data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
+                          <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_alumno"] . "'><i class='bi bi-trash'></i> </button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM alumno_v";
+            $sql_total = "SELECT COUNT(*) as total FROM alumno_v WHERE estado = 1";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:90%;  margin-left: auto; margin-right: auto;' class='paginacion'  data-bs-theme='dark'>";
+            echo "<div  class='paginacion'  data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -237,7 +265,8 @@ if (isset($_POST['action'])) {
                 . "<th>Curso</th>"
                 . "</tr>";
             echo "</thead>";
-            echo "<tbody class='table-group-divider'>";;
+            echo "<tbody class='table-group-divider'>";
+            ;
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
@@ -255,7 +284,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='width:90%;  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
+            echo "<div  class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -269,5 +298,27 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
         pg_close($conn);
+    }
+    if ($action == 'autocompletar') {
+        include '../db_connect.php';
+
+        // Obtener el término de búsqueda del POST
+        $query = $_POST['query'];
+
+        // Realizar la consulta a la base de datos
+        $sql = "SELECT id_persona, nombre, apellido FROM personas WHERE ci LIKE '%$query%'";
+        $resultado = pg_query($conn, $sql);
+
+        // Generar la lista de sugerencias
+        if (pg_num_rows($resultado) > 0) {
+            while ($row = pg_fetch_assoc($resultado)) {
+                $id = $row['id_persona'];
+                $nombre = $row['nombre'];
+                $apellido = $row['apellido'];
+                echo '<div class="suggest-element" data-id-persona="' . $id . '">' . $nombre . ' ' . $apellido . '</div>';
+            }
+        } else {
+            echo '<div class="suggest-element">No se encontraron sugerencias</div>';
+        }
     }
 }
