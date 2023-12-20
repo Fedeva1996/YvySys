@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function(response) {
                         $('#formAgregarModulo')[0].reset();
                         loadModulos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -64,7 +64,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         loadModulos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -96,7 +96,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function(response) {
                                     loadModulos();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {

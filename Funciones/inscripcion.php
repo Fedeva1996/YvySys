@@ -34,7 +34,7 @@ if (isset($_POST['action'])) {
         $fecha = $_POST['fecha'];
 
         $sql = "INSERT INTO inscripciones(alumno_id, curso_id, fecha_inscri) VALUES ('$id_alumno','$id_curso','$fecha')";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -66,7 +66,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM inscripciones WHERE id_inscripcion='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -100,7 +100,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE inscripciones SET curso_id='$id_curso', estado=$estado WHERE id_inscripcion ='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -233,7 +233,7 @@ if (isset($_POST['action'])) {
        FROM inscripciones 
        JOIN alumnos on inscripciones.id_alumno = alumnos.id_alumno 
        JOIN cursos on inscripciones.id_curso = cursos.id_curso 
-       WHERE nombre LIKE '%$buscar%' OR apellido LIKE '%$buscar%' OR ci LIKE '%$buscar%'
+       WHERE nombre LIKE '$buscar%' OR apellido LIKE '$buscar%' OR ci LIKE '$buscar%'
        ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 

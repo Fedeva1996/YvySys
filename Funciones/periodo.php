@@ -11,7 +11,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO periodo (ano, descripcion) "
             . "VALUES ('$ano', '$descri')";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -21,7 +21,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
@@ -48,7 +48,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM periodo WHERE id_periodo='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -58,7 +58,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (@!pg_query($conn, $sql)){
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -82,7 +82,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE periodo SET ano='$ano', descripcion='$descri', estado='$estado' WHERE id_periodo='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -185,7 +185,7 @@ if (isset($_POST['action'])) {
         $buscar = $_POST['buscar'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM periodo WHERE ano LIKE '%$buscar%' ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * FROM periodo WHERE ano LIKE '$buscar%' ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {

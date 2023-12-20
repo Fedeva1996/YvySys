@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function(response) {
                         $('#formAgregarPeriodo')[0].reset();
                         loadPeriodos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -62,7 +62,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         loadPeriodos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -94,7 +94,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function(response) {
                                     loadPeriodos();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -247,7 +247,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 </body>
 
 </html>

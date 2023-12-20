@@ -26,7 +26,7 @@ if (isset($_POST['action'])) {
         paso = '$paso',
         obs = '$obs' 
         WHERE id_calificacion ='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',

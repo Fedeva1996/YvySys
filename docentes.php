@@ -59,7 +59,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarDocente')[0].reset();
                         loadDocentes();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -103,7 +103,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarExistente')[0].reset();
                         loadDocentes();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
 
                     }
                 });
@@ -144,7 +144,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function (response) {
                         loadDocentes();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -176,7 +176,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadAlumnos();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -436,7 +436,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 
 </body>
 

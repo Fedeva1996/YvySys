@@ -41,7 +41,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#formAgregarProcesoClase')[0].reset();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                         setTimeout(function() {
                             location.reload(true);
                         }, 1500);
@@ -57,7 +57,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#formAgregarProcesoClaseDet')[0].reset();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -116,7 +116,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                         $('#formBuscarProcesoClase').submit();
                     },
                 });
@@ -452,7 +452,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 </body>
 
 </html>

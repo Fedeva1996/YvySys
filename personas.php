@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarPersona')[0].reset();
                         loadPersonas();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -71,7 +71,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function (response) {
                         loadPersonas();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -104,7 +104,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadPersonas();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -135,7 +135,7 @@ if (!isset($_SESSION['usuario'])) {
 
             });
             // Buscar
-            $('#formBuscarPersona').submit(function (e) {
+            $('#formBuscarPersona').keyup(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/persona.php',
@@ -366,7 +366,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 </body>
 
 </html>

@@ -41,7 +41,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#formAgregarPlanClase')[0].reset();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                         setTimeout(function() {
                             location.reload(true);
                         }, 1500);
@@ -59,7 +59,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function(response) {
                         $('#formAgregarPlanClaseDet')[0].reset();
                         $("#keep").val(keep).change();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -91,7 +91,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#tablaPlanesClase').html(response);
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -115,7 +115,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -146,7 +146,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function(response) {
                                     loadAlumnos();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -484,7 +484,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 
 </body>
 

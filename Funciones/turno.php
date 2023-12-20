@@ -11,7 +11,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO turno (descri, horario) "
             . "VALUES ('$descri', '$horario')";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -21,7 +21,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
@@ -49,7 +49,7 @@ if (isset($_POST['action'])) {
 
         $sql = "DELETE FROM cursos WHERE id_curso='$id'";
         $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -59,7 +59,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (@!pg_query($conn, $sql)){
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -84,7 +84,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE turno SET descri='$descri', horario='$horario', estado='$estado' WHERE id_turno='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -184,7 +184,7 @@ if (isset($_POST['action'])) {
         $buscar = $_POST['buscar'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM turno WHERE descri LIKE '%$buscar%' ORDER by id_turno DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * FROM turno WHERE descri LIKE '$buscar%' ORDER by id_turno DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {

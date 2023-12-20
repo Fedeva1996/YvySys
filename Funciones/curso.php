@@ -34,7 +34,7 @@ if (isset($_POST['action'])) {
             WHERE
                 id_pensum = '$pensum'
             ";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -44,7 +44,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
@@ -72,7 +72,7 @@ if (isset($_POST['action'])) {
 
         $sql = "DELETE FROM cursos WHERE id_curso='$id'";
         $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -82,7 +82,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (@!pg_query($conn, $sql)){
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -124,7 +124,7 @@ if (isset($_POST['action'])) {
             estado = '$estado'
         WHERE
             id_curso='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Editado!',

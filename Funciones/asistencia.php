@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO asistencias_cab(plan_clase_cab_id, fecha, docente_asis, obs) 
         VALUES ('$plan_clase_cab_id','$fecha','$docente_asis','$obs')";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -86,7 +86,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE asistencias_det SET estado='$estado' WHERE id_asistencia_det ='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',

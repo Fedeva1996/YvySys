@@ -19,33 +19,18 @@ if (isset($_POST['action'])) {
         $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
         VALUES ((SELECT max(id_persona) + 1 FROM personas), '$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
         $sql2 = "INSERT INTO alumnos(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
-        if (pg_query($conn, $sql)) {
-            if (pg_query($conn, $sql2)) {
-                echo "<script>
-                    Swal.fire(
-                    'Agregado!',
-                    'Ha agregado el registro con exito!',
-                    'success')
-                    .then((value) =>{
-                        $('.sweetAlerts').empty();
-                    });
-                    </script>";
+        if (@pg_query($conn, $sql)) {
+            if (@pg_query($conn, $sql2)) {
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
             }
-        } else if (!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -56,31 +41,16 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "INSERT INTO alumnos(persona_id) VALUES ($id);";
-        if (pg_query($conn, $sql)) {
-            echo "<script>
-                    Swal.fire(
-                    'Agregado!',
-                    'Ha agregado el registro con exito!',
-                    'success')
-                    .then((value) =>{
-                        $('.sweetAlerts').empty();
-                    });
-                    </script>";
-        } else if (!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -92,26 +62,16 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
-        if (pg_query($conn, $sql)) {
-            echo "<script>
-            Swal.fire(
-            'Eliminado!',
-            'Ha eliminado el registro con exito!',
-            'success')
-            .then((value) =>{
-                $('.sweetAlerts').empty();
-            });
-            </script>";
-        } else if (!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo eliminado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -133,24 +93,16 @@ if (isset($_POST['action'])) {
         $telefono = $_POST['telefono'];
 
         $sql = "UPDATE personas SET ci='$ci', nombre='$nombre', apellido='$apellido', fecha_nac=$fecha_nac, sexo='$sexo', correo='$correo', nacionalidad='$nacionalidad', direccion='$direccion', telefono='$telefono' WHERE id_persona='$id'";
-        if (pg_query($conn, $sql)) {
-            echo "<script>
-                Swal.fire(
-                'Editado!',
-                'Se edito el registro!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
-        } else if (!pg_query($conn, $sql)) {
-            echo "echo <script>
-            swal.fire('Error al editar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            });
-            </script>
-            ";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -169,9 +121,9 @@ if (isset($_POST['action'])) {
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM alumno_v 
         WHERE estado = 1 
-        AND nombre ILIKE '%$buscar%' 
-        OR apellido ILIKE '%$buscar%' 
-        OR ci ILIKE '%$buscar%' 
+        AND nombre ILIKE '$buscar%' 
+        OR apellido ILIKE '$buscar%' 
+        OR ci ILIKE '$buscar%' 
         ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
@@ -306,7 +258,7 @@ if (isset($_POST['action'])) {
         $query = $_POST['query'];
 
         // Realizar la consulta a la base de datos
-        $sql = "SELECT id_persona, nombre, apellido FROM personas WHERE ci LIKE '%$query%'";
+        $sql = "SELECT id_persona, nombre, apellido FROM personas WHERE ci LIKE '$query%'";
         $resultado = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias

@@ -13,7 +13,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO procesos_clase_cab(materia_id, fecha_entrega, puntaje, descripcion) 
         VALUES ('$id_materia','$fecha_entrega','$puntaje','$descripcion')";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -48,7 +48,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO procesos_clase_det(procesos_clase_cab_id, inscripcion_id, fecha_entrega, puntaje_hecho) 
         VALUES ('$id_procesos_clase_cab', '$id_inscripcion', '$fecha_entrega','$puntaje')";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -83,7 +83,7 @@ if (isset($_POST['action'])) {
         $puntaje = $_POST['puntaje'];
 
         $sql = "UPDATE procesos_clase_det SET procesos_clase_cab_id='$idCab', inscripcion_id='$idAl', fecha_entrega='$fecha_entrega', puntaje_hecho='$puntaje' WHERE id_procesos_clase_det='$id'";
-        if (pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql) === TRUE) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',

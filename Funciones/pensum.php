@@ -9,7 +9,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO pensum_cab(id_pensum ,curso) 
         VALUES ((SELECT MAX(id_pensum) +1 FROM pensum_cab), '$curso')";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -19,7 +19,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
             {
@@ -65,7 +65,7 @@ if (isset($_POST['action'])) {
                 pensum_cab 
                 ORDER BY id_pensum DESC LIMIT 1;
             ";
-            if (pg_query($conn, $sql)) {
+            if (@pg_query($conn, $sql)) {
                 echo "<script>
                     Swal.fire(
                     'Agregado!',
@@ -75,7 +75,7 @@ if (isset($_POST['action'])) {
                         $('.sweetAlerts').empty();
                     });
                     </script>";
-            } else if (!pg_query($conn, $sql)) {
+            } else if (@!pg_query($conn, $sql)) {
                 echo "<script>
                 swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
                 {
@@ -101,7 +101,7 @@ if (isset($_POST['action'])) {
         $horas_p = $_POST['horasp'];
 
         $sql = "UPDATE pensum_det SET pensum_cab_id='$id_pensum', descri='$modulo', horas_t='$horas_t', horas_p='$horas_p' WHERE id_pensum_det ='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -111,7 +111,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar!'" . pg_last_error($coon) . ", 
             {
@@ -132,7 +132,7 @@ if (isset($_POST['action'])) {
         $curso = $_POST['curso'];
 
         $sql = "UPDATE pensum_cab SET curso='$curso' WHERE id_pensum ='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -142,7 +142,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else  if (!pg_query($conn, $sql)) {
+        } else  if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar!'" . pg_last_error($conn) . ", 
             {

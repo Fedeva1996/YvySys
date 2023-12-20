@@ -41,7 +41,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#formAgregarAsistencia')[0].reset();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -97,7 +97,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                         $('#formBuscarAsistencia').submit();
                     },
                 });
@@ -266,7 +266,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
+    <div id="resultado"></div>
 </body>
 
 </html>

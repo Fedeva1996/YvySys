@@ -12,7 +12,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO materias (descri, id_curso, id_docente) "
             . "VALUES ('$descri', '$id_curso','$id_docente')";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Agregado!',
@@ -22,7 +22,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
@@ -49,7 +49,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM materias WHERE id_materia='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -59,7 +59,7 @@ if (isset($_POST['action'])) {
                 $('.sweetAlerts').empty();
             });
             </script>";
-        } else if (!pg_query($conn, $sql)){
+        } else if (@!pg_query($conn, $sql)){
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
             {
@@ -85,7 +85,7 @@ if (isset($_POST['action'])) {
 
 
         $sql = "UPDATE materias SET descri='$descri', id_curso='$id_curso', id_docente='$id_docente' WHERE id_materia='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -95,7 +95,7 @@ if (isset($_POST['action'])) {
                     $('.sweetAlerts').empty();
                 });
                 </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "echo <script>
             swal.fire('Error al editar! . pg_last_error($conn)', 
             {

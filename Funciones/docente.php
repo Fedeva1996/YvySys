@@ -19,8 +19,8 @@ if (isset($_POST['action'])) {
         $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
         VALUES ((SELECT max(id_persona) + 1 FROM personas), '$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
         $sql2 = "INSERT INTO docentes(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
-        if (pg_query($conn, $sql)) {
-            if (pg_query($conn, $sql2)) {
+        if (@pg_query($conn, $sql)) {
+            if (@pg_query($conn, $sql2)) {
                 echo "<script>
                     Swal.fire(
                     'Agregado!',
@@ -31,7 +31,7 @@ if (isset($_POST['action'])) {
                     });
                     </script>";
             }
-        } else if(!pg_query($conn, $sql)) {
+        } else if(@!pg_query($conn, $sql)) {
             echo "<script>
                     swal.fire('Error al registrar! .pg_last_error($conn)', 
                     {
@@ -51,7 +51,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "INSERT INTO docentes(persona_id) VALUES ($id);";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                     Swal.fire(
                     'Agregado!',
@@ -61,7 +61,7 @@ if (isset($_POST['action'])) {
                         $('.sweetAlerts').empty();
                     });
                     </script>";
-        } else if (!pg_query($conn, $sql)) {
+        } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al registrar! . pg_last_error($conn)', 
             {
@@ -87,7 +87,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM docentes WHERE id_docente='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
             Swal.fire(
             'Eliminado!',
@@ -128,7 +128,7 @@ if (isset($_POST['action'])) {
         $telefono = $_POST['telefono'];
 
         $sql = "UPDATE personas SET ci='$ci', nombre='$nombre', apellido='$apellido', fecha_nac=$fecha_nac, sexo='$sexo', correo='$correo', nacionalidad='$nacionalidad', direccion='$direccion', telefono='$telefono' WHERE id_persona='$id'";
-        if (pg_query($conn, $sql)) {
+        if (@pg_query($conn, $sql)) {
             echo "<script>
                 Swal.fire(
                 'Editado!',
@@ -164,9 +164,9 @@ if (isset($_POST['action'])) {
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM docente_v
         WHERE estado = 1 
-        AND nombre ILIKE '%$buscar%' 
-        OR apellido ILIKE '%$buscar%' 
-        OR ci ILIKE '%$buscar%' 
+        AND nombre ILIKE '$buscar%' 
+        OR apellido ILIKE '$buscar%' 
+        OR ci ILIKE '$buscar%' 
         ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 

@@ -46,9 +46,6 @@ if (!isset($_SESSION['usuario'])) {
     </style>
     <script>
         $(document).ready(function () {
-            // Cargar la tabla al cargar la página
-            loadAlumnos();
-
             // Agregar nuevo
             $('#formAgregarAlumno').submit(function (e) {
                 e.preventDefault();
@@ -59,7 +56,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
                         loadAlumnos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     }
                 });
             });
@@ -94,16 +91,16 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Agregar existente
-            $('#formAgregarExistente').submit(function(e) {
+            $('#formAgregarExistente').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarExistente')[0].reset();
                         loadAlumnos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
 
                     }
                 });
@@ -141,7 +138,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function (response) {
                         loadAlumnos();
-                        $('#sweetAlerts').html(response);
+                        $('#resultado').html(response);
                     },
                 });
             });
@@ -174,7 +171,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadAlumnos();
-                                    $('#sweetAlerts').html(response);
+                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -192,6 +189,9 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
+                        beforeSend: function (objeto) {
+                            $("#resultados").html("Mensaje: Cargando...");
+                        },
                         success: function (response) {
                             $('#tablaAlumnos').html(response);
                         }
@@ -205,7 +205,7 @@ if (!isset($_SESSION['usuario'])) {
 
             });
             // Buscar
-            $('#formBuscarAlumno').submit(function (e) {
+            $('#formBuscarAlumno').keyup(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/alumno.php',
@@ -217,8 +217,23 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
 
-        });
+            // ver inscripciones del alumno
+            $(document).on('click', '.btn-inscripciones', function () {
+                var id = $(this).closest('tr').find('.id').text();
+                $.ajax({
+                    url: 'funciones/alumno.php',
+                    type: 'POST',
+                    data: {
+                        action: 'inscripciones',
+                        id: id
 
+                    },
+                    success: function (response) {
+                        $('#tablaInscripciones').html(response);
+                    }
+                });
+            });
+        });
         // Cargar tabla
         function loadAlumnos() {
             $.ajax({
@@ -227,26 +242,14 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                },
                 success: function (response) {
                     $('#tablaAlumnos').html(response);
                 }
             });
         }
-        $(document).on('click', '.btn-inscripciones', function () {
-            var id = $(this).closest('tr').find('.id').text();
-            $.ajax({
-                url: 'funciones/alumno.php',
-                type: 'POST',
-                data: {
-                    action: 'inscripciones',
-                    id: id
-
-                },
-                success: function (response) {
-                    $('#tablaInscripciones').html(response);
-                }
-            });
-        });
     </script>
 </head>
 
@@ -277,6 +280,9 @@ if (!isset($_SESSION['usuario'])) {
                     Limpiar</button>
             </form>
         </div>
+        <!-- Mensaje error/exito -->
+        <div id="resultado"></div>
+
         <!-- Tabla -->
         <div id="tablaAlumnos"></div>
     </div>
@@ -363,7 +369,7 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="col">
                                 <div class="mb-3">
                                     <input class="input-group-text w-100" type="text" id="ci-input"
-                                        placeholder="Ci del alumno" autocomplete="off" required>
+                                        placeholder="CI del alumno" autocomplete="off" required>
                                     <input type="hidden" id="id" name="id">
                                     <div id="suggestions"></div>
                                 </div>
@@ -462,7 +468,6 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div class="sweetAlerts" id="sweetAlerts"></div>
 </body>
 
 </html>
