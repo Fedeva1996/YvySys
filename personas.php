@@ -84,9 +84,10 @@ if (!isset($_SESSION['usuario'])) {
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
                     confirmButtonText: "Confirmar",
-                    cancelButtonColor: '#d33',
+                    cancelButtonColor: '#6e7881',
                     cancelButtonText: "Cancelar"
                 })
                     .then((willDelete) => {
@@ -105,7 +106,10 @@ if (!isset($_SESSION['usuario'])) {
                                 }
                             });
                         } else {
-                            swal.fire("Se mantendra el registro!");
+                            swal.fire({
+                                title: "Se mantendra el registro!",
+                                background: "#212529"
+                            })
                         }
                     });
             });

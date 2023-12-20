@@ -18,32 +18,6 @@ if (!isset($_SESSION['usuario'])) {
 <head>
     <title>Alumnos</title>
     <?php include("head.php"); ?>
-    <style type="text/css">
-        #suggestions {
-            position: absolute;
-            background-color: #121212;
-            border: 1px solid #ccc;
-            width: 200px;
-            max-height: 150px;
-            overflow-y: auto;
-            display: none;
-            z-index: 9999;
-            /* Asegura que el div de sugerencias esté encima de otros elementos */
-            margin-top: 5px;
-            /* Espacio superior para separar del campo de entrada */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            /* Sombra suave */
-        }
-
-        .suggest-element {
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .suggest-element:hover {
-            background-color: #2c2c2c;
-        }
-    </style>
     <script>
         $(document).ready(function () {
             // Agregar nuevo
@@ -154,9 +128,10 @@ if (!isset($_SESSION['usuario'])) {
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
                     confirmButtonText: "Confirmar",
-                    cancelButtonColor: '#d33',
+                    cancelButtonColor: '#6e7881',
                     cancelButtonText: "Cancelar"
                 })
                     .then((willDelete) => {
@@ -175,7 +150,10 @@ if (!isset($_SESSION['usuario'])) {
                                 }
                             });
                         } else {
-                            swal.fire("Se mantendra el registro!");
+                            swal.fire({
+                                title: "Se mantendra el registro!",
+                                background: "#212529"
+                            })
                         }
                     });
             });

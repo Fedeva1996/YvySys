@@ -100,7 +100,10 @@ if (!isset($_SESSION['usuario'])) {
                                 }
                             });
                         } else {
-                            swal.fire("Se mantendra el registro!");
+                            swal.fire({
+                                title: "Se mantendra el registro!",
+                                background: "#212529"
+                            })
                         }
                     });
             });
