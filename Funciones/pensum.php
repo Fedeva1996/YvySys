@@ -66,15 +66,10 @@ if (isset($_POST['action'])) {
                 ORDER BY id_pensum DESC LIMIT 1;
             ";
             if (@pg_query($conn, $sql)) {
-                echo "<script>
-                    Swal.fire(
-                    'Agregado!',
-                    'Ha agregado el registro con exito!',
-                    'success')
-                    .then((value) =>{
-                        $('.sweetAlerts').empty();
-                    });
-                    </script>";
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
             } else if (@!pg_query($conn, $sql)) {
                 echo "<script>
                 swal.fire('Error al registrar!" . pg_last_error($conn) . "', 

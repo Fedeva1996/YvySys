@@ -22,31 +22,16 @@ if (isset($_POST['action'])) {
         $sql2 = "INSERT INTO $rol(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
         if (@pg_query($conn, $sql)) {
             if (@pg_query($conn, $sql2)) {
-                echo "<script>
-                    Swal.fire(
-                    'Agregado!',
-                    'Ha agregado el registro con exito!',
-                    'success')
-                    .then((value) =>{
-                        $('.sweetAlerts').empty();
-                    });
-                    </script>";
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
             }
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -60,15 +45,10 @@ if (isset($_POST['action'])) {
 
         $sql = "UPDATE personas SET estado = 0 WHERE id_persona='$id'";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-            Swal.fire(
-            'Eliminado!',
-            'Ha eliminado el registro con exito!',
-            'success')
-            .then((value) =>{
-                $('.sweetAlerts').empty();
-            });
-            </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo eliminado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else if (@!pg_query($conn, $sql)) {
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
@@ -101,23 +81,15 @@ if (isset($_POST['action'])) {
 
         $sql = "UPDATE personas SET ci='$ci', nombre='$nombre', apellido='$apellido', fecha_nac='$fecha_nac', sexo='$sexo', correo='$correo', nacionalidad='$nacionalidad', direccion='$direccion', telefono='$telefono' WHERE id_persona='$id'";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-                Swal.fire(
-                'Editado!',
-                'Se edito el registro!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else if (@!pg_query($conn, $sql)) {
-            echo "echo <script>
-            swal.fire('Error al editar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            });
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -175,7 +147,6 @@ if (isset($_POST['action'])) {
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_persona'] . "' 
             data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-            <button class='btn btn-secondary btn-inscripciones btn-sm' data-id='" . $fila["id_persona"] . "' data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
             <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_persona"] . "'><i class='bi bi-trash'></i> </button></td>";
                 echo "</tr>";
             }
@@ -197,70 +168,6 @@ if (isset($_POST['action'])) {
             }
             echo "</ul>";
             echo "</nav>";
-            echo "</div>";
-        } else {
-            echo "No se encontraron registros.";
-        }
-        pg_close($conn);
-    }
-    if ($action == 'inscripciones') {
-        include '../db_connect.php';
-
-        // Paginación
-        $registros_por_pagina = 5;
-        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $offset = ($pagina - 1) * $registros_por_pagina;
-
-        $id = $_POST['id'];
-
-        // Consulta para obtener los alumnos
-        $sql = "SELECT inscripciones.id_inscripcion,
-        alumnos.nombre,
-        alumnos.apellido,
-        alumnos.ci,
-        cursos.descri FROM inscripciones JOIN alumnos ON inscripciones.id_alumno = alumnos.id_alumno
-        JOIN cursos ON inscripciones.id_curso = cursos.id_curso
-        WHERE inscripciones.id_alumno LIKE '%$id%'  ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
-
-        if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark';  margin-left: auto; margin-right: auto;'>";
-            echo "<thead class='table-dark'>";
-            echo "<tr>"
-                . "<th>Nombre</th>"
-                . "<th>Apellido</th>"
-                . "<th>Ci</th>"
-                . "<th>Curso</th>"
-                . "</tr>";
-            echo "</thead>";
-            echo "<tbody class='table-group-divider'>";
-            ;
-            while ($fila = pg_fetch_assoc($resultado)) {
-                echo "<tr>";
-                echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
-                echo "<td class='apellido'>" . $fila['apellido'] . "</td>";
-                echo "<td class='ci'>" . $fila['ci'] . "</td>";
-                echo "<td class='curso'>" . $fila['descri'] . "</td>";
-            }
-            echo "</tbody>";
-            echo "</table>";
-
-            // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM personas WHERE rol_id = 1";
-            $resultado_total = pg_query($conn, $sql_total);
-            $fila_total = pg_fetch_assoc($resultado_total);
-            $total_registros = $fila_total['total'];
-            $total_paginas = ceil($total_registros / $registros_por_pagina);
-
-            echo "<div  class='paginacion' data-bs-theme='dark'>";
-            echo "<nav aria-label='Page navigation example'>";
-            echo "<ul class='pagination'>";
-            for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina' style='border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
-            }
-            echo "</ul>";
-            echo "</nav>";
-            echo "<p style='font-size: 0.875em;'>* Para editar la inscripción, ir a <a href='inscripciones.php'>Incripciones</a></p>";
             echo "</div>";
         } else {
             echo "No se encontraron registros.";

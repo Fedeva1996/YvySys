@@ -20,9 +20,6 @@ if (!isset($_SESSION['usuario'])) {
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {
-            // Cargar la tabla al cargar la página
-            loadPersonas();
-
             // Agregar nuevo
             $('#formAgregarPersona').submit(function (e) {
                 e.preventDefault();

@@ -27,23 +27,15 @@ if (isset($_POST['action'])) {
         obs = '$obs' 
         WHERE id_calificacion ='$id'";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Editado!',
-                'Se edito el registro!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
-            echo "echo <script>
-            swal.fire('Error al editar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            });
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);

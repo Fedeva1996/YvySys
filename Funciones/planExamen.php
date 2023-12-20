@@ -26,13 +26,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             </script>
             ";
         }
@@ -60,13 +57,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             </script>
             ";
         }
@@ -95,13 +89,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             </script>
             ";
         }
@@ -232,7 +223,7 @@ if (isset($_POST['action'])) {
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_plan_examen_det'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
         <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_plan_examen_det"] . "'><i class='bi bi-trash'></i></button>|
-        <button class='btn btn-dark btn-editar-cab btn-sm' data-id='" . $fila['id_plan_examen'] . "' data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
+        <button class='btn btn-secondary btn-editar-cab btn-sm' data-id='" . $fila['id_plan_examen'] . "' data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

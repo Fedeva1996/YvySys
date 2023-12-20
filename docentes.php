@@ -46,9 +46,6 @@ if (!isset($_SESSION['usuario'])) {
     </style>
     <script>
         $(document).ready(function () {
-            // Cargar la tabla al cargar la página
-            loadDocentes();
-
             // Agregar nuevo
             $('#formAgregarDocente').submit(function (e) {
                 e.preventDefault();
@@ -209,7 +206,7 @@ if (!isset($_SESSION['usuario'])) {
                 cargarPagina(1);
             });
             // Buscar
-            $('#formBuscarDocente').submit(function (e) {
+            $('#formBuscarDocente').keyup(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/docente.php',

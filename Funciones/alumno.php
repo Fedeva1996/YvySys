@@ -124,7 +124,7 @@ if (isset($_POST['action'])) {
         AND nombre ILIKE '$buscar%' 
         OR apellido ILIKE '$buscar%' 
         OR ci ILIKE '$buscar%' 
-        ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
+        ORDER by id_alumno DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -159,7 +159,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_alumno'] . "' data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                          <button class='btn btn-dark btn-inscripciones btn-sm' data-id='" . $fila["id_alumno"] . "' data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
+                          <button class='btn btn-secondary btn-inscripciones btn-sm' data-id='" . $fila["id_alumno"] . "' data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
                           <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_alumno"] . "'><i class='bi bi-trash'></i> </button></td>";
                 echo "</tr>";
             }

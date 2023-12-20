@@ -25,7 +25,7 @@ if (isset($_POST['action'])) {
         JOIN cursos ON materias.curso_id = cursos.id_curso
         JOIN docentes ON materias.docente_id = docentes.id_docente
         WHERE ('$date' BETWEEN plan_clase_cab.fecha_ini AND plan_clase_cab.fecha_fin)
-        AND materias.descri LIKE '%$query%'";
+        AND materias.descri LIKE '$query%'";
         $resultado = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
@@ -65,13 +65,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             </script>
             ";
         }
@@ -97,13 +94,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             </script>
             ";
         }

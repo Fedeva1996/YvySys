@@ -45,13 +45,10 @@ if (isset($_POST['action'])) {
                 });
                 </script>";
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
             {
                 icon: 'error',
             }).then((value) =>{
@@ -73,15 +70,10 @@ if (isset($_POST['action'])) {
         $sql = "DELETE FROM cursos WHERE id_curso='$id'";
         $sql = "DELETE FROM alumnos WHERE id_alumno='$id'";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-            Swal.fire(
-            'Eliminado!',
-            'Ha eliminado el registro con exito!',
-            'success')
-            .then((value) =>{
-                $('.sweetAlerts').empty();
-            });
-            </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo eliminado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else if (@!pg_query($conn, $sql)){
             echo "<script>
             swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
@@ -125,23 +117,15 @@ if (isset($_POST['action'])) {
         WHERE
             id_curso='$id'";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Editado!',
-                'Se edito el registro!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
-            echo "echo <script>
-            swal.fire('Error al editar! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            });
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
