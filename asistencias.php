@@ -167,7 +167,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Cursos</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_curso' required>";
+                                        echo "<select class='form-select  w-100'  name='id_curso' required>";
                                         echo "<option selected disabled>Seleccione curso</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";

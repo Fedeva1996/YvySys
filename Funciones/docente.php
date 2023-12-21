@@ -136,7 +136,7 @@ if (isset($_POST['action'])) {
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark'>";
+            echo "<table class='table table-hover table-dark table-sm'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>ID</th>"

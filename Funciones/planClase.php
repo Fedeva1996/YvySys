@@ -184,7 +184,7 @@ if (isset($_POST['action'])) {
                 echo "</div>";
                 echo "</br>";
             }
-            echo "<table class='table table-hover table-dark' ;  margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark table-sm' ;  margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>ID</th>"

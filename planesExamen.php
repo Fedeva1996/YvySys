@@ -214,7 +214,7 @@ if (!isset($_SESSION['usuario'])) {
                                         $resultado = pg_query($conn, $sql);
                                         if (pg_num_rows($resultado) > 0) {
                                             echo "<label for='materia'>Materias</label>";
-                                            echo "<select class='input-group-text w-100'  name='materia' required>";
+                                            echo "<select class='form-select  w-100'  name='materia' required>";
                                             echo "<option selected disabled>Seleccione materia</option>";
                                             while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
@@ -261,7 +261,7 @@ if (!isset($_SESSION['usuario'])) {
                                         FROM examen";
                                 $resultado = pg_query($conn, $sql);
                                 if (pg_num_rows($resultado) > 0) {
-                                    echo "<select class='input-group-text w-100' name='id_examen' required>";
+                                    echo "<select class='form-select  w-100' name='id_examen' required>";
                                     echo "<option selected disabled>Seleccione examen</option>";
                                     while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_examen'] . "'>" . $fila['directorio'] . " |  " . $fila['tipo'] . "</option>";
@@ -282,7 +282,7 @@ if (!isset($_SESSION['usuario'])) {
                                         JOIN cursos ON materias.curso_id = cursos.id_curso";
                                 $resultado = pg_query($conn, $sql);
                                 if (pg_num_rows($resultado) > 0) {
-                                    echo "<select class='input-group-text w-100' name='id_materia' required>";
+                                    echo "<select class='form-select  w-100' name='id_materia' required>";
                                     echo "<option selected disabled>Seleccione materia</option>";
                                     while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . " | " . $fila['curso'] . "</option>";
@@ -398,7 +398,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $sql = "SELECT * FROM materias";
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
-                                        echo "<select class='input-group-text w-100' id='id_materia' name='id_materia' required>";
+                                        echo "<select class='form-select  w-100' id='id_materia' name='id_materia' required>";
                                         echo "<option selected disabled>Seleccione materia</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
@@ -443,7 +443,7 @@ if (!isset($_SESSION['usuario'])) {
                                 $sql = "SELECT * FROM materias";
                                 $resultado = pg_query($conn, $sql);
                                 if (pg_num_rows($resultado) > 0) {
-                                    echo "<select class='input-group-text w-100' id='editMateria' name='id_materia' required>";
+                                    echo "<select class='form-select  w-100' id='editMateria' name='id_materia' required>";
                                     echo "<option selected disabled>Seleccione materia</option>";
                                     while ($fila = pg_fetch_assoc($resultado)) {
                                         echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";

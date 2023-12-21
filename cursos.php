@@ -87,13 +87,14 @@ if (!isset($_SESSION['usuario'])) {
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                    title: "Estás seguro de que deseas eliminar este registro?",
+title: "Estás seguro de que deseas eliminar este registro?",
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
                     confirmButtonText: "Confirmar",
-                    cancelButtonColor: '#d33',
+                    cancelButtonColor: '#6e7881',
                     cancelButtonText: "Cancelar"
                 })
                     .then((willDelete) => {
@@ -225,7 +226,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Pensum</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_pensum' required>";
+                                        echo "<select class='form-select  w-100'  name='id_pensum' required>";
                                         echo "<option selected disabled>Seleccione pensum</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
@@ -245,7 +246,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Periodo</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_periodo' required>";
+                                        echo "<select class='form-select  w-100'  name='id_periodo' required>";
                                         echo "<option selected disabled>Seleccione periodo</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
@@ -263,7 +264,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Turno</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_turno' required>";
+                                        echo "<select class='form-select  w-100'  name='id_turno' required>";
                                         echo "<option selected disabled>Seleccione turno</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
@@ -320,7 +321,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Pensum</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_pensum' required id='editPensum'>";
+                                        echo "<select class='form-select  w-100'  name='id_pensum' required id='editPensum'>";
                                         echo "<option selected disabled>Seleccione pensum</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
@@ -338,7 +339,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Periodo</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_periodo' required id='editPeriodo'>";
+                                        echo "<select class='form-select  w-100'  name='id_periodo' required id='editPeriodo'>";
                                         echo "<option selected disabled>Seleccione periodo</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
@@ -358,7 +359,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Turno</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_turno' required id='editTurno>";
+                                        echo "<select class='form-select  w-100'  name='id_turno' required id='editTurno>";
                                         echo "<option selected disabled>Seleccione turno</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
@@ -376,7 +377,7 @@ if (!isset($_SESSION['usuario'])) {
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
                                         echo "<label for='fecha'>Modalidad</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_modalidad' required id='editModalidad'>";
+                                        echo "<select class='form-select  w-100'  name='id_modalidad' required id='editModalidad'>";
                                         echo "<option selected disabled>Seleccione modalidad</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
                                             echo "<option value='" . $fila['id_modalidad'] . "'>" . $fila['descri'] . "</option>";

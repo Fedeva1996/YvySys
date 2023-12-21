@@ -165,13 +165,14 @@ if (!isset($_SESSION['usuario'])) {
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                    title: "Estás seguro de que deseas eliminar este registro?",
+title: "Estás seguro de que deseas eliminar este registro?",
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
                     confirmButtonText: "Confirmar",
-                    cancelButtonColor: '#d33',
+                    cancelButtonColor: '#6e7881',
                     cancelButtonText: "Cancelar"
                 })
                     .then((willDelete) => {
@@ -271,14 +272,14 @@ if (!isset($_SESSION['usuario'])) {
                                         $sql = "SELECT * FROM pensum_cab";
                                         $resultado = pg_query($conn, $sql);
                                         if (pg_num_rows($resultado) > 0) {
-                                            echo "<select class='input-group-text w-100 keep'  name='id' required>";
+                                            echo "<select class='form-select  w-100 keep'  name='id' required>";
                                             echo "<option selected disabled>Seleccione pensum</option>";
                                             while ($fila = pg_fetch_assoc($resultado)) {
                                                 echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
                                             }
                                             echo "</select>";
                                         } else {
-                                            echo "<select class='input-group-text w-100 keep' aria-label='Disabled select example'>";
+                                            echo "<select class='form-select  w-100 keep' aria-label='Disabled select example'>";
                                             echo "<option selected disabled>No hay pensums</option>";
                                             echo "</select>";
 
@@ -343,7 +344,7 @@ if (!isset($_SESSION['usuario'])) {
                                 </div>
                                 <div class="col">
                                     <div class="mb-3">
-                                        <select class='input-group-text w-100' name='modalidad' required>
+                                        <select class='form-select  w-100' name='modalidad' required>
                                             <option disabled selected>Seleccion la modalidad</option>
                                             <option value="virtual">Virtual</option>
                                             <option value="semi">Semi presencial</option>
@@ -433,7 +434,7 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <select class='input-group-text w-100' name='modalidad' required id="editModalidad">
+                                    <select class='form-select  w-100' name='modalidad' required id="editModalidad">
                                         <option disabled selected>Seleccion la modalidad</option>
                                         <option value="virtual">Virtual</option>
                                         <option value="semi">Semi presencial</option>
