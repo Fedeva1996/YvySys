@@ -18,7 +18,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
         VALUES ((SELECT max(id_persona) + 1 FROM personas), '$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
-        $sql2 = "INSERT INTO alumnos(persona_id) VALUES ((SELECT max(id_persona) FROM personas))";
+        $sql2 = "INSERT INTO alumnos(persona_id) VALUES (SELECT MAX(id_pensum) FROM personas))";
         if (@pg_query($conn, $sql)) {
             if (@pg_query($conn, $sql2)) {
                 echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>

@@ -79,15 +79,10 @@ if (isset($_POST['action'])) {
 
         $sql = "UPDATE plan_clase_cab SET fecha_ini = '$fecha_ini', fecha_fin = '$fecha_fin', materia_id = '$id_materia' WHERE id_plan_clase = '$id'";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha editado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".

@@ -20,21 +20,21 @@ if (!isset($_SESSION['usuario'])) {
     <title>Pensums</title>
     <?php include("head.php"); ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //buscar
-            $('#formBuscarPensum').submit(function(e) {
+            $('#formBuscarPensum').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#tablaPensums').html(response);
                     }
                 });
             });
             // Agregar nuevo
-            $('#formAgregarPensum').submit(function(e) {
+            $('#formAgregarPensum').submit(function (e) {
                 e.preventDefault();
 
                 // Obtén la referencia de la tabla
@@ -73,7 +73,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarPensum')[0].reset();
                         $('#resultado').html(response);
 
@@ -85,7 +85,7 @@ if (!isset($_SESSION['usuario'])) {
                                 "action": "agregarDet",
                                 "datos": datosJSON
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 $('#resultado').html(response);
                             }
                         });
@@ -93,8 +93,8 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
 
-            // Editar
-            $(document).on('click', '.btn-editar', function() {
+            // Editar det
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var id_cab = $(this).closest('tr').find('.id_cab').text();
                 var descri = $(this).closest('tr').find('.descri').text();
@@ -109,55 +109,71 @@ if (!isset($_SESSION['usuario'])) {
                 $('#editHorasp').val(horas_p);
             });
 
-            $('#formEditarPensum').submit(function(e) {
+            $('#formEditarPensum').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#resultado').html(response);
-                        $('#tablaPensums').html(response);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     },
                 });
             });
             // Editar cab
-            $(document).on('click', '.btn-editar-cab', function() {
+            $(document).on('click', '.btn-editar-cab', function () {
                 var id = $(this).data('id');
-                var curso = $(this).prev('input').val();
+                var curso = $(this).closest('.head').find('.curso').val();
+                var resolucion = $(this).closest('.head').find('.resolucion').val();
+                var fecha_res = $(this).closest('.head').find('.fecha_res').val();
+                var modalidad = $(this).closest('.head').find('.modalidad').val();
+                var obs = $(this).closest('.head').find('.obs').val();
+
+                console.log(id, curso, resolucion, fecha_res, modalidad, obs);
 
                 $('#editIdCab').val(id);
                 $('#editCursoCab').val(curso);
+                $('#editResolucion').val(resolucion);
+                $('#editFechaRes').val(fecha_res);
+                $('#editModalidad').val(modalidad);
+                $("select.editModalidad selected").val(modalidad).change();
+                $('#editObs').val(obs);
             });
 
-            $('#formEditarPensumCab').submit(function(e) {
+            $('#formEditarPensumCab').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#resultado').html(response);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     },
                 });
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function() {
+            $(document).on('click', '.btn-eliminar', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                        title: "Estás seguro de que deseas eliminar este registro?",
-                        text: "Una vez eliminado no se podra recuperar!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Confirmar",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Cancelar"
-                    })
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             $.ajax({
@@ -167,7 +183,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     loadAlumnos();
                                     $('#resultado').html(response);
                                 }
@@ -181,7 +197,7 @@ if (!isset($_SESSION['usuario'])) {
                     });
             });
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina, curso) {
                     $.ajax({
                         url: 'funciones/pensum.php',
@@ -190,23 +206,22 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'buscarPensum',
                             curso: curso,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaPensums').html(response);
                         }
                     });
                 }
-                $(document).on('click', '.btn-pagina', function() {
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     var curso = $(this).data('curso');
 
                     cargarPagina(pagina, curso);
                 });
-
             });
         });
         const agregarFila = () => {
             document.getElementById('tablaModulos').insertRow(-1).innerHTML =
-                '<td><input type="text"></td><td><input type="text"></td><td><input type="text"></td>'
+                '<td><input class="form-control form-control-sm" type="text"></td><td><input class="form-control form-control-sm" type="text"></td><td><input class="form-control form-control-sm" type="text"></td>'
         }
 
         const eliminarFila = () => {
@@ -235,10 +250,12 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Pensums</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarCurso'> <i class="bi bi-search"></i> Buscar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarCurso'> <i
+                    class="bi bi-search"></i> Buscar</button>
         </div>
         <!-- Formulario para buscar por curso -->
-        <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel"
+            aria-hidden="true" data-bs-theme="dark">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -248,25 +265,32 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="row">
                                 <div class="col">
                                     <div class="mb-3">
+                                        <label for='pensums'>Pensums</label>
                                         <?php
                                         include 'db_connect.php';
                                         $sql = "SELECT * FROM pensum_cab";
                                         $resultado = pg_query($conn, $sql);
                                         if (pg_num_rows($resultado) > 0) {
-                                            echo "<label for='pensums'>Pensums</label>";
-                                            echo "<select class='input-group-text w-100 keep'  name='curso' required>";
+                                            echo "<select class='input-group-text w-100 keep'  name='id' required>";
                                             echo "<option selected disabled>Seleccione pensum</option>";
                                             while ($fila = pg_fetch_assoc($resultado)) {
-                                                echo "<option value='" . $fila['curso'] . "'>" . $fila['curso'] . "</option>";
+                                                echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
                                             }
                                             echo "</select>";
+                                        } else {
+                                            echo "<select class='input-group-text w-100 keep' aria-label='Disabled select example'>";
+                                            echo "<option selected disabled>No hay pensums</option>";
+                                            echo "</select>";
+
                                         }
                                         ?>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i
+                                            class="bi bi-search"></i> Buscar</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </form>
@@ -275,10 +299,12 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-person-add"></i> Agregar pensum</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+                    class="bi bi-person-add"></i> Agregar pensum</button>
         </div>
         <!-- Formulario para agregar pensum-->
-        <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
+            data-bs-theme="dark">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -286,11 +312,52 @@ if (!isset($_SESSION['usuario'])) {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="row">
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                <i class="bi bi-info-circle"></i> El <strong>total</strong> se suma automaticamente al
+                                guardar.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
                         <form id="formAgregarPensum">
                             <input class="input-group-text" type="hidden" name="action" value="agregar">
                             <div class="row">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="curso" placeholder="Nombre del curso" required>
+                                    <input class="input-group-text w-100" type="text" name="curso"
+                                        placeholder="Nombre del curso" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="resolucion"
+                                        placeholder="Resolución de apertura" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <input class="input-group-text w-100" type="date" name="fecha_res"
+                                            placeholder="Fecha de Resolución" required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <select class='input-group-text w-100' name='modalidad' required>
+                                            <option disabled selected>Seleccion la modalidad</option>
+                                            <option value="virtual">Virtual</option>
+                                            <option value="semi">Semi presencial</option>
+                                            <option value="presencial">Presencial</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <input class="input-group-text w-100" type="text" name="obs" placeholder="Obs"
+                                            required>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -306,13 +373,16 @@ if (!isset($_SESSION['usuario'])) {
                                         <tbody></tbody>
                                     </table>
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-primary mr-2" onclick="agregarFila()">Agregar Fila</button>
-                                        <button type="button" class="btn btn-danger" onclick="eliminarFila()">Eliminar Fila</button>
+                                        <button type="button" class="btn btn-primary mr-2"
+                                            onclick="agregarFila()">Agregar Fila</button>
+                                        <button type="button" class="btn btn-danger" onclick="eliminarFila()">Eliminar
+                                            Fila</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                    cambios</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </form>
@@ -320,12 +390,16 @@ if (!isset($_SESSION['usuario'])) {
                 </div>
             </div>
         </div>
+        <!-- Mensaje error/exito -->
+        <div id="resultado"></div>
+
         <!-- Tabla -->
         <div id="tablaPensums"></div>
     </div>
 
-    <!-- Formulario para editar pensum-->
-    <div class="modal fade" id="modalEditarCab" tabindex="-1" aria-labelledby="modalEditarCabLabel" aria-hidden="true" data-bs-theme="dark">
+    <!-- Formulario para editar pensum cab-->
+    <div class="modal fade" id="modalEditarCab" tabindex="-1" aria-labelledby="modalEditarCabLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -339,21 +413,56 @@ if (!isset($_SESSION['usuario'])) {
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="curso" id="editCursoCab" placeholder="Nombre del curso" required>
+                                    <input class="input-group-text w-100" type="text" name="curso" id="editCursoCab"
+                                        placeholder="Nombre del curso" required>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3">
+                                <input class="input-group-text w-100" type="text" name="resolucion" id="editResolucion"
+                                    placeholder="Resolución de apertura">
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="date" name="fecha_res" id="editFechaRes"
+                                        placeholder="Fecha de Resolución">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <select class='input-group-text w-100' name='modalidad' required id="editModalidad">
+                                        <option disabled selected>Seleccion la modalidad</option>
+                                        <option value="virtual">Virtual</option>
+                                        <option value="semi">Semi presencial</option>
+                                        <option value="presencial">Presencial</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="obs" placeholder="Obs"
+                                        id="editObs">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Modal para editar det-->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
+    <!-- Modal para editar pensum det-->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -380,17 +489,20 @@ if (!isset($_SESSION['usuario'])) {
                             ?>
                         </div>
                         <div class="mb-3">
-                            <input class="input-group-text w-100" type="text" name="modulo" id="editModulo" placeholder="Nombre del modulo" required>
+                            <input class="input-group-text w-100" type="text" name="modulo" id="editModulo"
+                                placeholder="Nombre del modulo" required>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="horast" id='editHorast' placeholder="Horas teoricas" required>
+                                    <input class="input-group-text w-100" type="number" name="horast" id='editHorast'
+                                        placeholder="Horas teoricas" required>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="horasp" id='editHorasp' placeholder="Horas practicas" required>
+                                    <input class="input-group-text w-100" type="number" name="horasp" id='editHorasp'
+                                        placeholder="Horas practicas" required>
                                 </div>
                             </div>
                         </div>
@@ -404,7 +516,6 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div id="resultado"></div>
 </body>
 
 </html>

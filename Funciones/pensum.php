@@ -6,29 +6,30 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $curso = $_POST['curso'];
+        $resolucion = $_POST['resolucion'];
+        $fecha_res = $_POST['fecha_res'];
+        $modalidad = $_POST['modalidad'];
+        $obs = $_POST['obs'];
 
-        $sql = "INSERT INTO pensum_cab(id_pensum ,curso) 
-        VALUES ((SELECT MAX(id_pensum) +1 FROM pensum_cab), '$curso')";
+        $sql = "INSERT INTO 
+        pensum_cab(id_pensum, curso, resolucion, fecha_res, modalidad, obs) 
+        VALUES 
+        (COALESCE((SELECT MAX(id_pensum) + 1 FROM pensum_cab), 1), 
+         '$curso', 
+         '$resolucion',
+         '$fecha_res', 
+         '$modalidad',
+         '$obs')";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha agregado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div";
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -40,7 +41,6 @@ if (isset($_POST['action'])) {
         // Procesa los detalles
         $datosJSON = $_POST['datos'];
         $datos = json_decode($datosJSON, true);
-
         // Ahora $datos es un array asociativo con la información de cada fila de la tabla
         // Puedes hacer lo que necesites con estos datos
         foreach ($datos as $detalle) {
@@ -48,22 +48,24 @@ if (isset($_POST['action'])) {
             $horast = $detalle['horast'];
             $horasp = $detalle['horasp'];
 
-            $sql = "INSERT INTO 
-                pensum_det ( 
+            $sql = "INSERT INTO pensum_det (
                 id_pensum_det,
-                pensum_cab_id, 
-                descri, 
-                horas_t, 
-                horas_p) 
-                SELECT 
-                (SELECT MAX(id_pensum_det) +1 FROM pensum_det),
-                id_pensum, 
-                '$modulo', 
-                '$horast', 
-                '$horasp' 
-                FROM
-                pensum_cab 
-                ORDER BY id_pensum DESC LIMIT 1;
+                pensum_cab_id,
+                descri,
+                horas_t,
+                horas_p
+            )
+            SELECT
+                COALESCE((SELECT MAX(id_pensum_det) + 1 FROM pensum_det), 1),
+                id_pensum,
+                '$modulo',
+                '$horast',
+                '$horasp'
+            FROM
+                pensum_cab
+            ORDER BY
+                id_pensum DESC
+            LIMIT 1;
             ";
             if (@pg_query($conn, $sql)) {
                 echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
@@ -71,15 +73,10 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
             } else if (@!pg_query($conn, $sql)) {
-                echo "<script>
-                swal.fire('Error al registrar!" . pg_last_error($conn) . "', 
-                {
-                    icon: 'error',
-                }).then((value) =>{
-                    $('.sweetAlerts').empty();
-                });;
-                </script>
-                ";
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
             }
         }
 
@@ -97,25 +94,15 @@ if (isset($_POST['action'])) {
 
         $sql = "UPDATE pensum_det SET pensum_cab_id='$id_pensum', descri='$modulo', horas_t='$horas_t', horas_p='$horas_p' WHERE id_pensum_det ='$id'";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha editado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado, se actualizara la página.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar!'" . pg_last_error($coon) . ", 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
         pg_close($conn);
     }
@@ -125,28 +112,22 @@ if (isset($_POST['action'])) {
 
         $id = $_POST['idCab'];
         $curso = $_POST['curso'];
+        $resolucion = $_POST['resolucion'];
+        $fecha_res = $_POST['fecha_res'];
+        $modalidad = $_POST['modalidad'];
+        $obs = $_POST['obs'];
 
-        $sql = "UPDATE pensum_cab SET curso='$curso' WHERE id_pensum ='$id'";
+        $sql = "UPDATE pensum_cab SET curso='$curso', resolucion='$resolucion',fecha_res='$fecha_res',modalidad='$modalidad',obs='$obs' WHERE id_pensum ='$id'";
         if (@pg_query($conn, $sql)) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha editado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
-        } else  if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al registrar!'" . pg_last_error($conn) . ", 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado, se actualizara la página.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
         pg_close($conn);
     }
@@ -159,33 +140,55 @@ if (isset($_POST['action'])) {
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $curso = isset($_POST['curso']) ? $_POST['curso'] : "";
+        $id = isset($_POST['id']) ? $_POST['id'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
-        if (isset($_POST['id_curso'])) {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT * FROM public.pensum_v
-        WHERE curso LIKE '%$curso%'
+        // Consulta para obtener datos
+        $sql = "SELECT * FROM public.pensum_v
+        WHERE id_pensum = '$id'
         ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
-        } else {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT * FROM public.pensum_v
-            WHERE curso LIKE '%$curso'
-            ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
-        }
+        $resultado = pg_query($conn, $sql);
+        $cabecera = pg_query($conn, $sql);
         if (pg_num_rows($resultado) > 0) {
             if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
-                echo "<div class='row' data-bs-theme='dark'>";
+                echo "<div class='head' data-bs-theme='dark'>";
                 echo "<div class='row'>";
                 echo "<label>Curso</label>";
                 echo "<div class='input-group mb-3'>
-                <input readonly type='text' class='form-control' value='" . $cab['curso'] . "' aria-describedby='button-addon2'>
+                <input readonly type='text' class='form-control curso' value='" . $cab['curso'] . "' aria-describedby='button-addon2'>
                 <button class='btn btn-outline-secondary btn-editar-cab' data-id='" . $cab['id_pensum'] . "' type='button' id='button-addon2' data-bs-toggle='modal' data-bs-target='#modalEditarCab'>Editar</button>
                 </div>";
+                echo "</div>";
+                echo "<div class='row'>";
+                echo "<div class='col'>";
+                echo "<label>Resolución</label>";
+                echo "<input readonly type='text' class='form-control resolucion' value='" . $cab['resolucion'] . "'>";
+                echo "</div>";
+                echo "<div class='col'>";
+                echo "<label>Fecha resolución</label>";
+                echo "<input readonly type='text' class='form-control fecha_res' value='" . $cab['fecha_res'] . "'>";
+                echo "</div>";
+                echo "</div>";
+                echo "<div class='row'>";
+                echo "<div class='col'>";
+                echo "<label>Modalidad</label>";
+                if($cab['modalidad'] == "virtual"){
+                    echo "<input type='hidden' class='modalidad' value='virtual'>";
+                    echo "<input readonly type='text' class='form-control ' value='Virtual'>";
+                }
+                else if($cab['modalidad'] == "presencial"){
+                    echo "<input type='hidden' class=' modalidad' value='presencial'>";
+                    echo "<input readonly type='text' class='form-control ' value='Presencial'>";
+                }
+                else{
+                    echo "<input type='hidden' class=' modalidad' value='semi'>";
+                    echo "<input readonly type='text' class='form-control ' value='Semi presencial'>";
+                }
+                echo "</div>";
+                echo "<div class='col'>";
+                echo "<label>Obs</label>";
+                echo "<input readonly type='text' class='form-control obs' value='" . $cab['obs'] . "'>";
+                echo "</div>";
                 echo "</div>";
                 echo "<div class='row'>";
                 echo "<div class='col'>";
@@ -195,7 +198,6 @@ if (isset($_POST['action'])) {
                 echo "<div class='col'>";
                 echo "<label>Total horas practicas</label>";
                 echo "<input readonly type='text' class='form-control' value='" . $cab['total_horas_p'] . "'>";
-                echo "</div>";
                 echo "</div>";
                 echo "</div>";
                 echo "</br>";
@@ -229,7 +231,7 @@ if (isset($_POST['action'])) {
             // Paginación
             $sql_total = "SELECT COUNT(*) as total FROM pensum_det
             JOIN pensum_cab ON pensum_det.pensum_cab_id = pensum_cab.id_pensum
-            WHERE pensum_cab.curso LIKE '%$curso%'";
+            WHERE id_pensum = '$id'";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
