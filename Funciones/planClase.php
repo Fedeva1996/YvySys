@@ -15,15 +15,10 @@ if (isset($_POST['action'])) {
         $sql = "INSERT INTO plan_clase_cab(fecha_ini, fecha_fin, materia_id, cronograma_id, obs, docente_reemplazo) 
         VALUES ('$fecha_ini','$fecha_fin','$materia_id','$cronograma_id','$obs','$docente_reemplazo')";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha agregado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".
@@ -48,15 +43,10 @@ if (isset($_POST['action'])) {
         $sql = "INSERT INTO plan_clase_det(plan_clase_cab_id, proceso_clase_cab_id, competencia, indicadores, contenido, actividad) 
         VALUES ('$id_plan_clase','$procesoClase','$competencia','$indicadores','$contenido','$actividad')";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha agregado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".

@@ -35,15 +35,10 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO inscripciones(alumno_id, curso_id, fecha_inscri) VALUES ('$id_alumno','$id_curso','$fecha')";
         if (@pg_query($conn, $sql) === TRUE) {
-            echo "<script>
-                Swal.fire(
-                'Agregado!',
-                'Ha agregado el registro con exito!',
-                'success')
-                .then((value) =>{
-                    $('.sweetAlerts').empty();
-                });
-                </script>";
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".

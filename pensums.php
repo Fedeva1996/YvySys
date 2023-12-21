@@ -274,7 +274,7 @@ if (!isset($_SESSION['usuario'])) {
                                             echo "<select class='input-group-text w-100 keep'  name='id' required>";
                                             echo "<option selected disabled>Seleccione pensum</option>";
                                             while ($fila = pg_fetch_assoc($resultado)) {
-                                                echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
+                                                echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
                                             }
                                             echo "</select>";
                                         } else {

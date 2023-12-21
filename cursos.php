@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
@@ -19,18 +19,18 @@ if (!isset($_SESSION['usuario'])) {
     <title>Cursos</title>
     <?php include("head.php"); ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cargar la tabla al cargar la página
             loadCursos();
 
             // Agregar nuevo
-            $('#formAgregarCurso').submit(function(e) {
+            $('#formAgregarCurso').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarCurso')[0].reset();
                         loadCursos();
                         $('#resultado').html(response);
@@ -39,7 +39,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var id_pensum = $(this).closest('tr').find('.id_pensum').text();
                 var id_periodo = $(this).closest('tr').find('.id_periodo').text();
@@ -67,13 +67,13 @@ if (!isset($_SESSION['usuario'])) {
                 $("select.editEstado selected").val(estado).change();
             });
 
-            $('#formEditarCurso').submit(function(e) {
+            $('#formEditarCurso').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         loadCursos();
                         $('#resultado').html(response);
                     },
@@ -81,21 +81,21 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function() {
+            $(document).on('click', '.btn-eliminar', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                        title: "Estás seguro de que deseas eliminar este registro?",
-                        text: "Una vez eliminado no se podra recuperar!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Confirmar",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Cancelar"
-                    })
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             $.ajax({
@@ -105,7 +105,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     loadCursos();
                                     $('#resultado').html(response);
                                 }
@@ -120,7 +120,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/curso.php',
@@ -129,12 +129,12 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
                 }
-                $(document).on('click', '.btn-pagina', function() {
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
                 });
@@ -143,13 +143,13 @@ if (!isset($_SESSION['usuario'])) {
                 cargarPagina(1);
 
                 // Buscar
-                $('#formBuscarCurso').submit(function(e) {
+                $('#formBuscarCurso').keyup(function (e) {
                     e.preventDefault();
                     $.ajax({
                         url: 'funciones/curso.php',
                         type: 'POST',
                         data: $(this).serialize(),
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
@@ -166,7 +166,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#tablaCurso').html(response);
                 }
             });
@@ -183,24 +183,30 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Cursos</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-person-add"></i> Agregar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+                    class="bi bi-person-add"></i> Agregar</button>
         </div>
         <!-- Formulario para buscar -->
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarCurso">
-                <input type="hidden" name="action" value="buscar">
+                <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
                 </div>
                 <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadCursos()" type="reset"><i class="bi bi-eraser"></i>Limpiar</button>
+                <button class="btn btn-dark" onclick="loadCursos()" type="reset"><i
+                        class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
+        <!-- Mensaje error/exito -->
+        <div id="resultado"></div>
+
         <!-- Tabla -->
         <div id="tablaCurso"></div>
     </div>
     <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -222,13 +228,15 @@ if (!isset($_SESSION['usuario'])) {
                                         echo "<select class='input-group-text w-100'  name='id_pensum' required>";
                                         echo "<option selected disabled>Seleccione pensum</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
+                                            echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
                                         }
                                         echo "</select>";
                                     }
                                     ?>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col">
                                 <div class="mb-3">
                                     <?php
@@ -247,8 +255,6 @@ if (!isset($_SESSION['usuario'])) {
                                     ?>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col">
                                 <div class="mb-3">
                                     <?php
@@ -267,24 +273,6 @@ if (!isset($_SESSION['usuario'])) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM modalidad";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Modalidad</label>";
-                                        echo "<select class='input-group-text w-100'  name='id_modalidad' required>";
-                                        echo "<option selected disabled>Seleccione modalidad</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_modalidad'] . "'>" . $fila['descri'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col">
@@ -295,18 +283,14 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <label for="fecha">Tipo</label>
-                                    <select class="input-group-text w-100" name="tipo" required>
-                                        <option selected disabled>Seleccione tipo</option>
-                                        <option value="Taller">Taller</option>
-                                        <option value="Actualizacion">Actualización</option>
-                                        <option value="Tecnicatura">Tecnicatura</option>
-                                    </select>
+                                    <label for="fecha">Fecha Fin (Estimativo)</label>
+                                    <input class="input-group-text w-100" type="date" name="fecha_fin" required>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -315,7 +299,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -406,13 +391,15 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="fecha">Fecha inicio</label>
-                                    <input class="input-group-text w-100" type="date" name="fecha_ini" required id='editFechaIni'>
+                                    <input class="input-group-text w-100" type="date" name="fecha_ini" required
+                                        id='editFechaIni'>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="fecha">Fecha fin</label>
-                                    <input class="input-group-text w-100" type="date" name="fecha_fin" required id='editFechaFin'>
+                                    <input class="input-group-text w-100" type="date" name="fecha_fin" required
+                                        id='editFechaFin'>
                                 </div>
                             </div>
                         </div>
@@ -431,7 +418,8 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="fecha">Estado</label>
-                                    <select class="input-group-text w-100" class="editEstado" id="editEstado" name="estado">
+                                    <select class="input-group-text w-100" class="editEstado" id="editEstado"
+                                        name="estado">
                                         <option value="S">Sin iniciar</option>
                                         <option value="C">En curso</option>
                                         <option value="F">Finalizado</option>
@@ -440,7 +428,8 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -448,7 +437,6 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div id="resultado"></div>
 </body>
 
 </html>
