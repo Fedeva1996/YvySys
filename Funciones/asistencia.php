@@ -101,84 +101,29 @@ if (isset($_POST['action'])) {
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
         $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : "";
-        $id_curso = isset($_POST['curso']) ? $_POST['curso'] : "";
+        $id_modulo = isset($_POST['curso']) ? $_POST['curso'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         $fecha_p = isset($_POST['fecha_p']) ? $_POST['fecha_p'] : $fecha;
-        $curso = isset($_POST['id_curso']) ? $_POST['id_curso'] : $id_curso;
-        if (isset($_POST['fecha_p']) && $_POST['id_curso']) {
+        $curso = isset($_POST['id_modulo']) ? $_POST['id_modulo'] : $id_modulo;
+        if (isset($_POST['fecha_p']) && $_POST['id_modulo']) {
             // Consulta para obtener los alumnos
             $sql = "SELECT 
-            asistencias_det.id_asistencia_det,
-            asistencias_cab.plan_clase_cab_id,
-            asistencias_cab.docente_asis,
-            plan_clase_cab.materia_id,
-            asistencias_cab.fecha,
-            materias.id_materia,
-            materias.descri as materia,
-            cursos.id_curso,
-            cursos.tipo,
-            cursos.descri as curso,
-            docentes.id_docente,
-            docentes.nombre as nombre_docente,
-            docentes.apellido as apellido_docente,
-            asistencias_det.inscripcion_id,
-            asistencias_det.estado,
-            asistencias_det.obs,
-            inscripciones.id_inscripcion,
-            inscripciones.alumno_id,
-            alumnos.id_alumno,
-            alumnos.nombre,
-            alumnos.apellido,
-            alumnos.ci
+            *
             FROM
-            asistencias_det
-            JOIN asistencias_cab ON asistencias_det.asistenicia_cab_id = asistencias_cab.id_asistencia
-            JOIN plan_clase_cab ON asistencias_cab.plan_clase_cab_id = plan_clase_cab.id_plan_clase
-            JOIN materias ON plan_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente
-            JOIN inscripciones ON asistencias_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            WHERE asistencias_cab.fecha BETWEEN '$fecha_p' AND '$fecha_p'
-            AND cursos.id_curso LIKE '$curso'
+            asistencia_v
+            WHERE fecha = '$fecha_p'
+            AND id_modulo = '$curso'
             ORDER by id_asistencia_det DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         } else {
             $sql = "SELECT 
-            asistencias_det.id_asistencia_det,
-            asistencias_cab.plan_clase_cab_id,
-            asistencias_cab.docente_asis,
-            plan_clase_cab.materia_id,
-            asistencias_cab.fecha,
-            materias.id_materia,
-            materias.descri as materia,
-            cursos.id_curso,
-            cursos.tipo,
-            cursos.descri as curso,
-            docentes.id_docente,
-            docentes.nombre as nombre_docente,
-            docentes.apellido as apellido_docente,
-            asistencias_det.inscripcion_id,
-            asistencias_det.estado,
-            asistencias_det.obs,
-            inscripciones.id_inscripcion,
-            inscripciones.alumno_id,
-            alumnos.id_alumno,
-            alumnos.nombre,
-            alumnos.apellido
+            *
             FROM
-            asistencias_det
-            JOIN asistencias_cab ON asistencias_det.asistenicia_cab_id = asistencias_cab.id_asistencia
-            JOIN plan_clase_cab ON asistencias_cab.plan_clase_cab_id = plan_clase_cab.id_plan_clase
-            JOIN materias ON plan_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente
-            JOIN inscripciones ON asistencias_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            WHERE asistencias_cab.fecha BETWEEN '$fecha' AND '$fecha'
-            AND cursos.id_curso LIKE '$id_curso'
+            asistencia_v
+            WHERE fecha = '$fecha'
+            AND id_modulo = '$id_modulo'
             ORDER by id_asistencia_det DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultado = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
@@ -189,42 +134,24 @@ if (isset($_POST['action'])) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row g-3'>";
                 echo "<div class='col-md-6'>";
-                echo "<label>Curso</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['curso'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
                 echo "<label>Materia</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['materia'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-12'>";
-                echo "<label>Docente</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['nombre_docente'] . " " . $cab['apellido_docente'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Asistio  </label>";
-                if ($cab['docente_asis'] == 1) {
-                    echo "<input class='form-check-input' type='checkbox' value='' checked disabled>";
-                } else {
-                    echo "<input class='form-check-input' type='checkbox' value='' disabled>";
-                }
+                echo "<input type='text' class='form-control' disabled value='" . $cab['descri'] . "'>";
                 echo "</div>";
                 echo "<div class='col-md-6'>";
                 echo "<label>Fecha</label>";
                 echo "<input type='text' class='form-control' disabled value='" . $cab['fecha'] . "'>";
                 echo "</div>";
                 echo "</div>";
-
                 echo "</br>";
             }
 
-            echo "<table class='table table-hover table-dark table-sm' ;  margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;''>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
                 . "<th>ID</th>"
                 . "<th>Nombre</th>"
                 . "<th>CI</th>"
-                . "<th>Materia</th>"
-                . "<th>Curso</th>"
+                . "<th>Modulo</th>"
                 . "<th>Estado</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
@@ -233,14 +160,10 @@ if (isset($_POST['action'])) {
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_asistencia_det'] . "</td>";
-                echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
-                echo "<td class='id_inscripcion' style='display:none;'>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 echo "<td class='ci'>" . $fila['ci'] . "</td>";
-                echo "<td class='id_materia' style='display:none;'>" . $fila['id_materia'] . "</td>";
-                echo "<td class='materia'>" . $fila['materia'] . "</td>";
-                echo "<td class='id_curso' style='display:none;'>" . $fila['id_curso'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . "</td>";
+                echo "<td class='id_modulo' style='display:none;'>" . $fila['id_modulo'] . "</td>";
+                echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 if ($fila['estado'] == false) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#cc3300'>Ausente</td>";
@@ -248,7 +171,7 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Presente</td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_asistencia_det'] . "' 
            data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }
@@ -257,22 +180,15 @@ if (isset($_POST['action'])) {
 
             // Paginación
             $sql_total = "SELECT
-            COUNT(asistencias_det.id_asistencia_det) AS total FROM asistencias_det
-            JOIN asistencias_cab ON asistencias_det.asistenicia_cab_id = asistencias_cab.id_asistencia
-            JOIN plan_clase_cab ON asistencias_cab.plan_clase_cab_id = plan_clase_cab.id_plan_clase
-            JOIN materias ON plan_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente
-            JOIN inscripciones ON asistencias_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            WHERE asistencias_cab.fecha BETWEEN '$fecha' AND '$fecha'
-            AND cursos.id_curso LIKE '%$id_curso%'";
+            COUNT(*) AS total FROM asistencia_v
+            WHERE fecha = '2024/01/16'
+            AND id_modulo = '1'";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div ;  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
+            echo "<div style='margin-left: auto; margin-right: auto;'' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

@@ -8,7 +8,7 @@ if (isset($_POST['action'])) {
 
         $id_pensum = $_POST['pensum'];
 
-        $sql = "SELECT generar_materias($id_pensum)";
+        $sql = "SELECT generar_modulos($id_pensum)";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Materias generadas.
@@ -18,14 +18,7 @@ if (isset($_POST['action'])) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>;
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+                </div>";
         }
 
         pg_close($conn);
@@ -37,22 +30,17 @@ if (isset($_POST['action'])) {
 
         $id = $_POST['id'];
 
-        $sql = "DELETE FROM materias WHERE id_materia='$id'";
+        $sql = "DELETE FROM modulos WHERE id_modulo='$id'";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo eliminado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         } else if (@!pg_query($conn, $sql)){
-            echo "<script>
-            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
         }
 
         pg_close($conn);
@@ -101,7 +89,7 @@ if (isset($_POST['action'])) {
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark table-sm' ;  margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;''>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
@@ -141,7 +129,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div ;  margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
+            echo "<div style='margin-left: auto; margin-right: auto;'' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {

@@ -142,7 +142,7 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Asistencias</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarCurso'> <i class="bi bi-search"></i> Buscar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarModulo'> <i class="bi bi-search"></i> Buscar</button>
         </div>
         <div class="input-group mb-2">
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-calendar-plus"></i> Agregar asistencia de hoy</button>
@@ -150,8 +150,8 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaAsistencia"></div>
     </div>
-    <!-- Formulario para buscar por curso -->
-    <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel" aria-hidden="true" data-bs-theme="dark">
+    <!-- Formulario para buscar por modulo -->
+    <div class="modal fade" id="modalBuscarModulo" tabindex="-1" aria-labelledby="modalBuscarModuloLabel" aria-hidden="true" data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -163,14 +163,14 @@ if (!isset($_SESSION['usuario'])) {
                                 <div class="mb-3">
                                     <?php
                                     include 'db_connect.php';
-                                    $sql = "SELECT * FROM cursos";
+                                    $sql = "SELECT * FROM modulos";
                                     $resultado = pg_query($conn, $sql);
                                     if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Cursos</label>";
-                                        echo "<select class='form-select  w-100'  name='id_curso' required>";
-                                        echo "<option selected disabled>Seleccione curso</option>";
+                                        echo "<label for='fecha'>Modulos</label>";
+                                        echo "<select class='form-select  w-100'  name='id_modulo' required>";
+                                        echo "<option selected disabled>Seleccione modulo</option>";
                                         while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
+                                            echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['descri'] . "</option>";
                                         }
                                         echo "</select>";
                                     }

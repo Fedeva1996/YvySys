@@ -203,6 +203,9 @@ if (!isset($_SESSION['usuario'])) {
                         class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
+        <!-- Mensaje error/exito -->
+        <div id="resultado"></div>
+        
         <!-- Tabla -->
         <div id="tablaModulo"></div>
     </div>
@@ -220,21 +223,21 @@ if (!isset($_SESSION['usuario'])) {
                         <input type="hidden" name="action" value="generar">
                         <div class="row">
                             <div class="mb-3">
-                                <label for='pensums'>Pensums</label>
+                                <label for='cursos'>Pensums</label>
                                 <?php
                                 include 'db_connect.php';
-                                $sql = "SELECT * FROM pensum_cab";
+                                $sql = "SELECT * FROM curso_v";
                                 $resultado = pg_query($conn, $sql);
                                 if (pg_num_rows($resultado) > 0) {
                                     echo "<select class='form-select  w-100 keep'  name='pensum' required>";
                                     echo "<option selected disabled>Seleccione pensum</option>";
                                     while ($fila = pg_fetch_assoc($resultado)) {
-                                        echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
+                                        echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['descripcion'] . " » Turno " . $fila['turno'] . "</option>";
                                     }
                                     echo "</select>";
                                 } else {
                                     echo "<select class='form-select  w-100 keep' aria-label='Disabled select example'>";
-                                    echo "<option selected disabled>No hay pensums</option>";
+                                    echo "<option selected disabled>No hay cursos</option>";
                                     echo "</select>";
 
                                 }

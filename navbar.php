@@ -15,11 +15,13 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="pensums.php">Pensum</a></li>
+            <li><a class="dropdown-item" href="cronogramas.php">Cronogramas</a></li>
             <li><a class="dropdown-item" href="planesExamen.php">Planes de Examen</a></li>
-            <li><a class="dropdown-item" href="planesClase.php">Planes de clase</a></li>
             <li><a class="dropdown-item" href="inscripciones.php">Inscripciones</a></li>
+            <li><a class="dropdown-item" href="planesClase.php">Planes de clase</a></li>
             <li><a class="dropdown-item" href="asistencias.php">Asistencias</a></li>
             <li><a class="dropdown-item" href="procesosClase.php">Procesos de clase</a></li>
+            <li><a class="dropdown-item" href="calificaciones.php">Calificaciones</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">

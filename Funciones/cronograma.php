@@ -26,14 +26,21 @@ if (isset($_POST['action'])) {
                 pensum_cab
             WHERE
                 id_pensum = '$pensum'";
-        if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo agregado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        } else if (@!pg_query($conn, $sql)) {
+        if ($fecha_ini < $fecha_fin) {
+            if (@pg_query($conn, $sql)) {
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Exito!</strong> Campo agregado.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+            } else if (@!pg_query($conn, $sql)) {
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Error!</strong> " . pg_last_error($conn) . ".
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+            }
+        } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <strong>Error!</strong> Fecha de inicio no puede ser despues de la fecha de finalización.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
@@ -118,7 +125,7 @@ if (isset($_POST['action'])) {
         $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * from curso_v WHERE curso ILIKE '%$buscar%' ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * from cronograma_v WHERE tipo_evento ILIKE '%$buscar%' ORDER by id_evento DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -126,46 +133,35 @@ if (isset($_POST['action'])) {
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
+                . "<th>Evento</th>"
+                . "<th>Inicio</th>"
+                . "<th>Fin</th>"
                 . "<th>Curso</th>"
-                . "<th>Año</th>"
-                . "<th>Periodo</th>"
-                . "<th>Turno</th>"
-                . "<th>Horario</th>"
-                . "<th>Estado</th>"
+                . "<th>Modulo</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_curso'] . "</td>";
-                echo "<td class='id_pensum' style='display:none;'>" . $fila['id_pensum'] . "</td>";
-                echo "<td class='id_turno' style='display:none;'>" . $fila['id_turno'] . "</td>";
-                echo "<td class='id_periodo' style='display:none;'>" . $fila['id_periodo'] . "</td>";
+                echo "<td class='id'>" . $fila['id_evento'] . "</td>";
+                echo "<td class='cronograma_id' style='display:none;'>" . $fila['cronograma_id'] . "</td>";
+                echo "<td class='curso_id' style='display:none;'>" . $fila['curso_id'] . "</td>";
+                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                echo "<td class='tipo_evento'>" . $fila['tipo_evento'] . "</td>";
+                echo "<td class='fecha_inicio'>" . $fila['fecha_inicio'] . "</td>";
+                echo "<td class='fecha_fin'>" . $fila['fecha_fin'] . "</td>";
                 echo "<td class='curso'>" . $fila['curso'] . "</td>";
-                echo "<td class='ano'>" . $fila['ano'] . "</td>";
-                echo "<td class='periodo'>" . $fila['descripcion'] . "</td>";
-                echo "<td class='turno'>" . $fila['turno'] . "</td>";
-                echo "<td class='horario'>" . $fila['horario'] . "</td>";
-                if ($fila['estado'] === "S") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Sin iniciar</td>";
-                } else if ($fila['estado'] === "C") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#ffcc00'>En curso</td>";
-                } else if ($fila['estado'] === "F") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Finalizado</td>";
-                }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_curso'] . "' 
+                echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_evento'] . "' 
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_curso"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_evento"] . "'><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM cursos";
+            $sql_total = "SELECT COUNT(*) as total FROM cronograma_v";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -185,5 +181,26 @@ if (isset($_POST['action'])) {
         }
 
         pg_close($conn);
+    }
+    if ($action == 'autocompletar') {
+        include '../db_connect.php';
+
+        // Obtener el término de búsqueda del POST
+        $query = $_POST['query'];
+
+        // Realizar la consulta a la base de datos
+        $sql = "SELECT id_modulo, descri FROM modulos WHERE descri ILIKE '$query%'";
+        $resultado = pg_query($conn, $sql);
+
+        // Generar la lista de sugerencias
+        if (pg_num_rows($resultado) > 0) {
+            while ($row = pg_fetch_assoc($resultado)) {
+                $id = $row['id_modulo'];
+                $descri = $row['descri'];
+                echo '<div class="suggest-element" data-id-modulo="' . $id . '">' . $descri . '</div>';
+            }
+        } else {
+            echo '<div class="suggest-element">No se encontraron sugerencias</div>';
+        }
     }
 }

@@ -208,7 +208,7 @@ if (isset($_POST['action'])) {
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark table-sm' ;  margin-left: auto; margin-right: auto;'>";
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;''>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
                 . "<th>Nombre</th>"

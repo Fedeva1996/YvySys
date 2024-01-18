@@ -128,7 +128,7 @@ if (!isset($_SESSION['usuario'])) {
                 var id = $(this).data('id');
                 var curso = $(this).closest('.head').find('.curso').val();
                 var resolucion = $(this).closest('.head').find('.resolucion').val();
-                var fecha_res = $(this).closest('.head').find('.fecha_res').val();
+                var fecha_res = $(this).closest('.head').find('.fecha_res_sf').val();
                 var modalidad = $(this).closest('.head').find('.modalidad').val();
                 var obs = $(this).closest('.head').find('.obs').val();
 
@@ -165,7 +165,7 @@ if (!isset($_SESSION['usuario'])) {
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-title: "Estás seguro de que deseas eliminar este registro?",
+                    title: "Estás seguro de que deseas eliminar este registro?",
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
