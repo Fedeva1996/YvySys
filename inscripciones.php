@@ -18,32 +18,6 @@ if (!isset($_SESSION['usuario'])) {
 <head>
     <title>Inscriptos</title>
     <?php include("head.php"); ?>
-    <style type="text/css">
-        #suggestions {
-            position: absolute;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            width: 200px;
-            max-height: 150px;
-            overflow-y: auto;
-            display: none;
-            z-index: 9999;
-            /* Asegura que el div de sugerencias esté encima de otros elementos */
-            margin-top: 5px;
-            /* Espacio superior para separar del campo de entrada */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            /* Sombra suave */
-        }
-
-        .suggest-element {
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        .suggest-element:hover {
-            background-color: #e2e2e2;
-        }
-    </style>
     <script>
         $(document).ready(function() {
             // Cargar la tabla al cargar la página
@@ -200,7 +174,7 @@ if (!isset($_SESSION['usuario'])) {
 
             });
             // Buscar
-            $('#formBuscarInscripcion').submit(function(e) {
+            $('#formBuscarInscripcion').keyup(function(e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/inscripcion.php',
@@ -246,7 +220,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Formulario para buscar -->
         <div class="mb-3">
             <form id="formBuscarInscripcion">
-                <input type="hidden" name="action" value="buscar">
+                <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci del alumno">
                 </div>
