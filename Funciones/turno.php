@@ -123,9 +123,9 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_turno'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_turno"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
@@ -190,9 +190,9 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_turno'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_turno"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

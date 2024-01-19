@@ -25,7 +25,7 @@ if (isset($_POST['action'])) {
         }
     }
 
-    // Agregar un nuevo registro
+    // Agregar una inscripción
     if ($action == 'agregar') {
         include '../db_connect.php';
 
@@ -34,7 +34,32 @@ if (isset($_POST['action'])) {
         $fecha = $_POST['fecha'];
 
         $sql = "INSERT INTO inscripciones_cab(id_inscripcion, alumno_id, curso_id, fecha_inscripcion) VALUES (COALESCE((SELECT MAX(id_inscripcion) + 1 FROM inscripciones_cab), 1),'$id_alumno','$id_curso','$fecha')";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        }
+
+        pg_close($conn);
+    }
+
+    // Agregar una matriculación
+    if ($action == 'matricular') {
+        include '../db_connect.php';
+
+        $inscripcion_cab_id = $_POST['id'];
+        $modulo_id = $_POST['modulo'];
+        $fecha = $_POST['fecha'];
+        $obs = $_POST['obs'];
+
+        $sql = "INSERT INTO inscripciones_det(id_inscripcion_det, inscripcion_cab_id, modulo_id, fecha_inscripcion, obs) VALUES (COALESCE((SELECT MAX(id_inscripcion_det) + 1 FROM inscripciones_det), 1),'$inscripcion_cab_id','$modulo_id','$fecha', '$obs')";
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -56,7 +81,7 @@ if (isset($_POST['action'])) {
         $id = $_POST['id'];
 
         $sql = "DELETE FROM inscripciones_cab WHERE id_inscripcion='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo eliminado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -65,9 +90,28 @@ if (isset($_POST['action'])) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> Hay matriculaciones dependiendo de esta inscripción." . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>;
-                </script>
-                ";
+                </div>";
+        }
+
+        pg_close($conn);
+    }
+    // Eliminar un registro det
+    if ($action == 'eliminarDet') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "DELETE FROM inscripciones_det WHERE id_inscripcion_det='$id'";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo eliminado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> Hay matriculaciones dependiendo de esta inscripción." . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
 
         pg_close($conn);
@@ -125,8 +169,8 @@ if (isset($_POST['action'])) {
                 . "<th>Nombre</th>"
                 . "<th>Apellido</th>"
                 . "<th>Ci</th>"
-                . "<th>Curso</th>"
                 . "<th>Fecha de inscripción</th>"
+                . "<th>Curso</th>"
                 . "<th>Estado</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
@@ -134,7 +178,7 @@ if (isset($_POST['action'])) {
             echo "<tbody class='table-group-divider'>";
             $row = 0;
             while ($fila = pg_fetch_assoc($resultado)) {
-                echo "<tr data-bs-toggle='collapse' data-bs-target='#r$row'>";
+                echo "<tr>";
                 echo "<td class='id'>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
                 echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
@@ -150,13 +194,53 @@ if (isset($_POST['action'])) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_inscripcion'] . "' 
-            data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-            <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_inscripcion"] . "'><i class='bi bi-trash'></i></button></td>";
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                <button class='btn btn-secondary btn-matricular btn-sm' data-bs-toggle='collapse' data-bs-target='#r$row'><i class='bi bi-postcard'></i></button>
+                <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
-                echo "<tr class='collapse accordion-collapse' id='r$row' data-bs-parent='.table'>
-                <td colspan='7'> </td>
-            </tr>";
+                echo "<tr class='collapse accordion-collapse' id='r$row' data-bs-parent='.table'>";
+                echo "<td colspan='8'>";
+                echo "<button style='margin:10px;' class='btn btn-secondary btn-sm' data-bs-toggle='modal' data-bs-target='#modalMatricular'><i class='bi bi-person-add'></i> Matricular</button>";
+                $sqlDet = "SELECT *
+                FROM inscripcion_modulo_v
+                ORDER by id_inscripcion_det";
+                $resultadoDet = pg_query($conn, $sqlDet);
+                if (pg_num_rows($resultadoDet) > 0) {
+                    echo "<table style='width: 98%; margin: 0 auto;' class='table table-hover table-secondary table-sm'>";
+                    echo "<thead class='table-secondary'>"
+                        . "<tr>"
+                        . "<th scope='col'>ID</th>"
+                        . "<th scope='col'>Modulo</th>"
+                        . "<th scope='col'>Fecha inscripción</th>"
+                        . "<th scope='col'>Obs</th>"
+                        . "<th scope='col'>Estado</th>"
+                        . "<th scope='col'>Acciones</th>"
+                        . "</tr>"
+                        . "</thead>";
+                    echo "<tbody class='table-group-divider'>";
+                    while ($filaDet = pg_fetch_assoc($resultadoDet)) {
+                        echo "<tr>";
+                        echo "<td scope='row' class='id table-secondary'>" . $filaDet['id_inscripcion_det'] . "</td>";
+                        echo "<td class='inscripcion_cab_id table-' style='display:none;'>" . $filaDet['inscripcion_cab_id'] . "</td>";
+                        echo "<td class='modulo_id table-secondary' style='display:none;'>" . $filaDet['modulo_id'] . "</td>";
+                        echo "<td class='modulo table-secondary'>" . $filaDet['descri'] . "</td>";
+                        echo "<td class='fecha_inscripcion table-'>" . $filaDet['fecha_inscripcion'] . "</td>";
+                        echo "<td class='obs table-secondary'>" . $filaDet['obs'] . "</td>";
+                        if ($filaDet['estado'] == false) {
+                            echo "<td class='estado table-secondary' style='display:none;'> Inactivo</td>";
+                            echo "<td style = 'color:#cc3300'>Inactivo</td>";
+                        } else if ($filaDet['estado'] == true) {
+                            echo "<td class='estado table-secondary' style='display:none;'> Activo</td>";
+                            echo "<td style = 'color:#99cc33'>Activo</td>";
+                        }
+                        echo "<td><button class='btn btn-danger btn-eliminar-det btn-sm'><i class='bi bi-trash'></i></button></td>";
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                }
+                "</td>
+                </tr>";
                 $row++;
             }
             echo "</tbody>";

@@ -153,9 +153,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='fecha_fin'>" . $fila['fecha_fin'] . "</td>";
                 echo "<td class='curso'>" . $fila['curso'] . "</td>";
                 echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_evento'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_evento"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

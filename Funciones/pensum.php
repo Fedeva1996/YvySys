@@ -156,7 +156,7 @@ if (isset($_POST['action'])) {
                 echo "<label>Curso</label>";
                 echo "<div class='input-group mb-3'>
                 <input readonly type='text' class='form-control curso' value='" . $cab['curso'] . "' aria-describedby='button-addon2'>
-                <button class='btn btn-outline-secondary btn-editar-cab' data-id='" . $cab['id_pensum'] . "' type='button' id='button-addon2' data-bs-toggle='modal' data-bs-target='#modalEditarCab'>Editar</button>
+                <button class='btn btn-outline-secondary btn-editar-cab'  type='button' id='button-addon2' data-bs-toggle='modal' data-bs-target='#modalEditarCab'>Editar</button>
                 </div>";
                 echo "</div>";
                 echo "<div class='row'>";
@@ -221,9 +221,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='horas_t'>" . $fila['horas_t'] . "</td>";
                 echo "<td class='horas_p'>" . $fila['horas_p'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_pensum_det'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_pensum_det"] . "'><i class='bi bi-trash'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

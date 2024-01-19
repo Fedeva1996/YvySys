@@ -154,10 +154,10 @@ if (isset($_POST['action'])) {
                 echo "<td class='contenido'>" . $fila['contenido'] . "</td>";
                 echo "<td class='actividad'>" . $fila['actividad'] . "</td>";
                 echo "<td class='id_materia' style='display:none;'>" . $fila['id_modulo'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_plan_clase_det'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_plan_clase_det"] . "'><i class='bi bi-trash'></i></button>|
-        <button class='btn btn-secondary btn-editar-cab btn-sm' data-id='" . $fila['id_plan_clase'] . "' data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
+        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>|
+        <button class='btn btn-secondary btn-editar-cab btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

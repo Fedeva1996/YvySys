@@ -212,7 +212,7 @@ if (isset($_POST['action'])) {
                     echo "<td style = 'color:#81c784'>Pasó</td>";
                 }
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_calificacion'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }

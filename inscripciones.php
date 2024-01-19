@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
@@ -19,26 +19,26 @@ if (!isset($_SESSION['usuario'])) {
     <title>Inscriptos</title>
     <?php include("head.php"); ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cargar la tabla al cargar la página
             loadInscripcion();
 
             // Agregar nuevo
-            $('#formAgregarAlumno').submit(function(e) {
+            $('#formAgregarAlumno').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
                         $('#resultado').html(response);
                     }
                 });
             });
             //autocompletar alumno
-            $(document).ready(function() {
-                $('#ci-input').keyup(function() {
+            $(document).ready(function () {
+                $('#ci-input').keyup(function () {
                     var query = $(this).val();
 
                     if (query !== '') {
@@ -49,7 +49,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
                         });
@@ -58,7 +58,7 @@ if (!isset($_SESSION['usuario'])) {
                     }
                 });
 
-                $(document).on('click', '.suggest-element', function() {
+                $(document).on('click', '.suggest-element', function () {
                     var value = $(this).text();
                     var id = $(this).data('id_alumno');
                     $('#ci-input').val(value);
@@ -66,14 +66,15 @@ if (!isset($_SESSION['usuario'])) {
                     $('#suggestions').hide();
                 });
             });
+
             // Agregar existente
-            $('#formAgregarInscripcion').submit(function(e) {
+            $('#formAgregarInscripcion').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarInscripcion')[0].reset();
                         loadInscripcion();
                         $('#resultado').html(response);
@@ -82,7 +83,7 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var nombre = $(this).closest('tr').find('.nombre').text();
                 var apellido = $(this).closest('tr').find('.apellido').text();
@@ -93,19 +94,35 @@ if (!isset($_SESSION['usuario'])) {
                 $('#editNombre').val(nombre + " " + apellido);
                 document.getElementById("editCurso").value = id_curso;
                 document.getElementById("editEstado").value = estado;
-
-
-                // Asignar el valor de action al formulario de edición
-                $('#formEditarInscripcion').find('input[name="action"]').val('editar');
             });
 
-            $('#formEditarInscripcion').submit(function(e) {
+            $('#formEditarInscripcion').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
+                        loadInscripcion();
+                        $('#resultado').html(response);
+                    },
+                });
+            });
+
+            // matricular
+            $(document).on('click', '.btn-matricular', function () {
+                var id = $(this).closest('tr').find('.id').text();
+
+                $('#matId').val(id);
+            });
+
+            $('#formAgregarMatriculacion').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'funciones/inscripcion.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
                         loadInscripcion();
                         $('#resultado').html(response);
                     },
@@ -113,21 +130,21 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function() {
+            $(document).on('click', '.btn-eliminar', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                        title: "Estás seguro de que deseas eliminar este registro?",
-                        text: "Una vez eliminado no se podra recuperar!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Confirmar",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Cancelar"
-                    })
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             // Envío de la solicitud AJAX para eliminar el registro
@@ -138,7 +155,46 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function(response) {
+                                success: function (response) {
+                                    loadInscripcion();
+                                    $('#resultado').html(response);
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: "Se mantendra el registro!",
+                                background: "#212529"
+                            })
+                        }
+                    });
+            });
+            // Eliminar det
+            $(document).on('click', '.btn-eliminar-det', function () {
+                // Obtener el ID del registro a eliminar
+                var id = $(this).closest('tr').find('.id').text();
+
+                // Confirmar la eliminación con el usuario
+                swal.fire({
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            // Envío de la solicitud AJAX para eliminar el registro
+                            $.ajax({
+                                url: 'funciones/inscripcion.php',
+                                type: 'POST',
+                                data: {
+                                    action: 'eliminarDet',
+                                    id: id
+                                },
+                                success: function (response) {
                                     loadInscripcion();
                                     $('#resultado').html(response);
                                 }
@@ -152,7 +208,7 @@ if (!isset($_SESSION['usuario'])) {
                     });
             });
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/inscripcion.php',
@@ -161,26 +217,25 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaInscripcion').html(response);
                         }
                     });
                 }
 
-                $(document).on('click', '.btn-pagina', function() {
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
                 });
-
             });
             // Buscar
-            $('#formBuscarInscripcion').keyup(function(e) {
+            $('#formBuscarInscripcion').keyup(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#tablaInscripcion').html(response);
                     }
                 });
@@ -195,7 +250,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#tablaInscripcion').html(response);
                 }
             });
@@ -212,169 +267,242 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Inscripciones</h2>
         <div class="mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarAlumno'><i class="bi bi-person-add"></i> Agregar alumno</button>
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'><i class="bi bi-person-vcard"></i> Inscribir a curso</button>
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalReporte'><i class="bi bi-filetype-pdf"></i> Descargar reporte</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarAlumno'><i
+                    class="bi bi-person-add"></i> Agregar alumno</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'><i
+                    class="bi bi-person-vcard"></i> Inscribir a curso</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalReporte'><i
+                    class="bi bi-filetype-pdf"></i> Descargar reporte</button>
         </div>
-        
+
         <!-- Formulario para buscar -->
-        <div class="mb-3">
+        <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarInscripcion">
                 <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci del alumno">
+                    <input class="input-group-text w-25" type="text" name="buscar"
+                        placeholder="Nombre, apellido o Ci del alumno">
                 </div>
                 <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadInscripcion()" type="reset"><i class="bi bi-eraser"></i> Limpiar</button>
+                <button class="btn btn-dark" onclick="loadInscripcion()" type="reset"><i class="bi bi-eraser"></i>
+                    Limpiar</button>
             </form>
         </div>
+        <!-- muestra resultasdo error/exito -->
+        <div id="resultado"></div>
+
         <!-- Tabla -->
         <div id="tablaInscripcion"></div>
     </div>
     <!-- formulario agregar alumno -->
-    <div class="modal fade" id="modalAgregarAlumno" tabindex="-1" aria-labelledby="modalAgregarAlumnoLabel" aria-hidden="true" data-bs-theme="dark">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalAgregarAlumnoLabel">Agregar Alumno</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="formAgregarAlumno">
-                            <input class="input-group-text" type="hidden" name="action" value="agregar">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="ci" placeholder="Documento de identidad" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="nombre" placeholder="Nombre" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="apellido" placeholder="Apellido" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="date" name="edad" placeholder="Fecha nacimiento" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <select class="input-group-text w-100" style="width: 95%;" name="sexo" required>
-                                            <option selected disabled>Seleccione sexo</option>
-                                            <option value="M">Masculino</option>
-                                            <option value="F">Femenino</option>
-                                        </select>
-                                    </div>
+    <div class="modal fade" id="modalAgregarAlumno" tabindex="-1" aria-labelledby="modalAgregarAlumnoLabel"
+        aria-hidden="true" data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalAgregarAlumnoLabel">Agregar Alumno</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarAlumno">
+                        <input class="input-group-text" type="hidden" name="action" value="agregar">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="ci"
+                                        placeholder="Documento de identidad" required>
                                 </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="email" name="correo" placeholder="Correo" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="nacionalidad" placeholder="Nacionalidad" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="direccion" placeholder="Dirección" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" name="telefono" placeholder="Teléfomo" required>
-                                    </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="nombre" placeholder="Nombre"
+                                        required>
                                 </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="apellido"
+                                        placeholder="Apellido" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="date" name="edad"
+                                        placeholder="Fecha nacimiento" required>
+                                </div>
+                                <div class="mb-3">
+                                    <select class="input-group-text w-100" style="width: 95%;" name="sexo" required>
+                                        <option selected disabled>Seleccione sexo</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                    </select>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Formulario para agregar inscripcion -->
-        <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar inscripcion</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="formAgregarInscripcion">
-                            <input type="hidden" name="action" value="agregar">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" type="text" id="ci-input" placeholder="Ci del alumno" autocomplete="off" required>
-                                        <input type="hidden" id="id_alumno" name="id_alumno">
-                                        <div id="suggestions"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <?php
-                                        include 'db_connect.php';
-                                        $sql = "SELECT * FROM cursos";
-                                        $resultado = pg_query($conn, $sql);
-                                        if (pg_num_rows($resultado) > 0) {
-                                            echo "<select class='form-select  w-100' name='id_curso' required>";
-                                            echo "<option selected disabled>Seleccione curso</option>";
-                                            while ($fila = pg_fetch_assoc($resultado)) {
-                                                echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
-                                            }
-                                            echo "</select>";
-                                        }
-                                        ?>
-                                    </div>
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" readonly type="datetime" id="fecha" name="fecha" value="<?php echo date("d-m-Y"); ?>">
-                                    </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="email" name="correo"
+                                        placeholder="Correo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="nacionalidad"
+                                        placeholder="Nacionalidad" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="direccion"
+                                        placeholder="Dirección" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" name="telefono"
+                                        placeholder="Teléfomo" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                    cambios</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Formulario para ir a reporte -->
-        <div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true" data-bs-theme="dark">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalReporteLabel">Agregar inscripcion</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="reportes/inscriptos.php" method="post" id="formReporteInscripcion">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <?php
-                                        include 'db_connect.php';
-                                        $sql = "SELECT * FROM cursos";
-                                        $resultado = pg_query($conn, $sql);
-                                        if (pg_num_rows($resultado) > 0) {
-                                            echo "<select class='form-select  w-100' id='id_curso' name='id_curso' required>";
-                                            echo "<option selected disabled>Seleccione curso</option>";
-                                            while ($fila = pg_fetch_assoc($resultado)) {
-                                                echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
-                                            }
-                                            echo "</select>";
+    </div>
+    <!-- Formulario para agregar inscripcion -->
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
+        data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar inscripcion</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarInscripcion">
+                        <input type="hidden" name="action" value="agregar">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" type="text" id="ci-input"
+                                        placeholder="Ci del alumno" autocomplete="off" required>
+                                    <input type="hidden" id="id_alumno" name="id_alumno">
+                                    <div id="suggestions"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <?php
+                                    include 'db_connect.php';
+                                    $sql = "SELECT * FROM cursos";
+                                    $resultado = pg_query($conn, $sql);
+                                    if (pg_num_rows($resultado) > 0) {
+                                        echo "<select class='form-select  w-100' name='id_curso' required>";
+                                        echo "<option selected disabled>Seleccione curso</option>";
+                                        while ($fila = pg_fetch_assoc($resultado)) {
+                                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                         }
-                                        ?>
-                                    </div>
+                                        echo "</select>";
+                                    }
+                                    ?>
+                                </div>
+                                <div class="mb-3">
+                                    <input class="input-group-text w-100" readonly type="datetime" id="fecha"
+                                        name="fecha" value="<?php echo date("d-m-Y"); ?>">
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Formulario para agregar matriculación -->
+    <div class="modal fade" id="modalMatricular" tabindex="-1" aria-labelledby="modalMatricularLabel" aria-hidden="true"
+        data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalMatricularLabel">Agregar inscripcion</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarMatriculacion">
+                        <input type="hidden" name="action" value="matricular">
+                        <input type="hidden" id="matId" name="id">
+                        <div class="row">
+                            <div class="mb-3">
+                                <?php
+                                include 'db_connect.php';
+                                $sql = "SELECT * FROM modulo_v";
+                                $resultado = pg_query($conn, $sql);
+                                if (pg_num_rows($resultado) > 0) {
+                                    echo "<select class='form-select  w-100' name='modulo' required>";
+                                    echo "<option selected disabled>Seleccione modulo</option>";
+                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                        echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['modulo'] . "</option>";
+                                    }
+                                    echo "</select>";
+                                }
+                                ?>
+                            </div>
+                            <div class="mb-3">
+                                <input class="input-group-text w-100" readonly type="datetime"
+                                    name="fecha" value="<?php echo date("d-m-Y"); ?>">
+                            </div>
+                            <div class="mb-3">
+                                <input class="input-group-text w-100" type="text" name="obs"
+                                    placeholder="Observación">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Formulario para ir a reporte -->
+    <div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true"
+        data-bs-theme="dark">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalReporteLabel">Agregar inscripcion</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="reportes/inscriptos.php" method="post" id="formReporteInscripcion">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <?php
+                                    include 'db_connect.php';
+                                    $sql = "SELECT * FROM cursos";
+                                    $resultado = pg_query($conn, $sql);
+                                    if (pg_num_rows($resultado) > 0) {
+                                        echo "<select class='form-select  w-100' id='id_curso' name='id_curso' required>";
+                                        echo "<option selected disabled>Seleccione curso</option>";
+                                        while ($fila = pg_fetch_assoc($resultado)) {
+                                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
+                                        }
+                                        echo "</select>";
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -389,7 +517,8 @@ if (!isset($_SESSION['usuario'])) {
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="editNombre" class="col-sm-2 col-form-label">Alumno:</label>
-                                    <input class="form-control-plaintext w-100" type="text" readonly name="editNombre" id="editNombre">
+                                    <input class="form-control-plaintext w-100" type="text" readonly name="editNombre"
+                                        id="editNombre">
                                 </div>
                                 <div class="mb-3">
                                     <?php
@@ -405,7 +534,8 @@ if (!isset($_SESSION['usuario'])) {
                                     }
                                     ?>
                                 </div>
-                                <select class="editEstado input-group-text w-100" id="editEstado" name="estado" required>
+                                <select class="editEstado input-group-text w-100" id="editEstado" name="estado"
+                                    required>
                                     <option selected disabled>Seleccione estado</option>
                                     <option value="0">Inactivo</option>
                                     <option value="1">Activo</option>
@@ -413,7 +543,8 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -421,8 +552,6 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div id="resultado"></div>
-
 </body>
 
 </html>

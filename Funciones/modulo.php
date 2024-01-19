@@ -114,9 +114,9 @@ if (isset($_POST['action'])) {
                 }else {
                     echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm' data-id='" . $fila['id_modulo'] . "' 
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
             data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-person-plus'></i></button>
-            <button class='btn btn-danger btn-eliminar btn-sm' data-id='" . $fila["id_modulo"] . "'><i class='bi bi-trash'></i></button></td>";
+            <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
