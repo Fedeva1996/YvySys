@@ -39,7 +39,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Editar
-            $(document).on('click', '.btn-editar', function () {
+            $(document).on('click', '.btn-editar-curso', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var id_pensum = $(this).closest('tr').find('.id_pensum').text();
                 var id_periodo = $(this).closest('tr').find('.id_periodo').text();
@@ -77,7 +77,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function () {
+            $(document).on('click', '.btn-eliminar-curso', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
@@ -175,12 +175,13 @@ title: "Estás seguro de que deseas eliminar este registro?",
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/cursos.php")
         ?>
     </div>
     <div class="container">
         <h2>Cursos</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalGenerarCurso'> <i
                     class="bi bi-node-plus"></i> Generar</button>
         </div>
         <!-- Formulario para buscar -->
@@ -201,178 +202,7 @@ title: "Estás seguro de que deseas eliminar este registro?",
         <!-- Tabla -->
         <div id="tablaCurso"></div>
     </div>
-    <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar curso</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarCurso">
-                        <input type="hidden" name="action" value="agregar">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM pensum_cab";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Pensum</label>";
-                                        echo "<select class='form-select  w-100'  name='id_pensum' required>";
-                                        echo "<option selected disabled>Seleccione pensum</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM periodo";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Periodo</label>";
-                                        echo "<select class='form-select  w-100'  name='id_periodo' required>";
-                                        echo "<option selected disabled>Seleccione periodo</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM turno";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Turno</label>";
-                                        echo "<select class='form-select  w-100'  name='id_turno' required>";
-                                        echo "<option selected disabled>Seleccione turno</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Editar curso</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarCurso">
-                        <div class="row">
-                            <input type="hidden" name="action" value="editar">
-                            <input type="hidden" name="id" id="editId">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM pensum_cab";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Pensum</label>";
-                                        echo "<select class='form-select  w-100'  name='id_pensum' required id='editPensum'>";
-                                        echo "<option selected disabled>Seleccione pensum</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM periodo";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Periodo</label>";
-                                        echo "<select class='form-select  w-100'  name='id_periodo' required id='editPeriodo'>";
-                                        echo "<option selected disabled>Seleccione periodo</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM turno";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Turno</label>";
-                                        echo "<select class='form-select  w-100'  name='id_turno' required id='editTurno>";
-                                        echo "<option selected disabled>Seleccione turno</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="fecha">Estado</label>
-                                    <select class="input-group-text w-100" class="editEstado" id="editEstado"
-                                        name="estado">
-                                        <option value="S">Sin iniciar</option>
-                                        <option value="C">En curso</option>
-                                        <option value="F">Finalizado</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </body>
 
 </html>

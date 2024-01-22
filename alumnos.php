@@ -65,14 +65,14 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Agregar existente
-            $('#formAgregarExistente').submit(function (e) {
+            $('#formAgregarAlumnoExistente').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function (response) {
-                        $('#formAgregarExistente')[0].reset();
+                        $('#formAgregarAlumnoExistente')[0].reset();
                         loadAlumnos();
                         $('#resultado').html(response);
 
@@ -80,7 +80,7 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Editar
-            $(document).on('click', '.btn-editar', function () {
+            $(document).on('click', '.btn-editar-persona', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var ci = $(this).closest('tr').find('.ci').text();
                 var nombre = $(this).closest('tr').find('.nombre').text();
@@ -118,7 +118,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function () {
+            $(document).on('click', '.btn-eliminar-alumno', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
@@ -235,14 +235,16 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/personas.php");
+        include("Modals/alumnos.php");
         ?>
     </div>
     <div class="container">
         <h2>Alumnos</h2>
         <div class="mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarAlumno'> <i
                     class="bi bi-person-add"></i> Agregar nuevo</button>
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarExistente'> <i
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarAlumnoExistente'> <i
                     class="bi bi-person-gear"></i> Agregar existente</button>
         </div>
 
@@ -264,188 +266,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaAlumnos"></div>
     </div>
-    <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar Nuevo Alumno</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarAlumno">
-                        <input class="input-group-text" type="hidden" name="action" value="agregarNuevo">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="ci"
-                                        placeholder="Documento de identidad" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nombre" placeholder="Nombre"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="apellido"
-                                        placeholder="Apellido" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="date" name="fecha_nac"
-                                        placeholder="Fecha de nacimiento" required>
-                                </div>
-                                <div class="mb-3">
-                                    <select class="input-group-text w-100" style="width: 95%;" name="sexo" required>
-                                        <option selected disabled>Seleccione sexo</option>
-                                        <option value="M">Masculino</option>
-                                        <option value="F">Femenino</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="email" name="correo"
-                                        placeholder="Correo" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nacionalidad"
-                                        placeholder="Nacionalidad" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="direccion"
-                                        placeholder="Dirección" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="telefono"
-                                        placeholder="Teléfomo" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                    cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Formulario para agregar existentes -->
-    <div class="modal fade" id="modalAgregarExistente" tabindex="-1" aria-labelledby="modalAgregarLabel"
-        aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar existente</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarExistente">
-                        <input type="hidden" name="action" value="agregarExistente">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" id="ci-input"
-                                        placeholder="CI del alumno" autocomplete="off" required>
-                                    <input type="hidden" id="id" name="id">
-                                    <div id="suggestions"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Editar Alumno</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarAlumno">
-                        <input type="hidden" name="action" value="editar">
-                        <input type="hidden" name="id" id="editId">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="ci" id="editCi" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nombre" id="editNombre"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="apellido" id="editApellido"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="date" name="fecha_nac" id="editFechaNac"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <select class="editSexo input-group-text w-100" id="editSexo" name="sexo" required>
-                                        <option selected disabled>Seleccione sexo</option>
-                                        <option value="M">Masculino</option>
-                                        <option value="F">Femenino</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="email" name="correo" id="editCorreo"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="nacionalidad"
-                                        id="editNacionalidad" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="direccion"
-                                        id="editDireccion" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" name="telefono" id="editTelefono"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalInscripciones" tabindex="-1" aria-labelledby="modalInscripcionesLabel"
-        aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Inscripciones</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="tablaInscripciones"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>

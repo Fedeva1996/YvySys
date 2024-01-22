@@ -1,7 +1,8 @@
 <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">YvySys</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -48,6 +49,12 @@
           </ul>
         </li>
       </ul>
+      <span class="navbar-text">
+        <?php
+          echo "Bienvenido <strong>". $_SESSION['rol'] ."</strong> " . $_SESSION['nombre'];
+        ?>
+      </span>
+      &nbsp;&nbsp;
       <a class="btn btn-outline-danger" role="button" href="logout.php">
         Salir <i class="bi bi-box-arrow-in-right"></i>
       </a>

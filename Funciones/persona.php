@@ -145,9 +145,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='nacionalidad'>" . $fila['nacionalidad'] . "</td>";
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-            data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-            <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i> </button></td>";
+                echo "<td><button class='btn btn-secondary btn-editar-persona btn-sm'  
+            data-bs-toggle='modal' data-bs-target='#modalEditarPersona'><i class='bi bi-pencil'></i></button>
+            <button class='btn btn-danger btn-eliminar-persona btn-sm' ><i class='bi bi-trash'></i> </button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

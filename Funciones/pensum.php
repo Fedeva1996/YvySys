@@ -106,7 +106,7 @@ if (isset($_POST['action'])) {
         }
         pg_close($conn);
     }
-    //Editar un registro
+    //Editar un cab
     if ($action == 'editarCab') {
         include '../db_connect.php';
 
@@ -116,8 +116,9 @@ if (isset($_POST['action'])) {
         $fecha_res = $_POST['fecha_res'];
         $modalidad = $_POST['modalidad'];
         $obs = $_POST['obs'];
+        $estado = $_POST['estado'];
 
-        $sql = "UPDATE pensum_cab SET curso='$curso', resolucion='$resolucion',fecha_res='$fecha_res',modalidad='$modalidad',obs='$obs' WHERE id_pensum ='$id'";
+        $sql = "UPDATE pensum_cab SET curso='$curso', resolucion='$resolucion',fecha_res='$fecha_res',modalidad='$modalidad',obs='$obs', estado='$estado' WHERE id_pensum ='$id'";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo editado, se actualizara la página.
@@ -156,7 +157,7 @@ if (isset($_POST['action'])) {
                 echo "<label>Curso</label>";
                 echo "<div class='input-group mb-3'>
                 <input readonly type='text' class='form-control curso' value='" . $cab['curso'] . "' aria-describedby='button-addon2'>
-                <button class='btn btn-outline-secondary btn-editar-cab'  type='button' id='button-addon2' data-bs-toggle='modal' data-bs-target='#modalEditarCab'>Editar</button>
+                <button class='btn btn-outline-secondary btn-editar-cabecera'  type='button' id='button-addon2' data-bs-toggle='modal' data-bs-target='#modalEditarPensumCabecera'>Editar</button>
                 </div>";
                 echo "</div>";
                 echo "<div class='row'>";
@@ -173,18 +174,7 @@ if (isset($_POST['action'])) {
                 echo "<div class='row'>";
                 echo "<div class='col'>";
                 echo "<label>Modalidad</label>";
-                if($cab['modalidad'] == "virtual"){
-                    echo "<input type='hidden' class='modalidad' value='virtual'>";
-                    echo "<input readonly type='text' class='form-control ' value='Virtual'>";
-                }
-                else if($cab['modalidad'] == "presencial"){
-                    echo "<input type='hidden' class=' modalidad' value='presencial'>";
-                    echo "<input readonly type='text' class='form-control ' value='Presencial'>";
-                }
-                else{
-                    echo "<input type='hidden' class=' modalidad' value='semi'>";
-                    echo "<input readonly type='text' class='form-control ' value='Semi presencial'>";
-                }
+                echo "<input readonly type='text' class='form-control modalidad' value='".$cab['modalidad']."'>";
                 echo "</div>";
                 echo "<div class='col'>";
                 echo "<label>Obs</label>";
@@ -199,6 +189,8 @@ if (isset($_POST['action'])) {
                 echo "<div class='col'>";
                 echo "<label>Total horas practicas</label>";
                 echo "<input readonly type='text' class='form-control' value='" . $cab['total_horas_p'] . "'>";
+                echo "<input style='display:none' class='estado' value='" . $cab['estado'] . "'>";
+                echo "<input style='display:none' class='id' value='" . $cab['id_pensum'] . "'>";
                 echo "</div>";
                 echo "</div>";
                 echo "</br>";
@@ -216,14 +208,14 @@ if (isset($_POST['action'])) {
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_pensum_det'] . "</td>";
+                echo "<td class='id_det'>" . $fila['id_pensum_det'] . "</td>";
                 echo "<td class='id_cab' style='display:none;'>" . $fila['id_pensum'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='horas_t'>" . $fila['horas_t'] . "</td>";
                 echo "<td class='horas_p'>" . $fila['horas_p'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-        data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                echo "<td><button class='btn btn-secondary btn-editar-detalle btn-sm'  
+        data-bs-toggle='modal' data-bs-target='#modalEditarPensumDetalle'><i class='bi bi-pencil'></i></button>
+        <button class='btn btn-danger btn-eliminar-pensum-detalle btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

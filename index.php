@@ -25,13 +25,36 @@ if (isset($_SESSION['usuario'])) {
 
   <!-- Custom styles for this template -->
   <link href="signin.css" rel="stylesheet">
-
+  <script>
+    $(document).ready(function () {
+      // Agregar nuevo
+      $('#loginForm').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: 'login.php',
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function (response) {
+            $('#resultado').html(response);
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          }
+        });
+      });
+    });
+  </script>
 </head>
 
 <body class="text-center">
-  <form class="form-signin" action="login.php" method="post" data-bs-theme="dark">
+
+  <form class="form-signin" id="loginForm" data-bs-theme="dark">
     <img class="mb-4" src="imagenes/Icono.png" alt="" width="144" height="144">
     <h1 class="h3 mb-3 font-weight-normal">Iniciar sesión</h1>
+    <!-- Mensaje error/exito -->
+    <div id="resultado"></div>
+
+    <input type="hidden" name="action" value="login">
 
     <label for="username" class="sr-only">Usuario</label>
     <input type="text" id="username" name="username" class="form-control" placeholder="Usuario" required autofocus>
@@ -45,7 +68,7 @@ if (isset($_SESSION['usuario'])) {
 
 </html>
 <style>
-  html,  
+  html,
   body {
     height: 100%;
     display: -ms-flexbox;

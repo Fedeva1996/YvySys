@@ -7,25 +7,13 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
 
-        $pensum = $_POST['id_pensum'];
-        $periodo = $_POST['id_periodo'];
-        $turno = $_POST['id_turno'];
+        $curso = $_POST["curso"];
+        $fecha_ini = $_POST['fecha_ini'];
+        $fecha_fin = $_POST['fecha_fin'];
 
-        $sql = "INSERT INTO cursos(id_curso,
-            pensum_id,
-            periodo_id,
-            turno_id,
-            descri)
-            SELECT
-            COALESCE((SELECT MAX(id_curso) + 1 FROM cursos), 1),
-                '$pensum',
-                '$periodo',
-                '$turno',
-                curso
-            FROM
-                pensum_cab
-            WHERE
-                id_pensum = '$pensum'";
+        $sql = "INSERT INTO cronogramas(
+            curso_id, fecha_inicio, fecha_fin)
+            VALUES ($curso, '$fecha_ini', '$fecha_fin');";
         if ($fecha_ini < $fecha_fin) {
             if (@pg_query($conn, $sql)) {
                 echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
@@ -54,22 +42,37 @@ if (isset($_POST['action'])) {
 
         $id = $_POST['id'];
 
-        $sql = "DELETE FROM cursos WHERE id_curso='$id'";
+        $sql = "DELETE FROM cronogramas WHERE id_cronograma='$id'";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo eliminado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
+        }
+        pg_close($conn);
+    }
+    // generar eventos
+    if ($action == 'generar') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "SELECT generar_eventos_para_cronograma($id)";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Eventos generados.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
         }
         pg_close($conn);
     }
@@ -125,7 +128,7 @@ if (isset($_POST['action'])) {
         $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * from cronograma_v WHERE tipo_evento ILIKE '%$buscar%' ORDER by id_evento DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * from cronograma_v WHERE descri ILIKE '%$buscar%' ORDER by id_cronograma DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
@@ -133,29 +136,28 @@ if (isset($_POST['action'])) {
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
-                . "<th>Evento</th>"
+                . "<th>Curso</th>"
                 . "<th>Inicio</th>"
                 . "<th>Fin</th>"
-                . "<th>Curso</th>"
-                . "<th>Modulo</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_evento'] . "</td>";
-                echo "<td class='cronograma_id' style='display:none;'>" . $fila['cronograma_id'] . "</td>";
+                echo "<td class='id'>" . $fila['id_cronograma'] . "</td>";
                 echo "<td class='curso_id' style='display:none;'>" . $fila['curso_id'] . "</td>";
-                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
-                echo "<td class='tipo_evento'>" . $fila['tipo_evento'] . "</td>";
+                echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='fecha_inicio'>" . $fila['fecha_inicio'] . "</td>";
                 echo "<td class='fecha_fin'>" . $fila['fecha_fin'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . "</td>";
-                echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-        data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                echo "<td>
+                <button class='btn btn-secondary btn-generar btn-sm'  
+                data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
+                <button class='btn btn-secondary btn-editar btn-sm'  
+                data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                data-bs-toggle='modal' data-bs-target='#modalEventos'><i class='bi bi-postcard'></i></button>
+                <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

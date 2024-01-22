@@ -17,7 +17,9 @@ if (!isset($_SESSION['usuario'])) {
 
 <head>
     <title>Periodos</title>
-    <?php include("head.php"); ?>
+    <?php 
+    include("head.php"); 
+    ?>
     <script>
         $(document).ready(function() {
             // Cargar la tabla al cargar la página
@@ -39,7 +41,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar-periodo', function() {
                 var id = $(this).closest('tr').find('.id').text();
                 var ano = $(this).closest('tr').find('.ano').text();
                 var descri = $(this).closest('tr').find('.descri').text();
@@ -68,7 +70,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar', function() {
+            $(document).on('click', '.btn-eliminar-periodo', function() {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
@@ -165,17 +167,18 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/periodos.php")
         ?>
     </div>
     <div class="container">
         <h2>Periodos</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-person-add"></i> Agregar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarPeriodo'> <i class="bi bi-person-add"></i> Agregar</button>
         </div>
         <!-- Formulario para buscar -->
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarPeriodo">
-                <input type="hidden" name="action" value="buscar">
+                <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Año">
                 </div>
@@ -185,70 +188,6 @@ if (!isset($_SESSION['usuario'])) {
         </div>
         <!-- Tabla -->
         <div id="tablaPeriodo"></div>
-    </div>
-    <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar periodo</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarPeriodo">
-                        <input type="hidden" name="action" value="agregar">
-                        <div class="row">
-                            <div class="mb-3">
-                                <input class="input-group-text w-100" type="text" name="ano" placeholder="Año" required>
-                            </div>
-                            <div class="mb-3">
-                                <input class="input-group-text w-100" type="text" name="descri" placeholder="Descripción. Ej:Taller enero" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Editar Alumno</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarPeriodo">
-                        <div class="row">
-                            <input type="hidden" name="action" value="editar">
-                            <input type="hidden" name="id" id="editId">
-                            <div class="mb-3">
-                                <input class="input-group-text w-100" type="text" name="ano" id="editAno" required>
-                            </div>
-                            <div class="mb-3">
-                                <input class="input-group-text w-100" type="text" name="descri" id="editDescri" required>
-                            </div>
-                            <div class="mb-3">
-                                <select class="input-group-text w-100" class="editEstado" id="editEstado" name="estado">
-                                    <option value="S">Sin iniciar</option>
-                                    <option value="C">En curso</option>
-                                    <option value="F">Finalizado</option>
-                                </select>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
     <div id="resultado"></div>
 </body>
