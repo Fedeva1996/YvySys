@@ -132,7 +132,7 @@ if (isset($_POST['action'])) {
         $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;''>";
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
@@ -156,7 +156,7 @@ if (isset($_POST['action'])) {
                 <button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                 <button class='btn btn-secondary btn-ver-eventos btn-sm'  
-                data-bs-toggle='modal' data-bs-target='#modalEventos'><i class='bi bi-postcard'></i></button>
+                data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(".$fila['id_cronograma'].",1)'><i class='bi bi-postcard'></i></button>
                 <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
@@ -169,7 +169,7 @@ if (isset($_POST['action'])) {
             $total_registros = $fila_total['total'];
             $total_paginas = ceil($total_registros / $registros_por_pagina);
 
-            echo "<div style='margin-left: auto; margin-right: auto;'' class='paginacion' data-bs-theme='dark'>";
+            echo "<div style='margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
@@ -184,6 +184,53 @@ if (isset($_POST['action'])) {
 
         pg_close($conn);
     }
+    // Obtener la lista de registros
+    if ($action == 'verEventos') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        // Consulta para obtener los alumnos
+        $sql = "SELECT * from evento_v WHERE cronograma_id = '$id' ORDER by id_evento ASC";
+        $resultado = pg_query($conn, $sql);
+
+        if (pg_num_rows($resultado) > 0) {
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
+            echo "<thead class='table-dark'>"
+                . "<tr>"
+                . "<th>Id</th>"
+                . "<th>fecha</th>"
+                . "<th>Tipo</th>"
+                . "<th>Modulo</th>"
+                . "<th>Exámen</th>"
+                . "<th>Acciones</th>"
+                . "</tr>"
+                . "</thead>";
+            echo "<tbody class='table-group-divider'>";
+            while ($fila = pg_fetch_assoc($resultado)) {
+                echo "<tr>";
+                echo "<td class='id'>" . $fila['id_evento'] . "</td>";
+                echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
+                echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
+                echo "<td class='fecha' styke='display:none;'>" . $fila['fecha'] . "</td>";
+                echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
+                echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                echo "<td class='examen_id'>" . $fila['examen_id'] . "</td>";
+                echo "<td class='tipo_examen'>" . $fila['tipo_examen'] . "</td>";
+                echo "<td>
+                <button class='btn btn-secondary btn-editar btn-sm'  
+                data-bs-toggle='modal' data-bs-target='#modalEditarEvento'><i class='bi bi-pencil'></i></button>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+        } else {
+            echo "No se encontraron registros.";
+        }
+
+        pg_close($conn);
+    }
+    // autocompletado
     if ($action == 'autocompletar') {
         include '../db_connect.php';
 

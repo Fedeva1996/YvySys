@@ -231,6 +231,20 @@ if (!isset($_SESSION['usuario'])) {
                 }
             });
         }
+        // Cargar tabla eventos
+        function loadEventos(id) {
+            $.ajax({
+                url: 'funciones/cronograma.php',
+                type: 'POST',
+                data: {
+                    action: 'verEventos',
+                    id: id
+                },
+                success: function (response) {
+                    $('#tablaEventos').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
