@@ -180,7 +180,6 @@ if (!isset($_SESSION['usuario'])) {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
                 });
-
             });
             // Buscar
             $('#formBuscarAlumno').keyup(function (e) {
