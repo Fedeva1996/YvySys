@@ -25,7 +25,7 @@
                                 }
                                 echo "</select>";
                             } else {
-                                echo "<select class='form-select  w-100 keep' aria-label='Disabled select example'>";
+                                echo "<select class='form-select  w-100 keep' aria-label='Disabled'>";
                                 echo "<option selected disabled>No hay cursos</option>";
                                 echo "</select>";
 

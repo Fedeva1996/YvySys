@@ -23,6 +23,7 @@ if (isset($_POST['action'])) {
         }
 
         $modulo = $_POST['modulo'];
+        $cronograma = $_POST['cronograma'];
         $fecha = $_POST['fecha'];
         $fecha_recuperatorio = $_POST['fecha_recuperatorio'];
         $puntaje = $_POST['puntaje'];
@@ -32,7 +33,7 @@ if (isset($_POST['action'])) {
         // Select file type
         $fileType = strtolower(pathinfo($directorio_archivo, PATHINFO_EXTENSION));
         // Valid file extensions
-        $extensions_arr = array("pdf");
+        $extensions_arr = array("pdf", "doc", "docx");
 
         // Check extension
         if (in_array($fileType, $extensions_arr)) {
@@ -44,11 +45,17 @@ if (isset($_POST['action'])) {
 
                     // Insert record
                     $sql = "INSERT INTO plan_examen (
-                id_plan_examen, examen_id, modulo_id, fecha, recuperatorio, obs, tipo, puntaje)
-                VALUES (
-                COALESCE((SELECT MAX(id_plan_examen) + 1 FROM plan_examen), 1),
-                (SELECT insertar_examen('$examen_nombre', '$ruta_sin_puntos')),
-                $modulo, '$fecha', '$fecha_recuperatorio', '$obs', '$tipo', '$puntaje')";
+                    id_plan_examen, examen_id, modulo_id, cronograma_id, fecha, recuperatorio, obs, tipo, puntaje)
+                    VALUES (
+                    COALESCE((SELECT MAX(id_plan_examen) + 1 FROM plan_examen), 1),
+                    (SELECT insertar_examen('$examen_nombre', '$ruta_sin_puntos')),
+                    $modulo, 
+                    $cronograma,
+                    '$fecha', 
+                    '$fecha_recuperatorio', 
+                    '$obs', 
+                    '$tipo', 
+                    '$puntaje')";
 
                     $result = pg_query($conn, $sql);
 
@@ -84,59 +91,24 @@ if (isset($_POST['action'])) {
 
         pg_close($conn);
     }
-    // Agregar un nuevo detalle
-    if ($action == 'agregarDet') {
+
+    // Obtener la lista de registros
+    if ($action == 'selectModulo') {
         include '../db_connect.php';
 
-        $id_plan_examen = $_POST['id_plan_examen'];
-        $id_inscripcion = $_POST['id_inscripcion'];
-        $puntaje = $_POST['puntaje'];
+        $curso = $_POST['cronogramaId'];
+        $sql = "SELECT * FROM modulo_v WHERE curso_id = (select curso_id from cronogramas where id_cronograma = $curso)";
+        $resultado = pg_query($conn, $sql);
 
-        $sql = "INSERT INTO plan_examen_det(plan_examen_cab_id, inscripcion_id, puntaje_hecho) 
-        VALUES ('$id_plan_examen','$id_inscripcion','$puntaje')";
-        if (@pg_query($conn, $sql) === TRUE) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo agregado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+        if (pg_num_rows($resultado) > 0) {
+            echo "<option selected disabled>Seleccione módulo</option>";
+            while ($fila = pg_fetch_assoc($resultado)) {
+                echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['modulo'] . "</option>";
+            }
         } else {
-            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>;
-            </script>
-            ";
+            echo "<option selected disabled>No hay módulos</option>";
         }
-
-        pg_close($conn);
     }
-    //Editar un registro
-    if ($action == 'editarCab') {
-        include '../db_connect.php';
-
-        $id = $_POST['idCab'];
-        $id_materia = $_POST['id_materia'];
-        $fecha = $_POST['fecha'];
-        $recuperatorio = $_POST['recuperatorio'];
-        $puntaje = $_POST['puntaje'];
-
-        $sql = "UPDATE plan_examen_cab SET materia_id='$id_materia', fecha='$fecha', recuperatorio='$recuperatorio', puntaje='$puntaje' WHERE id_plan_examen ='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo editado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        } else {
-            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>;
-            </script>
-            ";
-        }
-        pg_close($conn);
-    }
-
     // Obtener la lista de registros
     if ($action == 'listar') {
         include '../db_connect.php';
@@ -171,6 +143,7 @@ if (isset($_POST['action'])) {
                 . "<tr>"
                 . "<th>ID</th>"
                 . "<th>Directorio</th>"
+                . "<th>Cronograma</th>"
                 . "<th>Modulo</th>"
                 . "<th>Fecha</th>"
                 . "<th>Fecha recuperatorio</th>"
@@ -186,6 +159,8 @@ if (isset($_POST['action'])) {
                 echo "<td class='examen' style='display:none;'>" . $fila['examen_id'] . "</td>";
                 echo "<td class='directorio' style='display:none;'>" . $fila['directorio'] . "</td>";
                 echo "<td class='directorio'><a target='_blank' href='" . $fila['directorio'] . "' >" . $fila['directorio'] . "</a></td>";
+                echo "<td class='cronograma' style='display:none;'>" . $fila['cronograma_id'] . "</td>";
+                echo "<td class='curso'>" . $fila['curso'] . " > " . $fila['fecha_inicio'] . " al " . $fila['fecha_fin'] . "</td>";
                 echo "<td class='modulo' style='display:none;'>" . $fila['modulo_id'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
