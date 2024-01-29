@@ -36,9 +36,7 @@ if (isset($_SESSION['usuario'])) {
           data: $(this).serialize(),
           success: function (response) {
             $('#resultado').html(response);
-            setTimeout(function () {
-              location.reload();
-            }, 2000);
+            location.reload();
           }
         });
       });

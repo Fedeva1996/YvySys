@@ -56,44 +56,27 @@ if (!isset($_SESSION['usuario'])) {
             // Editar
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
-                var idCab = $(this).closest('tr').find('.id_cab').text();
-                var idAl = $(this).closest('tr').find('.id_alumno').text();
-                var puntaje = $(this).closest('tr').find('.puntaje_hecho').text();
+                var directorio = $(this).closest('tr').find('.directorio').text();
+                var cronograma = $(this).closest('tr').find('.cronograma').text();
+                var modulo = $(this).closest('tr').find('.modulo').text();
+                var fecha = $(this).closest('tr').find('.fecha').text();
+                var recuperatorio = $(this).closest('tr').find('.recuperatorio').text();
+                var puntaje = $(this).closest('tr').find('.puntaje').text();
+                var tipo = $(this).closest('tr').find('.tipo').text();
+                var obs = $(this).closest('tr').find('.obs').text();
 
-                $('#editId').val(id);
-                $('#editIdCab').val(idCab).change();
-                $('#editIdAl').val(idAl).change();
-                $('#editPuntaje').val(puntaje);
+                $('#editarId').val(id);
+                $('#editarDirectorio').val(directorio);
+                $('#editarCronogramaSelect').val(cronograma).change();
+                $('#editarModuloSelect').val(modulo).change();
+                $('#editarFecha').val(fecha);
+                $('#editarRecuperatorio').val(recuperatorio);
+                $('#editarTipo').val(tipo).change();
+                $('#editarPuntaje').val(puntaje);
+                $('#editarPbs').val(obs);
             });
 
             $('#formEditarPlanExamen').submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: 'funciones/planExamen.php',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        loadPlanesExamen();
-                        $('#resultado').html(response);
-                    },
-                });
-            });
-            // Editar
-            $(document).on('click', '.btn-editar-cab', function () {
-                var id = $(this).closest('tr').find('.idCab').text();
-                var id_materia = $(this).closest('tr').find('.id_materia').text();
-                var fecha = $(this).closest('tr').find('.fecha').text();
-                var Recuperatorio = $(this).closest('tr').find('.recuperatorio').text();
-                var puntaje = $(this).closest('tr').find('.puntaje').text();
-
-                $('#editIdCab').val(id);
-                $('#editMateria').val(id_materia);
-                $('#editFecha').val(fecha);
-                $('#editRecuperatorio').val(Recuperatorio);
-                $('#editPuntaje').val(puntaje);
-            });
-
-            $('#formEditarPlanExamenCab').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/planExamen.php',
