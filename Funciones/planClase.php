@@ -84,59 +84,96 @@ if (isset($_POST['action'])) {
         pg_close($conn);
     }
 
-
     // Obtener la lista de registros
-    if ($action == 'buscarPlanClase') {
+    if ($action == 'listar') {
         include '../db_connect.php';
 
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
 
-        $fecha_p = isset($_POST['fecha_p']) ? $_POST['fecha_p'] : $fecha;
-        if ($fecha_p != "") {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT 
-            *
-        FROM plan_clase_v
-        ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
-        } else {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT 
-            *
-            FROM plan_clase_v
-        ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-        }
+        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
+
+        // Consulta para obtener los alumnos
+        $sql = "SELECT * FROM plan_clase_cab_v ORDER by id_plan_clase LIMIT $registros_por_pagina OFFSET $offset";
+        $resultado = pg_query($conn, $sql);
+
         if (pg_num_rows($resultado) > 0) {
-            if ($fecha_p != "" && $cab = pg_fetch_assoc($cabecera)) {
-                echo "<!-- cabecera -->";
-                echo "<div class='row g-3'>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Fecha inicio</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['fecha'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Fecha fin</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['descri'] . "'>";
-                echo "</div>";
-                if ($cab['docente_reemplazo'] != null) {
-                    echo "<div class='col-md-6'>";
-                    echo "<label>Docente</label>";
-                    echo "<input type='text' class='form-control' disabled value='" . $cab['nombrer'] . " " . $cab['apellidor'] . "'>";
-                    echo "</div>";
-                }
-                echo "</div>";
-                echo "</br>";
-            }
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>ID</th>"
+                . "<th>Evento</th>"
+                . "<th>Docente de reemplazo</th>"
+                . "<th>Modulo</th>"
+                . "<th>Obs</th>"
+                . "<th>Acciones</th>"
+                . "</tr>"
+                . "</thead>";
+            echo "<tbody class='table-group-divider'>";
+            while ($fila = pg_fetch_assoc($resultado)) {
+                echo "<tr>";
+                echo "<td class='id'>" . $fila['id_plan_clase'] . "</td>";
+                echo "<td class='evento_id' style='display:none;'>" . $fila['evento_id'] . "</td>";
+                echo "<td class='evento'>" . $fila['fecha'] . " > " . $fila['tipo'] . "</td>";
+                echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
+                echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                echo "<td class='obs'>" . $fila['obs'] . "</td>";
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
+                data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>
+                <button class='btn btn-secondary btn-ver-detalle btn-sm'  
+                data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_plan_clase'] . ",1)'><i class='bi bi-postcard'></i></button></td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+
+            // Paginación
+            $sql_total = "SELECT COUNT(*) as total FROM plan_clase_cab_v";
+            $resultado_total = pg_query($conn, $sql_total);
+            $fila_total = pg_fetch_assoc($resultado_total);
+            $total_registros = $fila_total['total'];
+            $total_paginas = ceil($total_registros / $registros_por_pagina);
+
+            echo "<div style='margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
+            echo "<nav aria-label='Page navigation example'>";
+            echo "<ul class='pagination justify-content-center'>";
+            for ($i = 1; $i <= $total_paginas; $i++) {
+                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='  border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
+            }
+            echo "</ul>";
+            echo "</nav>";
+            echo "</div>";
+        } else {
+            echo "No se encontraron registros.";
+        }
+        pg_close($conn);
+    }
+    // Obtener la lista de registros
+    if ($action == 'verDetalle') {
+        include '../db_connect.php';
+
+        // Paginación
+        $registros_por_pagina = 10;
+        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
+        $offset = ($pagina - 1) * $registros_por_pagina;
+
+        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
+
+        // Consulta para obtener los alumnos
+        $sql = "SELECT * FROM plan_clase_det_v ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
+        $resultado = pg_query($conn, $sql);
+
+        if (pg_num_rows($resultado) > 0) {
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
+            echo "<thead class='table-dark'>"
+                . "<tr>"
+                . "<th>ID</th>"
+                . "<th>Proceso de clase</th>"
                 . "<th>Competencia</th>"
                 . "<th>Indicadores</th>"
                 . "<th>Contenido</th>"
@@ -148,23 +185,24 @@ if (isset($_POST['action'])) {
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_clase_det'] . "</td>";
-                echo "<td class='idCab' style='display:none;'>" . $fila['id_plan_clase'] . "</td>";
+                echo "<td class='plan_clase_cab_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";
+                echo "<td class='proceso_clase_cab_id' style='display:none;'>" . $fila['proceso_clase_cab_id'] . "</td>";
+                echo "<td class='proceso_clase'>" . $fila['descripcion'] . " > " . $fila['fecha_entrega'] . "</td>";
                 echo "<td class='competencia'>" . $fila['competencia'] . "</td>";
                 echo "<td class='indicadores'>" . $fila['indicadores'] . "</td>";
                 echo "<td class='contenido'>" . $fila['contenido'] . "</td>";
                 echo "<td class='actividad'>" . $fila['actividad'] . "</td>";
-                echo "<td class='id_materia' style='display:none;'>" . $fila['id_modulo'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-        data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>|
-        <button class='btn btn-secondary btn-editar-cab btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditarCab'><i class='bi bi-pencil'></i></button></td>";
+                data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>
+                </td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM plan_clase_v";
+            $sql_total = "SELECT COUNT(*) as total FROM plan_clase_det_v";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
