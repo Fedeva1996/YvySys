@@ -156,7 +156,7 @@ if (isset($_POST['action'])) {
                 <button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                 <button class='btn btn-secondary btn-ver-eventos btn-sm'  
-                data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(".$fila['id_cronograma'].",1)'><i class='bi bi-postcard'></i></button>
+                data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_cronograma'] . ",1)'><i class='bi bi-postcard'></i></button>
                 <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 echo "</tr>";
             }
@@ -202,7 +202,6 @@ if (isset($_POST['action'])) {
                 . "<th>fecha</th>"
                 . "<th>Tipo</th>"
                 . "<th>Modulo</th>"
-                . "<th>Exámen</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
@@ -212,14 +211,15 @@ if (isset($_POST['action'])) {
                 echo "<td class='id'>" . $fila['id_evento'] . "</td>";
                 echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
                 echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
-                echo "<td class='fecha' styke='display:none;'>" . $fila['fecha'] . "</td>";
                 echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
-                echo "<td class='modulo'>" . $fila['descri'] . "</td>";
-                echo "<td class='examen_id'>" . $fila['examen_id'] . "</td>";
-                echo "<td class='tipo_examen'>" . $fila['tipo_examen'] . "</td>";
+                if ($fila['descri'] == null) {
+                    echo "<td class='modulo'> No asignado</td>";
+                } else {
+                    echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                }
                 echo "<td>
                 <button class='btn btn-secondary btn-editar btn-sm'  
-                data-bs-toggle='modal' data-bs-target='#modalEditarEvento'><i class='bi bi-pencil'></i></button>";
+                data-bs-toggle='modal' data-bs-target='#modalEditarEvento'><i class='bi bi-pencil'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

@@ -161,9 +161,9 @@
     </div>
 </div>
 <!-- Modal para eventos -->
-<div class="modal fade modal-lg modal-dialog-scrollable" id="modalEventos" tabindex="-1" aria-labelledby="modalEventosLabel" aria-hidden="true"
+<div class="modal fade modal-lg" id="modalEventos" tabindex="-1" aria-labelledby="modalEventosLabel" aria-hidden="true"
     data-bs-theme="dark">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modalEventosLabel">Eventos</h1>
