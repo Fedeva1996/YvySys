@@ -27,6 +27,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
                         loadAlumnos();
@@ -46,6 +49,9 @@ if (!isset($_SESSION['usuario'])) {
                             data: {
                                 query: query,
                                 action: 'autocompletar'
+                            },
+                            beforeSend: function (objeto) {
+                                $("#resultados").html("Mensaje: Cargando...");
                             },
                             success: function (response) {
                                 $('#suggestions').html(response).show();
@@ -71,6 +77,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarAlumnoExistente')[0].reset();
                         loadAlumnos();
@@ -110,6 +119,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadAlumnos();
                         $('#resultado').html(response);
@@ -143,6 +155,9 @@ if (!isset($_SESSION['usuario'])) {
                                 data: {
                                     action: 'eliminar',
                                     id: id
+                                },
+                                beforeSend: function (objeto) {
+                                    $("#resultados").html("Mensaje: Cargando...");
                                 },
                                 success: function (response) {
                                     loadAlumnos();
@@ -188,6 +203,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#tablaAlumnos').html(response);
                     }
@@ -204,6 +222,9 @@ if (!isset($_SESSION['usuario'])) {
                         action: 'inscripciones',
                         id: id
 
+                    },
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#tablaInscripciones').html(response);

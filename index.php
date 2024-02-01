@@ -34,7 +34,10 @@ if (isset($_SESSION['usuario'])) {
           url: 'login.php',
           type: 'POST',
           data: $(this).serialize(),
-          success: function (response) {
+          beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
             $('#resultado').html(response);
             location.reload();
           }

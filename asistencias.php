@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
@@ -20,34 +20,41 @@ if (!isset($_SESSION['usuario'])) {
     <?php include("head.php"); ?>
     <script>
         //buscar
-        $(document).ready(function() {
-            $('#formBuscarAsistencia').submit(function(e) {
+        $(document).ready(function () {
+            $('#formBuscarAsistencia').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                         $('#tablaAsistencia').html(response);
                     }
                 });
             });
             // Agregar nuevo
-            $('#formAgregarAsistencia').submit(function(e) {
+            $('#formAgregarAsistencia').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                         $('#formAgregarAsistencia')[0].reset();
+                        loadAsistencias();
                         $('#resultado').html(response);
                     }
                 });
             });
             //autocompletar alumno
-            $(document).ready(function() {
-                $('#planClase-input').keyup(function() {
+            $(document).ready(function () {
+                $('#planClase-input').keyup(function () {
                     var query = $(this).val();
 
                     if (query !== '') {
@@ -58,7 +65,10 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            success: function(response) {
+                            beforeSend: function (objeto) {
+                                $("#resultados").html("Mensaje: Cargando...");
+                            },
+                            success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
                         });
@@ -67,7 +77,7 @@ if (!isset($_SESSION['usuario'])) {
                     }
                 });
 
-                $(document).on('click', '.suggest-element', function() {
+                $(document).on('click', '.suggest-element', function () {
                     var value = $(this).text();
                     var id = $(this).data('id-materia');
                     var id_curso = $(this).data('id-curso');
@@ -78,7 +88,7 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var estado = $(this).closest('tr').find('.estado').text();
 
@@ -90,46 +100,70 @@ if (!isset($_SESSION['usuario'])) {
                 $('#formEditarAsistencia').find('input[name="action"]').val('editar');
             });
 
-            $('#formEditarAsistencia').submit(function(e) {
+            $('#formEditarAsistencia').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                         $('#resultado').html(response);
+                        loadAsistencias();
                         $('#formBuscarAsistencia').submit();
                     },
                 });
             });
 
             //paginacion
-            $(document).ready(function() {
-                function cargarPagina(pagina, curso, fecha) {
+            $(document).ready(function () {
+                function cargarPagina(pagina, id_modulo, fecha) {
                     $.ajax({
                         url: 'funciones/asistencia.php',
                         type: 'POST',
                         data: {
-                            action: 'buscarAsistencia',
+                            action: 'listar',
                             pagina: pagina,
-                            curso: curso,
+                            id_modulo: id_modulo,
                             fecha: fecha
                         },
-                        success: function(response) {
+                        beforeSend: function (objeto) {
+                            $("#resultados").html("Mensaje: Cargando...");
+                        },
+                        success: function (response) {
                             $('#tablaAsistencia').html(response);
                         }
                     });
                 }
-                $(document).on('click', '.btn-pagina', function() {
+                cargarPagina(1);
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
-                    var curso = $(this).data('curso');
+                    var id_modulo = $(this).data('id_modulo');
                     var fecha = $(this).data('fecha');
 
-                    cargarPagina(pagina, curso, fecha);
+                    cargarPagina(pagina, id_modulo, fecha);
                 });
 
             });
         });
+        // Cargar tabla
+        function loadAsistencias() {
+            $.ajax({
+                url: 'funciones/asistencia.php',
+                type: 'POST',
+                data: {
+                    action: 'listar'
+                },
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                },
+                success: function (response) {
+                    $('#tablaAsistencia').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
@@ -137,136 +171,24 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/asistencias.php");
         ?>
     </div>
     <div class="container">
         <h2>Asistencias</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarModulo'> <i class="bi bi-search"></i> Buscar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarModulo'> <i
+                    class="bi bi-search"></i> Buscar</button>
         </div>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-calendar-plus"></i> Agregar asistencia de hoy</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+                    class="bi bi-calendar-plus"></i> Agregar asistencia de hoy</button>
         </div>
+        <!-- mostrar exito/error -->
+        <div id="resultado"></div>
+
         <!-- Tabla -->
         <div id="tablaAsistencia"></div>
-    </div>
-    <!-- Formulario para buscar por modulo -->
-    <div class="modal fade" id="modalBuscarModulo" tabindex="-1" aria-labelledby="modalBuscarModuloLabel" aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form id="formBuscarAsistencia">
-                        <input type="hidden" name="action" value="buscarAsistencia">
-                        <input type="hidden" name="pagina" value="1">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM modulos";
-                                    $resultado = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultado) > 0) {
-                                        echo "<label for='fecha'>Modulos</label>";
-                                        echo "<select class='form-select  w-100'  name='id_modulo' required>";
-                                        echo "<option selected disabled>Seleccione modulo</option>";
-                                        while ($fila = pg_fetch_assoc($resultado)) {
-                                            echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['descri'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="fecha">Fecha</label>
-                                    <input class="input-group-text w-100" type="date" name="fecha_p" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar asistencia</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarAsistencia">
-                        <input type="hidden" name="action" value="agregar">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" id="planClase-input" placeholder="Nombre de materia, curso o docente" autocomplete="off" required>
-                                    <input type="hidden" id="id-plan" name="id-plan">
-                                    <div id="suggestions"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" readonly type="datetime" id="fecha" name="fecha" value="<?php echo date("Y-m-d"); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <input class="form-check-input" type="checkbox" value="1" name="asistenciaD" id="asistenciaD" checked>
-                                    <label class="form-check-label" for="asistenciaD">
-                                        Docente asistió
-                                    </label>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="text" id="obs" name="obs" placeholder="Observaciones">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Editar Inscripción</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarAsistencia">
-                        <input type="hidden" name="action" value="editar">
-                        <div class="row">
-                            <input type="hidden" name="id" id="editId">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <select class="editEstado input-group-text w-100" id="editEstado" name="estado" required>
-                                        <option selected disabled>Seleccione asistencia</option>
-                                        <option value="1">Presente</option>
-                                        <option value="0">Ausente</option>
-                                    </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                </div>
-                            </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <div id="resultado"></div>
 </body>
 
 </html>

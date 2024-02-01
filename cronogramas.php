@@ -30,6 +30,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/cronograma.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarCronograma')[0].reset();
                         loadCronogramas();
@@ -69,6 +72,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/cronograma.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadCronogramas();
                         $('#resultado').html(response);
@@ -102,7 +108,10 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadCronogramas();
                                     $('#resultado').html(response);
                                 }
@@ -141,7 +150,10 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'generar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadCronogramas();
                                     $('#resultado').html(response);
                                 }
@@ -164,7 +176,10 @@ if (!isset($_SESSION['usuario'])) {
                     action: 'listar',
                     pagina: pagina
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -184,7 +199,10 @@ if (!isset($_SESSION['usuario'])) {
                 url: 'funciones/cronograma.php',
                 type: 'POST',
                 data: $(this).serialize(),
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -201,6 +219,9 @@ if (!isset($_SESSION['usuario'])) {
                     data: {
                         query: query,
                         action: 'autocompletar'
+                    },
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#suggestions').html(response).show();
@@ -226,7 +247,10 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -240,7 +264,10 @@ if (!isset($_SESSION['usuario'])) {
                     action: 'verEventos',
                     id: id
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaEventos').html(response);
                 }
             });

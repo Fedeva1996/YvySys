@@ -30,6 +30,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/turno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarTurno')[0].reset();
                         loadTurnos();
@@ -62,6 +65,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/turno.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadTurnos();
                         $('#resultado').html(response);
@@ -94,7 +100,10 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadTurnos();
                                     $('#resultado').html(response);
                                 }
@@ -118,7 +127,10 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function (response) {
+                        beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                             $('#tablaTurno').html(response);
                         }
                     });
@@ -138,7 +150,10 @@ if (!isset($_SESSION['usuario'])) {
                         url: 'funciones/turno.php',
                         type: 'POST',
                         data: $(this).serialize(),
-                        success: function (response) {
+                        beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                             $('#tablaTurno').html(response);
                         }
                     });
@@ -155,7 +170,10 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaTurno').html(response);
                 }
             });

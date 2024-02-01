@@ -228,9 +228,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                        <button class="btn btn-outline-primary" data-bs-target="#modalEventos" data-bs-toggle="modal" type="submit">Guardar
                             cambios</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-target="#modalEventos" data-bs-toggle="modal">Cerrar</button>
                     </div>
                 </form>
             </div>

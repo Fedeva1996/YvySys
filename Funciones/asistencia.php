@@ -94,76 +94,64 @@ if (isset($_POST['action'])) {
         pg_close($conn);
     }
 
-    if ($action == 'buscarAsistencia') {
+    if ($action == 'listar') {
         include '../db_connect.php';
 
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
         $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : "";
-        $id_modulo = isset($_POST['curso']) ? $_POST['curso'] : "";
+        $id_modulo = isset($_POST['id_modulo']) ? $_POST['id_modulo'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
 
-        $fecha_p = isset($_POST['fecha_p']) ? $_POST['fecha_p'] : $fecha;
-        $curso = isset($_POST['id_modulo']) ? $_POST['id_modulo'] : $id_modulo;
-        if (isset($_POST['fecha_p']) && $_POST['id_modulo']) {
-            // Consulta para obtener los alumnos
+        if ($fecha == "" && $id_modulo == "") {
             $sql = "SELECT 
             *
-            FROM
-            asistencia_v
-            WHERE fecha = '$fecha_p'
-            AND id_modulo = '$curso'
-            ORDER by id_asistencia_det DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
+            FROM asistencia_cab_v
+            ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
+        } else if ($fecha != "" && $id_modulo == "") {
+            $sql = "SELECT 
+            *
+            FROM asistencia_cab_v WHERE fecha = '$fecha'
+            ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
+        } else if ($fecha == "" && $id_modulo != "") {
+            $sql = "SELECT 
+            *
+            FROM asistencia_cab_v WHERE modulo_id = $id_modulo
+            ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         } else {
             $sql = "SELECT 
             *
-            FROM
-            asistencia_v
-            WHERE fecha = '$fecha'
-            AND id_modulo = '$id_modulo'
-            ORDER by id_asistencia_det DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
+            FROM asistencia_cab_v WHERE fecha = '$fecha' AND modulo_id = $id_modulo
+            ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         }
+        $resultado = pg_query($conn, $sql);
 
         if (pg_num_rows($resultado) > 0) {
-            if ($cab = pg_fetch_assoc($cabecera)) {
-                echo "<!-- cabecera -->";
-                echo "<div class='row g-3'>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Materia</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['descri'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Fecha</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['fecha'] . "'>";
-                echo "</div>";
-                echo "</div>";
-                echo "</br>";
-            }
-
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
                 . "<th>ID</th>"
-                . "<th>Nombre</th>"
-                . "<th>CI</th>"
+                . "<th>Fecha</th>"
                 . "<th>Modulo</th>"
-                . "<th>Estado</th>"
+                . "<th>Tipo clase</th>"
+                . "<th>Asistencia</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultado)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_asistencia_det'] . "</td>";
-                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
-                echo "<td class='ci'>" . $fila['ci'] . "</td>";
-                echo "<td class='id_modulo' style='display:none;'>" . $fila['id_modulo'] . "</td>";
-                echo "<td class='descri'>" . $fila['descri'] . "</td>";
+                echo "<td class='id'>" . $fila['id_asistencia'] . "</td>";
+                echo "<td class='plan_clase_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";
+                echo "<td class='fecha'>" . $fila['fecha'] . "</td>";
+                if ($fila['modulo_id'] == null) {
+                    echo "<td> Aún no asignado <i>(Asignar en cronograma)</i></td>";
+                } else {
+                    echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                    echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                }
+                echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
                 if ($fila['estado'] == false) {
                     echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#cc3300'>Ausente</td>";
@@ -179,10 +167,14 @@ if (isset($_POST['action'])) {
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT
-            COUNT(*) AS total FROM asistencia_v
-            WHERE fecha = '2024/01/16'
-            AND id_modulo = '1'";
+            if ($fecha == "" || $id_modulo == "") {
+                $sql_total = "SELECT
+                COUNT(*) AS total FROM asistencia_cab_v";
+            } else {
+                $sql_total = "SELECT
+                COUNT(*) AS total FROM asistencia_cab_v WHERE fecha = '$fecha' AND modulo_id = '$id_modulo'";
+            }
+
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -192,7 +184,7 @@ if (isset($_POST['action'])) {
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina' style='border: none;padding: 0;background: none;' data-pagina='$i' data-curso='$GLOBALS[curso]' data-fecha='$GLOBALS[fecha_p]'>$i</button></a></li>";
+                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina' style='border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
             }
             echo "</ul>";
             echo "</nav>";

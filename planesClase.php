@@ -27,6 +27,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#tablaPlanesClase').html(response);
                     }
@@ -39,6 +42,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarPlanClase')[0].reset();
                         $('#resultado').html(response);
@@ -56,6 +62,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarPlanClaseDet')[0].reset();
                         $("#keep").val(keep).change();
@@ -90,6 +99,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadPlanClase();
                         $('#resultado').html(response);
@@ -115,6 +127,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadPlanClase();
                         $('#resultado').html(response);
@@ -146,7 +161,10 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadPlanClase();
                                     $('#resultado').html(response);
                                 }
@@ -168,7 +186,10 @@ if (!isset($_SESSION['usuario'])) {
                         data: {
                             action: 'listar'
                         },
-                        success: function (response) {
+                        beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                             $('#tablaPlanesClase').html(response);
                         }
                     });
@@ -191,7 +212,10 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaPlanesClase').html(response);
                 }
             });
@@ -205,7 +229,10 @@ if (!isset($_SESSION['usuario'])) {
                     action: 'verDetalle',
                     id: id
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaDetalle').html(response);
                 }
             });

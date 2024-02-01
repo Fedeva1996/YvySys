@@ -30,6 +30,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarCurso')[0].reset();
                         loadCursos();
@@ -69,6 +72,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadCursos();
                         $('#resultado').html(response);
@@ -102,7 +108,10 @@ title: "Estás seguro de que deseas eliminar este registro?",
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadCursos();
                                     $('#resultado').html(response);
                                 }
@@ -126,7 +135,10 @@ title: "Estás seguro de que deseas eliminar este registro?",
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function (response) {
+                        beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
@@ -146,7 +158,10 @@ title: "Estás seguro de que deseas eliminar este registro?",
                         url: 'funciones/curso.php',
                         type: 'POST',
                         data: $(this).serialize(),
-                        success: function (response) {
+                        beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
@@ -163,7 +178,10 @@ title: "Estás seguro de que deseas eliminar este registro?",
                 data: {
                     action: 'listar'
                 },
-                success: function (response) {
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                     $('#tablaCurso').html(response);
                 }
             });

@@ -27,6 +27,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planExamen.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadPlanesExamen();
                         $('#tablaPlanesExamen').html(response);
@@ -45,6 +48,9 @@ if (!isset($_SESSION['usuario'])) {
                     data: formData,
                     contentType: false,
                     processData: false,
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         $('#formAgregarPlanExamen')[0].reset();
                         loadPlanesExamen();
@@ -82,6 +88,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planExamen.php',
                     type: 'POST',
                     data: $(this).serialize(),
+                    beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
                     success: function (response) {
                         loadPlanesExamen();
                         $('#resultado').html(response);
@@ -113,7 +122,10 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function (response) {
+                                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
                                     loadPlanesExamen();
                                     $('#resultado').html(response);
                                 }
@@ -139,7 +151,7 @@ if (!isset($_SESSION['usuario'])) {
                         beforeSend: function (objeto) {
                             $("#resultados").html("Mensaje: Cargando...");
                         },
-                        success: function (response) {
+                    success: function (response) {
                             $('#tablaPlanesExamen').html(response);
                         }
                     });
@@ -162,7 +174,7 @@ if (!isset($_SESSION['usuario'])) {
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
                 },
-                success: function (response) {
+                    success: function (response) {
                     $('#tablaPlanesExamen').html(response);
                 }
             });
