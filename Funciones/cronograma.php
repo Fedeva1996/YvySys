@@ -162,6 +162,8 @@ if (isset($_POST['action'])) {
                 } else {
                     echo "<td>
                     <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Asignar materias</button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                     <button class='btn btn-secondary btn-ver-eventos btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_cronograma'] . ")'><i class='bi bi-postcard'></i></button>
@@ -235,6 +237,38 @@ if (isset($_POST['action'])) {
             echo "</table>";
         } else {
             echo "No se encontraron registros.";
+        }
+
+        pg_close($conn);
+    }
+    // Agregar un nuevo registro
+    if ($action == 'asignarModulo') {
+        include '../db_connect.php';
+
+        // Procesa los detalles
+        $datosJSON = $_POST['datos'];
+        $datos = json_decode($datosJSON, true);
+        // Ahora $datos es un array asociativo con la información de cada fila de la tabla
+        // Puedes hacer lo que necesites con estos datos
+        foreach ($datos as $detalle) {
+            $modulo = $detalle['id'];
+            $inicio = $detalle['inicio'];
+            $fin = $detalle['fin'];
+
+            $sql = "UPDATE eventos
+            SET modulo_id = $modulo
+            WHERE fecha BETWEEN '$inicio' AND '$fin'";
+            if (@pg_query($conn, $sql)) {
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Modulo asignado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+            } else if (@!pg_query($conn, $sql)) {
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+            }
         }
 
         pg_close($conn);

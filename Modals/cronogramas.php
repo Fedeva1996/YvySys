@@ -228,9 +228,56 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-outline-primary" data-bs-target="#modalEventos" data-bs-toggle="modal" type="submit">Guardar
+                        <button class="btn btn-outline-primary" data-bs-target="#modalEventos" data-bs-toggle="modal"
+                            type="submit">Guardar
                             cambios</button>
-                        <button type="button" class="btn btn-secondary" data-bs-target="#modalEventos" data-bs-toggle="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-target="#modalEventos"
+                            data-bs-toggle="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Formulario para asignar modulos-->
+<div class="modal fade" id="modalAsignar" tabindex="-1" aria-labelledby="modalAsignarLabel" aria-hidden="true"
+    data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalAsignarLabel">Asignar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <i class="bi bi-info-circle"></i> <strong>Cuidado!</strong> las fechas no deben sobreponerle, si
+                        sucede, el siguiente modulo ocupara esa fecha.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <form id="formAsignarModulo">
+                    <?php
+                    include 'db_connect.php';
+                    $sql = "SELECT * FROM modulos";
+                    $resultado = pg_query($conn, $sql);
+                    if (pg_num_rows($resultado) > 0) {
+                        while ($fila = pg_fetch_assoc($resultado)) {
+                            echo "<div class='mb-3'>";
+                            echo "<div class='row'>";
+                            echo "<input class='id' hidden value='" . $fila['id_modulo'] . "'>";
+                            echo "<div class='col'><input disabled class='form-control form-control-sm' name='modulo_id' type='text' value='" . $fila['descri'] . "'></div>";
+                            echo "<div class='col'><input class='form-control form-control-sm' name='inicio' type='date'></div>";
+                            echo "<div class='col'><input class='form-control form-control-sm' name='fin' type='date'></div>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                    }
+                    ?>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                            cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </form>
             </div>

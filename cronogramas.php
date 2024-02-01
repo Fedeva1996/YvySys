@@ -20,6 +20,48 @@ if (!isset($_SESSION['usuario'])) {
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {
+            // Asignar modulos
+            $('#formAsignarModulo').submit(function (e) {
+                e.preventDefault();
+                // Objeto para almacenar los datos en formato JSON
+                var datos = [];
+
+                // Recorre cada fila del formulario
+                $(".row").each(function () {
+                    let id = $(this).find(".id").val();
+                    let inicio = $(this).find("input[name='inicio']").val();
+                    let fin = $(this).find("input[name='fin']").val();
+
+                    // Agrega el objeto al array si los campos no están vacíos
+                    if (id && inicio && fin) {
+                        datos.push({
+                        "id": id,
+                        "inicio": inicio,
+                        "fin": fin
+                    });
+                    }
+                });
+                // Convierte el array a formato JSON
+                var datosJSON = JSON.stringify(datos);
+
+                $.ajax({
+                    url: 'funciones/cronograma.php',
+                    type: 'POST',
+                    data: {
+                        "action": "asignarModulo",
+                        "datos": datosJSON
+                    },
+                    beforeSend: function (objeto) {
+                        $("#resultados").html("Mensaje: Cargando...");
+                    },
+                    success: function (response) {
+                        $('#formAgregarCronograma')[0].reset();
+                        loadCronogramas();
+                        $('#resultado').html(response);
+                    }
+                });
+            });
+
             // Cargar la tabla al cargar la página
             loadCronogramas();
 

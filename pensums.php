@@ -45,7 +45,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#tablaPensums').html(response);
@@ -92,9 +92,6 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
                     success: function (response) {
                         $('#formAgregarPensum')[0].reset();
                         $('#resultado').html(response);
@@ -108,9 +105,9 @@ if (!isset($_SESSION['usuario'])) {
                                 "datos": datosJSON
                             },
                             beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                                $("#resultados").html("Mensaje: Cargando...");
+                            },
+                            success: function (response) {
                                 $('#resultado').html(response);
                             }
                         });
@@ -141,7 +138,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#resultado').html(response);
@@ -181,7 +178,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#resultado').html(response);
@@ -219,9 +216,9 @@ if (!isset($_SESSION['usuario'])) {
                                     id: id
                                 },
                                 beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                                    $("#resultados").html("Mensaje: Cargando...");
+                                },
+                                success: function (response) {
                                     loadAlumnos();
                                     $('#resultado').html(response);
                                 }
@@ -245,9 +242,9 @@ if (!isset($_SESSION['usuario'])) {
                             curso: curso,
                         },
                         beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                            $("#resultados").html("Mensaje: Cargando...");
+                        },
+                        success: function (response) {
                             $('#tablaPensums').html(response);
                         }
                     });
