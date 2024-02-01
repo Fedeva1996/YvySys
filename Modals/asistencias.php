@@ -3,6 +3,10 @@
     data-bs-theme="dark">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalBuscarModuloLabel">Agregar asistencia</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             <div class="modal-body">
                 <form id="formBuscarAsistencia">
                     <input type="hidden" name="action" value="listar">
@@ -11,19 +15,7 @@
                         <div class="col">
                             <div class="mb-3">
                                 <?php
-                                include 'db_connect.php';
-                                $sql = "SELECT * FROM modulos";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
-                                    echo "<label for='fecha'>Modulos</label>";
-                                    echo "<select class='form-select  w-100'  name='id_modulo' required>";
-                                    echo "<option selected disabled>Seleccione modulo</option>";
-                                    echo "<option value=''>--Vacio--</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
-                                        echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['descri'] . "</option>";
-                                    }
-                                    echo "</select>";
-                                }
+
                                 ?>
                             </div>
                         </div>
@@ -103,26 +95,37 @@
             <div class="modal-body">
                 <form id="formEditarAsistencia">
                     <input type="hidden" name="action" value="editar">
-                    <div class="row">
-                        <input type="hidden" name="id" id="editId">
-                        <div class="col">
-                            <div class="mb-3">
-                                <select class="editEstado input-group-text w-100" id="editEstado" name="estado"
-                                    required>
-                                    <option selected disabled>Seleccione asistencia</option>
-                                    <option value="1">Presente</option>
-                                    <option value="0">Ausente</option>
-                                </select>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                    cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
+                    <input type="hidden" name="id" id="editId">
+                    <div class="mb-3">
+                        <select class="editEstado input-group-text w-100" id="editEstado" name="estado" required>
+                            <option selected disabled>Seleccione asistencia</option>
+                            <option value="1">Presente</option>
+                            <option value="0">Ausente</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                            cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<!-- Modal para asistencias -->
+<div class="modal fade modal-lg" id="modalAsistencias" tabindex="-1" aria-labelledby="modalAsistenciasLabel"
+    aria-hidden="true" data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalAsistenciasLabel">Asistencias</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabla -->
+                <div id="tablaVerAsistencias"></div>
+            </div>
+        </div>
+    </div>
 </div>

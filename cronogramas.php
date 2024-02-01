@@ -31,7 +31,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#formAgregarCronograma')[0].reset();
@@ -73,7 +73,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         loadCronogramas();
@@ -109,9 +109,9 @@ if (!isset($_SESSION['usuario'])) {
                                     id: id
                                 },
                                 beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                                    $("#resultados").html("Mensaje: Cargando...");
+                                },
+                                success: function (response) {
                                     loadCronogramas();
                                     $('#resultado').html(response);
                                 }
@@ -126,10 +126,10 @@ if (!isset($_SESSION['usuario'])) {
             });
             //generar
             $(document).on('click', '.btn-generar', function () {
-                // Obtener el ID del registro a eliminar
+                // Obtener el ID
                 var id = $(this).closest('tr').find('.id').text();
 
-                // Confirmar la eliminación con el usuario
+                // Confirmar la generación de eventos
                 swal.fire({
                     title: "Cuidado!",
                     text: "¿Estás seguro de que deseas generar eventos?",
@@ -151,9 +151,9 @@ if (!isset($_SESSION['usuario'])) {
                                     id: id
                                 },
                                 beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                                    $("#resultados").html("Mensaje: Cargando...");
+                                },
+                                success: function (response) {
                                     loadCronogramas();
                                     $('#resultado').html(response);
                                 }
@@ -178,8 +178,8 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -201,8 +201,8 @@ if (!isset($_SESSION['usuario'])) {
                 data: $(this).serialize(),
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -221,7 +221,7 @@ if (!isset($_SESSION['usuario'])) {
                         action: 'autocompletar'
                     },
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#suggestions').html(response).show();
@@ -249,8 +249,8 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaCronograma').html(response);
                 }
             });
@@ -266,8 +266,8 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaEventos').html(response);
                 }
             });
@@ -284,7 +284,7 @@ if (!isset($_SESSION['usuario'])) {
     </div>
     <div class="container">
         <h2>Cronogramas</h2>
-        <div class="input-group mb-2">
+        <div class="mb-2">
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
                     class="bi bi-person-add"></i> Agregar</button>
         </div>

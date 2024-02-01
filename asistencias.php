@@ -145,7 +145,48 @@ if (!isset($_SESSION['usuario'])) {
 
                     cargarPagina(pagina, id_modulo, fecha);
                 });
+            });
+            //generar
+            $(document).on('click', '.btn-generar', function () {
+                // Obtener el ID 
+                var id = $(this).closest('tr').find('.id').text();
 
+                // Confirmar la generación de asistencias
+                swal.fire({
+                    title: "Cuidado!",
+                    text: "¿Estás seguro de que deseas generar eventos?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#6e7881',
+                    cancelButtonText: "Cancelar"
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            $.ajax({
+                                url: 'funciones/asistencia.php',
+                                type: 'POST',
+                                data: {
+                                    action: 'generar',
+                                    id: id
+                                },
+                                beforeSend: function (objeto) {
+                                    $("#resultados").html("Mensaje: Cargando...");
+                                },
+                                success: function (response) {
+                                    loadCronogramas();
+                                    $('#resultado').html(response);
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: "No se generaran los eventos de este cronograma!",
+                                background: "#212529"
+                            })
+                        }
+                    });
             });
         });
         // Cargar tabla
@@ -164,6 +205,23 @@ if (!isset($_SESSION['usuario'])) {
                 }
             });
         }
+        // Cargar tabla eventos
+        function loadVerAsistencias(id) {
+            $.ajax({
+                url: 'funciones/asistencia.php',
+                type: 'POST',
+                data: {
+                    action: 'verAsistencias',
+                    id: id
+                },
+                beforeSend: function (objeto) {
+                    $("#resultados").html("Mensaje: Cargando...");
+                },
+                success: function (response) {
+                    $('#tablaVerAsistencias').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
@@ -176,11 +234,9 @@ if (!isset($_SESSION['usuario'])) {
     </div>
     <div class="container">
         <h2>Asistencias</h2>
-        <div class="input-group mb-2">
+        <div class="mb-2">
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarModulo'> <i
                     class="bi bi-search"></i> Buscar</button>
-        </div>
-        <div class="input-group mb-2">
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
                     class="bi bi-calendar-plus"></i> Agregar asistencia de hoy</button>
         </div>
@@ -189,6 +245,7 @@ if (!isset($_SESSION['usuario'])) {
 
         <!-- Tabla -->
         <div id="tablaAsistencia"></div>
+    </div>
 </body>
 
 </html>

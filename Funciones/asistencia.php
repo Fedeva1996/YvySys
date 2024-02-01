@@ -107,22 +107,22 @@ if (isset($_POST['action'])) {
         if ($fecha == "" && $id_modulo == "") {
             $sql = "SELECT 
             *
-            FROM asistencia_cab_v
+            FROM asistencia_alumno_cab_v
             ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         } else if ($fecha != "" && $id_modulo == "") {
             $sql = "SELECT 
             *
-            FROM asistencia_cab_v WHERE fecha = '$fecha'
+            FROM asistencia_alumno_cab_v WHERE fecha = '$fecha'
             ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         } else if ($fecha == "" && $id_modulo != "") {
             $sql = "SELECT 
             *
-            FROM asistencia_cab_v WHERE modulo_id = $id_modulo
+            FROM asistencia_alumno_cab_v WHERE modulo_id = $id_modulo
             ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         } else {
             $sql = "SELECT 
             *
-            FROM asistencia_cab_v WHERE fecha = '$fecha' AND modulo_id = $id_modulo
+            FROM asistencia_alumno_cab_v WHERE fecha = '$fecha' AND modulo_id = $id_modulo
             ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         }
         $resultado = pg_query($conn, $sql);
@@ -136,7 +136,6 @@ if (isset($_POST['action'])) {
                 . "<th>Modulo</th>"
                 . "<th>Tipo clase</th>"
                 . "<th>Asistencia</th>"
-                . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
@@ -144,7 +143,8 @@ if (isset($_POST['action'])) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_asistencia'] . "</td>";
                 echo "<td class='plan_clase_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";
-                echo "<td class='fecha'>" . $fila['fecha'] . "</td>";
+                echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
+                echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
                 if ($fila['modulo_id'] == null) {
                     echo "<td> Aún no asignado <i>(Asignar en cronograma)</i></td>";
                 } else {
@@ -152,15 +152,21 @@ if (isset($_POST['action'])) {
                     echo "<td class='modulo'>" . $fila['descri'] . "</td>";
                 }
                 echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
-                if ($fila['estado'] == false) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Ausente</td>";
-                } else if ($fila['estado'] == true) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Presente</td>";
+                if ($fila['estado'] == "f") {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-generar btn-sm'  
+                    data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
+                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsistencias' onclick='loadVerAsistencias(" . $fila['id_asistencia'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button></td>";
+                } else {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsistencias' onclick='loadVerAsistencias(" . $fila['id_asistencia'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button></td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-           data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }
             echo "</tbody>";
@@ -169,10 +175,10 @@ if (isset($_POST['action'])) {
             // Paginación
             if ($fecha == "" || $id_modulo == "") {
                 $sql_total = "SELECT
-                COUNT(*) AS total FROM asistencia_cab_v";
+                COUNT(*) AS total FROM asistencia_alumno_cab_v";
             } else {
                 $sql_total = "SELECT
-                COUNT(*) AS total FROM asistencia_cab_v WHERE fecha = '$fecha' AND modulo_id = '$id_modulo'";
+                COUNT(*) AS total FROM asistencia_alumno_cab_v WHERE fecha = '$fecha' AND modulo_id = '$id_modulo'";
             }
 
             $resultado_total = pg_query($conn, $sql_total);
@@ -191,6 +197,81 @@ if (isset($_POST['action'])) {
             echo "</div>";
         } else {
             echo "No se encontraron registros.";
+        }
+        pg_close($conn);
+    }
+    if ($action == 'verAsistencias') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "SELECT 
+            *
+            FROM asistencia_alumno_det_v WHERE asistencia_cab_id = $id
+            ORDER by id_asistencia_det DESC";
+
+        $resultado = pg_query($conn, $sql);
+
+        if (pg_num_rows($resultado) > 0) {
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
+            echo "<thead class='table-dark'>";
+            echo "<tr>"
+                . "<th>ID</th>"
+                . "<th>Alumno</th>"
+                . "<th>Justificativo</th>"
+                . "<th>Obs</th>"
+                . "<th>Asistencia</th>"
+                . "<th>Acciones</th>"
+                . "</tr>"
+                . "</thead>";
+            echo "<tbody class='table-group-divider'>";
+            while ($fila = pg_fetch_assoc($resultado)) {
+                echo "<tr>";
+                echo "<td class='id'>" . $fila['id_asistencia_det'] . "</td>";
+                echo "<td>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                if ($fila['justificativo_id'] == null) {
+                    echo "<td> Aún no asignado <i>(Asignar en cronograma)</i></td>";
+                } else {
+                    echo "<td class='justificativo_id' style='display:none;'>" . $fila['justificativo_id'] . "</td>";
+                    echo "<td> Justificado</td>";
+                }
+                echo "<td class='obs'>" . $fila['obs'] . "</td>";
+                if ($fila['estado'] == false) {
+                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
+                    echo "<td style = 'color:#cc3300'>Ausente</td>";
+                } else if ($fila['estado'] == true) {
+                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
+                    echo "<td style = 'color:#99cc33'>Presente</td>";
+                }
+                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
+           data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+        } else {
+            echo "No se encontraron registros.";
+        }
+        pg_close($conn);
+    }
+
+    // generar eventos
+    if ($action == 'generar') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "SELECT generar_eventos_para_cronograma($id)";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Eventos generados.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
         }
         pg_close($conn);
     }
