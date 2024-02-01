@@ -117,10 +117,18 @@ if (isset($_POST['action'])) {
                 echo "<td class='id'>" . $fila['id_plan_clase'] . "</td>";
                 echo "<td class='evento_id' style='display:none;'>" . $fila['evento_id'] . "</td>";
                 echo "<td class='evento'>" . $fila['fecha'] . " > " . $fila['tipo'] . "</td>";
-                echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
-                echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
-                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
-                echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                if ($fila['docente_id'] == null) {
+                    echo "<td> Aún no asignado</td>";
+                } else {
+                    echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
+                    echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                }
+                if ($fila['modulo_id'] == null) {
+                    echo "<td> Aún no asignado <i>(Asignar en cronograma)</i></td>";
+                } else {
+                    echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                    echo "<td class='modulo'>" . $fila['descri'] . "</td>";
+                }
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
