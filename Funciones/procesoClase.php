@@ -27,7 +27,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
     // Agregar un nuevo detalle
     if ($action == 'agregarDet') {
@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
     //Editar un registro
     if ($action == 'editarDet') {
@@ -80,7 +80,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        pg_close($conn);
+        
     }
 
     if ($action == 'buscarProcesoClase') {
@@ -252,6 +252,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 }

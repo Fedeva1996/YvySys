@@ -68,7 +68,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
     //Editar un registro
     if ($action == 'editar') {
@@ -91,7 +91,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        pg_close($conn);
+        
     }
 
     if ($action == 'listar') {
@@ -198,7 +198,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
     if ($action == 'verAsistencias') {
         include '../db_connect.php';
@@ -252,7 +252,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 
     // generar eventos
@@ -260,19 +260,37 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $id = $_POST['id'];
+        $modulo_id = $_POST['modulo_id'];
 
-        $sql = "SELECT generar_eventos_para_cronograma($id)";
-        if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Eventos generados.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+        $sql = "SELECT id_inscripcion_det FROM inscripciones_det WHERE modulo_id = $modulo_id";
+        
+        $resultado = pg_query($conn, $sql);
+
+        if ($resultado) {
+            if (pg_num_rows($resultado) > 0) {
+                while ($fila = pg_fetch_assoc($resultado)) {
+                    $inscripcion = $fila['id_inscripcion_det'];
+                    $sql2 = "INSERT INTO asistencia_a_det(asistencia_cab_id, inscripcion_det_id) VALUES ($id, $inscripcion)";
+                    if (@pg_query($conn, $sql2)) {
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Exito!</strong> Asistencias generadas.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    } else {
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Error!</strong> " . pg_last_error($conn) . ".
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    }
+                    
+                }
+            }
         } else if (@!pg_query($conn, $sql)) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
             <strong>Error!</strong> " . pg_last_error($conn) . ".
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        pg_close($conn);
+        
     }
 }

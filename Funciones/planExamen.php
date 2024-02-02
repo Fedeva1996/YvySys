@@ -90,7 +90,7 @@ if (isset($_POST['action'])) {
         </div>";
         }
 
-        pg_close($conn);
+        
     }
 
     // Obtener la lista de registros
@@ -174,7 +174,7 @@ if (isset($_POST['action'])) {
             </div>";
         }
 
-        pg_close($conn);
+        
     }
     // Obtener la lista de registros
     if ($action == 'listar') {
@@ -275,6 +275,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 }

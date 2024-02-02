@@ -30,7 +30,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
 
     // Eliminar un registro
@@ -57,7 +57,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        pg_close($conn);
+        
 
     }
 
@@ -83,7 +83,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        pg_close($conn);
+        
     }
 
     // Obtener la lista de registros
@@ -151,6 +151,6 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        pg_close($conn);
+        
     }
 }

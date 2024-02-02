@@ -32,7 +32,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        pg_close($conn);
+        
     }
     // Agregar un nuevo registro
     if ($action == 'agregarDet') {
@@ -80,7 +80,7 @@ if (isset($_POST['action'])) {
             }
         }
 
-        pg_close($conn);
+        
     }
     //Editar un registro
     if ($action == 'editarDet') {
@@ -104,7 +104,7 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-        pg_close($conn);
+        
     }
     //Editar un cab
     if ($action == 'editarCab') {
@@ -130,7 +130,7 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-        pg_close($conn);
+        
     }
 
 
@@ -242,6 +242,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 }

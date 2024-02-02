@@ -150,6 +150,7 @@ if (!isset($_SESSION['usuario'])) {
             $(document).on('click', '.btn-generar', function () {
                 // Obtener el ID 
                 var id = $(this).closest('tr').find('.id').text();
+                var modulo_id = $(this).closest('tr').find('.modulo_id').text();
 
                 // Confirmar la generación de asistencias
                 swal.fire({
@@ -170,7 +171,8 @@ if (!isset($_SESSION['usuario'])) {
                                 type: 'POST',
                                 data: {
                                     action: 'generar',
-                                    id: id
+                                    id: id,
+                                    modulo_id: modulo_id
                                 },
                                 beforeSend: function (objeto) {
                                     $("#resultados").html("Mensaje: Cargando...");
@@ -182,7 +184,7 @@ if (!isset($_SESSION['usuario'])) {
                             });
                         } else {
                             swal.fire({
-                                title: "No se generaran los eventos de este cronograma!",
+                                title: "No se generaran las asistencia del día!",
                                 background: "#212529"
                             })
                         }

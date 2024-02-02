@@ -28,7 +28,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#tablaPlanesClase').html(response);
@@ -43,7 +43,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#formAgregarPlanClase')[0].reset();
@@ -63,7 +63,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         $('#formAgregarPlanClaseDet')[0].reset();
@@ -100,7 +100,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         loadPlanClase();
@@ -128,7 +128,7 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
+                        $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
                         loadPlanClase();
@@ -162,9 +162,9 @@ if (!isset($_SESSION['usuario'])) {
                                     id: id
                                 },
                                 beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                                    $("#resultados").html("Mensaje: Cargando...");
+                                },
+                                success: function (response) {
                                     loadPlanClase();
                                     $('#resultado').html(response);
                                 }
@@ -177,6 +177,7 @@ if (!isset($_SESSION['usuario'])) {
                         }
                     });
             });
+
             //paginacion
             $(document).ready(function () {
                 function cargarPagina(pagina, curso) {
@@ -187,9 +188,9 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar'
                         },
                         beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                            $("#resultados").html("Mensaje: Cargando...");
+                        },
+                        success: function (response) {
                             $('#tablaPlanesClase').html(response);
                         }
                     });
@@ -214,8 +215,8 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaPlanesClase').html(response);
                 }
             });
@@ -231,8 +232,8 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 beforeSend: function (objeto) {
                     $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+                },
+                success: function (response) {
                     $('#tablaDetalle').html(response);
                 }
             });

@@ -38,7 +38,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        pg_close($conn);
+        
     }
 
     //Editar un registro
@@ -60,7 +60,7 @@ if (isset($_POST['action'])) {
             }
         }
 
-        pg_close($conn);
+        
     }
     if ($action == 'sumar') {
         if (isset($_POST['num1']) && isset($_POST['num2']) && isset($_POST['num3'])) {
@@ -246,6 +246,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 }

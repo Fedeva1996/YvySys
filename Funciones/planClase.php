@@ -28,7 +28,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
     if ($action == 'agregarDet') {
         include '../db_connect.php';
@@ -56,7 +56,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        pg_close($conn);
+        
     }
     //Editar un registro
     if ($action == 'editarCab') {
@@ -81,7 +81,7 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        pg_close($conn);
+        
     }
 
     // Obtener la lista de registros
@@ -159,7 +159,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
     // Obtener la lista de registros
     if ($action == 'verDetalle') {

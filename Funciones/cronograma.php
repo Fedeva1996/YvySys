@@ -33,7 +33,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        pg_close($conn);
+        
     }
 
     // Eliminar un registro
@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        pg_close($conn);
+        
     }
     // generar eventos
     if ($action == 'generar') {
@@ -74,7 +74,7 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        pg_close($conn);
+        
     }
 
     //Editar un registro
@@ -113,7 +113,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        pg_close($conn);
+        
     }
 
     // Obtener la lista de registros
@@ -193,7 +193,7 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        pg_close($conn);
+        
     }
     // Obtener la lista de registros
     if ($action == 'verEventos') {
@@ -239,7 +239,7 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        pg_close($conn);
+        
     }
     // Agregar un nuevo registro
     if ($action == 'asignarModulo') {
@@ -271,7 +271,7 @@ if (isset($_POST['action'])) {
             }
         }
 
-        pg_close($conn);
+        
     }
     // autocompletado
     if ($action == 'autocompletar') {
