@@ -171,9 +171,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                },
+
                     success: function (response) {
                     $('#tablaPlanesExamen').html(response);
                 }

@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
@@ -20,50 +20,50 @@ if (!isset($_SESSION['usuario'])) {
     <?php include("head.php"); ?>
     <script>
         //buscar
-        $(document).ready(function() {
-            $('#formBuscarProcesoClase').submit(function(e) {
+        $(document).ready(function () {
+            $('#formBuscarProcesoClase').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/procesoClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#tablaProcesoClase').html(response);
                     }
                 });
             });
             // Agregar nuevo
-            $('#formAgregarProcesoClase').submit(function(e) {
+            $('#formAgregarProcesoClase').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/procesoClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarProcesoClase')[0].reset();
                         $('#resultados').html(response);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             location.reload(true);
                         }, 1500);
                     }
                 });
             });
             // Agregar nuevo
-            $('#formAgregarProcesoClaseDet').submit(function(e) {
+            $('#formAgregarProcesoClaseDet').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/procesoClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarProcesoClaseDet')[0].reset();
                         $('#resultados').html(response);
                     }
                 });
             });
             //autocompletar alumno
-            $(document).ready(function() {
-                $('#materia-input').keyup(function() {
+            $(document).ready(function () {
+                $('#materia-input').keyup(function () {
                     var query = $(this).val();
 
                     if (query !== '') {
@@ -74,7 +74,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
                         });
@@ -83,7 +83,7 @@ if (!isset($_SESSION['usuario'])) {
                     }
                 });
 
-                $(document).on('click', '.suggest-element', function() {
+                $(document).on('click', '.suggest-element', function () {
                     var value = $(this).text();
                     var id = $(this).data('id-materia');
                     var id_curso = $(this).data('id-curso');
@@ -95,7 +95,7 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
             // Editar
-            $(document).on('click', '.btn-editar', function() {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var idCab = $(this).closest('tr').find('.idCab').text();
                 var idAl = $(this).closest('tr').find('.idAlumno').text();
@@ -109,13 +109,13 @@ if (!isset($_SESSION['usuario'])) {
                 $('#editPuntaje').val(puntaje);
             });
 
-            $('#formEditarProcesoClase').submit(function(e) {
+            $('#formEditarProcesoClase').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/procesoClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#resultados').html(response);
                         $('#formBuscarProcesoClase').submit();
                     },
@@ -123,23 +123,24 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina, curso, fecha) {
                     $.ajax({
                         url: 'funciones/procesoClase.php',
                         type: 'POST',
                         data: {
-                            action: 'buscarProcesoClase',
+                            action: 'listar',
                             pagina: pagina,
                             curso: curso,
                             fecha: fecha
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaProcesoClase').html(response);
                         }
                     });
                 }
-                $(document).on('click', '.btn-pagina', function() {
+                cargarPagina(1);
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     var curso = $(this).data('curso');
                     var fecha = $(this).data('fecha');
@@ -148,6 +149,20 @@ if (!isset($_SESSION['usuario'])) {
                 });
 
             });
+            // Cargar tabla
+            function loadProcesosClase() {
+                $.ajax({
+                    url: 'funciones/procesoClase.php',
+                    type: 'POST',
+                    data: {
+                        action: 'listar'
+                    },
+
+                    success: function (response) {
+                        $('#tablaProcesoClase').html(response);
+                    }
+                });
+            }
         });
     </script>
 </head>
@@ -161,11 +176,14 @@ if (!isset($_SESSION['usuario'])) {
     <div class="container">
         <h2>Proceso de clase</h2>
         <div class="mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarCurso'> <i class="bi bi-search"></i> Buscar</button>
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalReporte'><i class="bi bi-filetype-pdf"></i> Descargar reporte</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalBuscarCurso'> <i
+                    class="bi bi-search"></i> Buscar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalReporte'><i
+                    class="bi bi-filetype-pdf"></i> Descargar reporte</button>
         </div>
         <!-- Formulario para buscar por curso -->
-        <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel" aria-hidden="true" data-bs-theme="dark">
+        <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel"
+            aria-hidden="true" data-bs-theme="dark">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -198,8 +216,10 @@ if (!isset($_SESSION['usuario'])) {
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i
+                                            class="bi bi-search"></i> Buscar</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </form>
@@ -208,15 +228,18 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i class="bi bi-calendar-plus"></i> Agregar proceso de Clase</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
+                    class="bi bi-calendar-plus"></i> Agregar proceso de Clase</button>
             &nbsp;&nbsp;
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarDetalle'> <i class="bi bi-person-add"></i> Agregar entrega</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarDetalle'> <i
+                    class="bi bi-person-add"></i> Agregar entrega</button>
         </div>
         <!-- Tabla -->
         <div id="tablaProcesoClase"></div>
     </div>
     <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -257,12 +280,14 @@ if (!isset($_SESSION['usuario'])) {
                                     <input class="form-control" type="number" name="puntaje" placeholder="Puntaje">
                                 </div>
                                 <div class="mb-3">
-                                    <input class="form-control" type="text" name="descripcion" placeholder="Descripción">
+                                    <input class="form-control" type="text" name="descripcion"
+                                        placeholder="Descripción">
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -271,7 +296,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <!-- Formulario para agregar det -->
-    <div class="modal fade" id="modalAgregarDetalle" tabindex="-1" aria-labelledby="modalAgregarDetalleLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalAgregarDetalle" tabindex="-1" aria-labelledby="modalAgregarDetalleLabel"
+        aria-hidden="true" data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -324,7 +350,8 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="puntaje" placeholder="Puntaje" required>
+                                    <input class="input-group-text w-100" type="number" name="puntaje"
+                                        placeholder="Puntaje" required>
                                 </div>
                             </div>
                         </div>
@@ -338,7 +365,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <!-- Formulario para ir a reporte -->
-    <div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -373,7 +401,8 @@ if (!isset($_SESSION['usuario'])) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
@@ -382,7 +411,8 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true" data-bs-theme="dark">
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+        data-bs-theme="dark">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -432,17 +462,20 @@ if (!isset($_SESSION['usuario'])) {
                                 <div class="col">
                                     <div class="input-group flex-nowrap mb-3">
                                         <span class="input-group-text" id="addon-wrapping">Entrega</span>
-                                        <input class="form-control" id="editFechaEntrega" type="date" name="fecha_entrega" required>
+                                        <input class="form-control" id="editFechaEntrega" type="date"
+                                            name="fecha_entrega" required>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="mb-3">
-                                        <input class="input-group-text w-100" id="editPuntaje" type="number" name="puntaje" placeholder="Puntaje" required>
+                                        <input class="input-group-text w-100" id="editPuntaje" type="number"
+                                            name="puntaje" placeholder="Puntaje" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar cambios</button>
+                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                                    cambios</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>

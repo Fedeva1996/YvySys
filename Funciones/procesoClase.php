@@ -83,7 +83,7 @@ if (isset($_POST['action'])) {
         
     }
 
-    if ($action == 'buscarProcesoClase') {
+    if ($action == 'listar') {
         include '../db_connect.php';
 
         // Paginación
@@ -95,131 +95,50 @@ if (isset($_POST['action'])) {
 
         $fecha_p = isset($_POST['fecha_p']) ? $_POST['fecha_p'] : $fecha;
         $curso = isset($_POST['id_curso']) ? $_POST['id_curso'] : $id_curso;
-        if (isset($_POST['fecha_p']) && $_POST['id_curso']) {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT 
-            procesos_clase_cab.id_procesos_clase,
-            procesos_clase_cab.fecha_entrega as fecha_entregat,
-            procesos_clase_cab.puntaje,
-            procesos_clase_cab.descripcion,
-            materias.descri as materia,
-            cursos.descri as curso,
-            procesos_clase_det.id_procesos_clase_det,
-            docentes.nombre as nombred,
-            docentes.apellido as apellidod,
-            alumnos.id_alumno,
-            alumnos.nombre,
-            alumnos.apellido,
-            procesos_clase_det.fecha_entrega,
-            procesos_clase_det.puntaje_hecho,
-            procesos_clase_det.estado
+        $sql = "SELECT *
             FROM 
-            procesos_clase_det
-            JOIN procesos_clase_cab ON procesos_clase_det.procesos_clase_cab_id = procesos_clase_cab.id_procesos_clase
-            JOIN inscripciones ON procesos_clase_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            JOIN materias ON procesos_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente
-            WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha_p' AND '$fecha_p'
-            AND cursos.id_curso LIKE '$curso'
-            ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
+            proceso_clase_cab_v
+            ORDER by id_proceso_clase DESC LIMIT $registros_por_pagina OFFSET $offset";
             $resultados = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
-        } else {
-            $sql = "SELECT 
-            procesos_clase_cab.id_procesos_clase,
-            procesos_clase_cab.fecha_entrega as fecha_entregat,
-            procesos_clase_cab.puntaje,
-            procesos_clase_cab.descripcion,
-            materias.descri as materia,
-            cursos.descri as curso,
-            procesos_clase_det.id_procesos_clase_det,
-            docentes.nombre as nombred,
-            docentes.apellido as apellidod,
-            alumnos.id_alumno,
-            alumnos.nombre,
-            alumnos.apellido,
-            procesos_clase_det.fecha_entrega,
-            procesos_clase_det.puntaje_hecho,
-            procesos_clase_det.estado
-            FROM 
-            procesos_clase_det
-            JOIN procesos_clase_cab ON procesos_clase_det.procesos_clase_cab_id = procesos_clase_cab.id_procesos_clase
-            JOIN inscripciones ON procesos_clase_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            JOIN materias ON procesos_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente
-            WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha' AND '$fecha'
-            AND cursos.id_curso LIKE '$id_curso'
-            ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultados = pg_query($conn, $sql);
-            $cabecera = pg_query($conn, $sql);
-        }
 
         if (pg_num_rows($resultados) > 0) {
-            if ($cab = pg_fetch_assoc($cabecera)) {
-                echo "<!-- cabecera -->";
-                echo "<div class='row g-3'>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Curso</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['curso'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Materia</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['materia'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Descripción</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['descripcion'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Puntaje</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['puntaje'] . "'>";
-                echo "</div>";
-                echo "<div class='col-md-6'>";
-                echo "<label>Docente</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['nombred'] . " " . $cab['apellidod'] . "'>";
-                echo "</div>";;
-                echo "<div class='col-md-6'>";
-                echo "<label>Fecha</label>";
-                echo "<input type='text' class='form-control' disabled value='" . $cab['fecha_entregat'] . "'>";
-                echo "</div>";
-                echo "</div>";
-
-                echo "</br>";
-            }
-
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
                 . "<th>ID</th>"
-                . "<th>Nombre</th>"
                 . "<th>Fecha entrega</th>"
-                . "<th>Puntaje hecho</th>"
-                . "<th>Estado</th>"
+                . "<th>Puntaje total</th>"
+                . "<th>descripción</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_procesos_clase_det'] . "</td>";
-                echo "<td class='idCab' style='display:none;'>" . $fila['id_procesos_clase'] . "</td>";
-                echo "<td class='idAlumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
-                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
-                echo "<td class='fecha_entrega'>" . $fila['fecha_entrega'] . "</td>";
-                echo "<td class='puntaje'>" . $fila['puntaje_hecho'] . "</td>";
-                if ($fila['estado'] == false) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Asignado</td>";
-                } else if ($fila['estado'] == true) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Presentado</td>";
+                echo "<td class='id'>" . $fila['id_proceso_clase'] . "</td>";
+                echo "<td class='fecha_entrega' style='display:none;'>" . $fila['fecha_entrega'] . "</td>";
+                echo "<td class='fecha_entrega_f'>" . $fila['fecha_entrega_f'] . "</td>";
+                echo "<td class='puntaje'>" . $fila['puntaje'] . "</td>";
+                echo "<td class='descripcion'>" . $fila['descripcion'] . "</td>";
+                if ($fila['estado'] == "f") {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-generar btn-sm'  
+                    data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                } else {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Puntuar</button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-           data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
                 echo "</tr>";
             }
             echo "</tbody>";
@@ -227,14 +146,8 @@ if (isset($_POST['action'])) {
 
             // Paginación
             $sql_total = "SELECT
-            COUNT(procesos_clase_det.id_procesos_clase_det) AS total FROM 
-            procesos_clase_det
-            JOIN procesos_clase_cab ON procesos_clase_det.procesos_clase_cab_id = procesos_clase_cab.id_procesos_clase
-            JOIN inscripciones ON procesos_clase_det.inscripcion_id = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno
-            JOIN materias ON procesos_clase_cab.materia_id = materias.id_materia
-            JOIN cursos ON materias.curso_id = cursos.id_curso
-            JOIN docentes ON materias.docente_id = docentes.id_docente";
+            COUNT(*) AS total FROM 
+            proceso_clase_cab_v";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];

@@ -203,9 +203,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                },
+
                 success: function (response) {
                     $('#tablaPlanesClase').html(response);
                 }
@@ -220,9 +218,7 @@ if (!isset($_SESSION['usuario'])) {
                     action: 'verDetalle',
                     id: id
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                },
+
                 success: function (response) {
                     $('#tablaDetalle').html(response);
                 }
