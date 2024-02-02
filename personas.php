@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarPersona')[0].reset();
                         loadPersonas();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -74,7 +74,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadPersonas();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -111,7 +111,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadPersonas();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -245,7 +245,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </div>
     </div>
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 </body>
 
 </html>

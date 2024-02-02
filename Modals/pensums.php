@@ -173,11 +173,11 @@
                         <?php
                         include 'db_connect.php';
                         $sql = "SELECT * FROM pensum_cab";
-                        $resultado = pg_query($conn, $sql);
-                        if (pg_num_rows($resultado) > 0) {
+                        $resultados = pg_query($conn, $sql);
+                        if (pg_num_rows($resultados) > 0) {
                             echo "<select id='editCab' class='input-group-text w-100' name='id_pensum' required>";
                             echo "<option selected disabled>Seleccione cabecera</option>";
-                            while ($fila = pg_fetch_assoc($resultado)) {
+                            while ($fila = pg_fetch_assoc($resultados)) {
                                 echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
                             }
                             echo "</select>";
@@ -228,11 +228,11 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM pensum_cab";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='form-select  w-100 keep'  name='id' required>";
                                     echo "<option selected disabled>Seleccione pensum</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
                                     }
                                     echo "</select>";

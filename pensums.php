@@ -44,9 +44,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaPensums').html(response);
                     }
@@ -94,7 +92,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function (response) {
                         $('#formAgregarPensum')[0].reset();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
 
                         // Realiza la segunda llamada AJAX para almacenar los detalles
                         $.ajax({
@@ -108,7 +106,7 @@ if (!isset($_SESSION['usuario'])) {
                                 $("#resultados").html("Mensaje: Cargando...");
                             },
                             success: function (response) {
-                                $('#resultado').html(response);
+                                $('#resultados').html(response);
                             }
                         });
                     }
@@ -137,11 +135,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                         setTimeout(function () {
                             location.reload();
                         }, 2000);
@@ -177,11 +173,9 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/pensum.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                         setTimeout(function () {
                             location.reload();
                         }, 2000);
@@ -220,7 +214,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadAlumnos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -284,7 +278,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
 
         <!-- Mensaje error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaPensums"></div>

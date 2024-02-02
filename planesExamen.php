@@ -54,7 +54,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarPlanExamen')[0].reset();
                         loadPlanesExamen();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -93,7 +93,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadPlanesExamen();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -127,7 +127,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadPlanesExamen();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -200,7 +200,7 @@ if (!isset($_SESSION['usuario'])) {
                     class="bi bi-filetype-pdf"></i> Descargar reporte</button>
         </div>
         <!-- mensaje exito/error -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
         <!-- Tabla -->
         <div id="tablaPlanesExamen"></div>
     </div>

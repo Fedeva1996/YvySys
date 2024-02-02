@@ -89,11 +89,11 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM cursos";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='form-select  w-100' name='id_curso' required>";
                                     echo "<option selected disabled>Seleccione curso</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                     }
                                     echo "</select>";
@@ -134,11 +134,11 @@
                             <?php
                             include 'db_connect.php';
                             $sql = "SELECT * FROM modulo_v";
-                            $resultado = pg_query($conn, $sql);
-                            if (pg_num_rows($resultado) > 0) {
+                            $resultados = pg_query($conn, $sql);
+                            if (pg_num_rows($resultados) > 0) {
                                 echo "<select class='form-select  w-100' name='modulo' required>";
                                 echo "<option selected disabled>Seleccione modulo</option>";
-                                while ($fila = pg_fetch_assoc($resultado)) {
+                                while ($fila = pg_fetch_assoc($resultados)) {
                                     echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['modulo'] . "</option>";
                                 }
                                 echo "</select>";
@@ -180,11 +180,11 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM cursos";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='form-select  w-100' id='id_curso' name='id_curso' required>";
                                     echo "<option selected disabled>Seleccione curso</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                     }
                                     echo "</select>";
@@ -227,10 +227,10 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM cursos";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='editCurso input-group-text w-100' id='editCurso' name='id_curso' required>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
                                     }
                                     echo "</select>";

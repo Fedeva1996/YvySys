@@ -98,9 +98,9 @@ if (isset($_POST['action'])) {
         $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM turno WHERE descri LIKE '$buscar%' ORDER by id_turno DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -112,7 +112,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_turno'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";

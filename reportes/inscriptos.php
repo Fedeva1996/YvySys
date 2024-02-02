@@ -138,9 +138,9 @@ else{
     JOIN alumnos on inscripciones.alumno_id = alumnos.id_alumno 
     JOIN cursos on inscripciones.curso_id = cursos.id_curso 
     ORDER by id_inscripcion";}
-$resultado = pg_query($conn, $sql);
+$resultados = pg_query($conn, $sql);
 
-while ($fila = pg_fetch_assoc($resultado)) {
+while ($fila = pg_fetch_assoc($resultados)) {
     $pdf->Cell(30, 6, ($fila['nombre']), 1, 0, 'C');
     $pdf->Cell(30, 6, $fila['apellido'], 1, 0, 'C');
     $pdf->Cell(20, 6, $fila['ci'], 1, 0, 'C');

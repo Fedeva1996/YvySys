@@ -112,9 +112,9 @@ if (isset($_POST['action'])) {
         OR apellido ILIKE '$buscar%' 
         OR ci ILIKE '$buscar%'  
         ORDER by id_persona DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm table-sm'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -132,7 +132,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td scope='row' class='id'>" . $fila['id_persona'] . "</td>";
                 echo "<td class='ci'>" . $fila['ci'] . "</td>";

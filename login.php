@@ -27,12 +27,12 @@ if (isset($_POST['action'])) {
 
         // Busca el usuario en la base de datos
         $consulta = "SELECT * FROM usuario_v WHERE usuario='$usuario' AND estado = 1";
-        $resultado = pg_query($conexion, $consulta);
+        $resultados = pg_query($conexion, $consulta);
 
         // Verifica si el usuario existe y la contraseña es correcta
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             // El usuario existe, verificar la contraseña
-            $fila = pg_fetch_assoc($resultado);
+            $fila = pg_fetch_assoc($resultados);
             if ($usuario == $fila['usuario'] && md5($contraseña) == $fila['contrasena']) {
                 // La contraseña es correcta, iniciar sesión
                 // Evitar la posibilidad de fijación de sesión

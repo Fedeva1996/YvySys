@@ -16,11 +16,11 @@
                             <?php
                             include 'db_connect.php';
                             $sql = "SELECT * FROM curso_v";
-                            $resultado = pg_query($conn, $sql);
-                            if (pg_num_rows($resultado) > 0) {
+                            $resultados = pg_query($conn, $sql);
+                            if (pg_num_rows($resultados) > 0) {
                                 echo "<select class='form-select  w-100 keep'  name='pensum' required>";
                                 echo "<option selected disabled>Seleccione pensum</option>";
-                                while ($fila = pg_fetch_assoc($resultado)) {
+                                while ($fila = pg_fetch_assoc($resultados)) {
                                     echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['descripcion'] . " » Turno " . $fila['turno'] . "</option>";
                                 }
                                 echo "</select>";

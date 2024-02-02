@@ -35,7 +35,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function(response) {
                         $('#formAgregarPeriodo')[0].reset();
                         loadPeriodos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -64,7 +64,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         loadPeriodos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -96,7 +96,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function(response) {
                                     loadPeriodos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -189,7 +189,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaPeriodo"></div>
     </div>
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 </body>
 
 </html>

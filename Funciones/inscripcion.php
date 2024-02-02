@@ -10,11 +10,11 @@ if (isset($_POST['action'])) {
 
         // Realizar la consulta a la base de datos
         $sql = "SELECT id_alumno, nombre, apellido FROM alumno_v WHERE ci LIKE '$query%'";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if (pg_num_rows($resultado) > 0) {
-            while ($row = pg_fetch_assoc($resultado)) {
+        if (pg_num_rows($resultados) > 0) {
+            while ($row = pg_fetch_assoc($resultados)) {
                 $id = $row['id_alumno'];
                 $nombre = $row['nombre'];
                 $apellido = $row['apellido'];
@@ -159,9 +159,9 @@ if (isset($_POST['action'])) {
         FROM inscripcion_curso_v
         WHERE  nombre LIKE '$buscar%' OR apellido LIKE '$buscar%' OR ci LIKE '$buscar%'
         ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm accordion' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -177,7 +177,7 @@ if (isset($_POST['action'])) {
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             $row = 0;
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";

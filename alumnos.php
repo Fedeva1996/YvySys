@@ -27,13 +27,11 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
                         loadAlumnos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -77,13 +75,11 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarAlumnoExistente')[0].reset();
                         loadAlumnos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
 
                     }
                 });
@@ -119,12 +115,10 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadAlumnos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -161,7 +155,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadAlumnos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -203,9 +197,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaAlumnos').html(response);
                     }
@@ -223,9 +215,7 @@ if (!isset($_SESSION['usuario'])) {
                         id: id
 
                     },
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaInscripciones').html(response);
                     }
@@ -281,7 +271,7 @@ if (!isset($_SESSION['usuario'])) {
             </form>
         </div>
         <!-- Mensaje error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaAlumnos"></div>

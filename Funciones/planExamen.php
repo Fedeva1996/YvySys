@@ -99,11 +99,11 @@ if (isset($_POST['action'])) {
 
         $curso = $_POST['cronogramaId'];
         $sql = "SELECT * FROM modulo_v WHERE curso_id = (select curso_id from cronogramas where id_cronograma = $curso)";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<option selected disabled>Seleccione módulo</option>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<option value='" . $fila['id_modulo'] . "'>" . $fila['modulo'] . "</option>";
             }
         } else {
@@ -195,16 +195,16 @@ if (isset($_POST['action'])) {
             WHERE fecha BETWEEN '$fecha_p' AND '$fecha_p'
             AND descri = '$materia'
             ORDER by id_plan_examen LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
             $sql = "SELECT 
             *
             FROM plan_examen_v
             ORDER by id_plan_examen LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
         }
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -221,7 +221,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_examen'] . "</td>";
                 echo "<td class='examen' style='display:none;'>" . $fila['examen_id'] . "</td>";

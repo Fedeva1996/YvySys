@@ -123,6 +123,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- mostrar exito/error -->
+                <div id="resultados2"></div>
                 <!-- Tabla -->
                 <div id="tablaVerAsistencias"></div>
             </div>

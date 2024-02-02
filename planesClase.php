@@ -27,9 +27,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaPlanesClase').html(response);
                     }
@@ -42,12 +40,10 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarPlanClase')[0].reset();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                         setTimeout(function () {
                             location.reload(true);
                         }, 1500);
@@ -62,14 +58,12 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarPlanClaseDet')[0].reset();
                         $("#keep").val(keep).change();
                         loadPlanClase();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -99,12 +93,10 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadPlanClase();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -127,12 +119,10 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/planClase.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadPlanClase();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -166,7 +156,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadPlanClase();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -260,7 +250,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
 
         <!-- Mensaje exito/error -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
         <!-- Tabla -->
         <div id="tablaPlanesClase"></div>
 

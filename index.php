@@ -38,7 +38,7 @@ if (isset($_SESSION['usuario'])) {
                     $("#resultados").html("Mensaje: Cargando...");
                     },
                     success: function (response) {
-            $('#resultado').html(response);
+            $('#resultados').html(response);
             location.reload();
           }
         });
@@ -53,7 +53,7 @@ if (isset($_SESSION['usuario'])) {
     <img class="mb-4" src="imagenes/Icono.png" alt="" width="144" height="144">
     <h1 class="h3 mb-3 font-weight-normal">Iniciar sesión</h1>
     <!-- Mensaje error/exito -->
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 
     <input type="hidden" name="action" value="login">
 

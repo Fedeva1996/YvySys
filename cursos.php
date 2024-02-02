@@ -36,7 +36,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarCurso')[0].reset();
                         loadCursos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -77,7 +77,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadCursos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -113,7 +113,7 @@ title: "Estás seguro de que deseas eliminar este registro?",
                     },
                     success: function (response) {
                                     loadCursos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -215,7 +215,7 @@ title: "Estás seguro de que deseas eliminar este registro?",
             </form>
         </div>
         <!-- Mensaje error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaCurso"></div>

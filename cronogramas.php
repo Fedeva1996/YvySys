@@ -51,13 +51,11 @@ if (!isset($_SESSION['usuario'])) {
                         "action": "asignarModulo",
                         "datos": datosJSON
                     },
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarCronograma')[0].reset();
                         loadCronogramas();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -72,13 +70,11 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/cronograma.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarCronograma')[0].reset();
                         loadCronogramas();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -114,12 +110,10 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/cronograma.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadCronogramas();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -155,7 +149,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadCronogramas();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -197,7 +191,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
                                 success: function (response) {
                                     loadCronogramas();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -262,9 +256,7 @@ if (!isset($_SESSION['usuario'])) {
                         query: query,
                         action: 'autocompletar'
                     },
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#suggestions').html(response).show();
                     }
@@ -343,7 +335,7 @@ if (!isset($_SESSION['usuario'])) {
             </form>
         </div>
         <!-- Mensaje error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaCronograma"></div>

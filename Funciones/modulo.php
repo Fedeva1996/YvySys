@@ -86,9 +86,9 @@ if (isset($_POST['action'])) {
         OR curso ILIKE '%$buscar%' 
         ORDER BY id_modulo  
         LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -100,7 +100,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_modulo'] . "</td>";
                 echo "<td class='id_pensum_det' style='display:none;'>" . $fila['pensum_det_id'] . "</td>";
@@ -153,11 +153,11 @@ if (isset($_POST['action'])) {
 
         // Realizar la consulta a la base de datos
         $sql = "SELECT id_docente, nombre, apellido FROM docente_v WHERE ci LIKE '$query%'";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if (pg_num_rows($resultado) > 0) {
-            while ($row = pg_fetch_assoc($resultado)) {
+        if (pg_num_rows($resultados) > 0) {
+            while ($row = pg_fetch_assoc($resultados)) {
                 $id = $row['id_docente'];
                 $nombre = $row['nombre'];
                 $apellido = $row['apellido'];

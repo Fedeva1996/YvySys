@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formGenerarModulos')[0].reset();
                         loadModulos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -90,7 +90,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadModulos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -126,7 +126,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadModulos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -226,7 +226,7 @@ if (!isset($_SESSION['usuario'])) {
             </form>
         </div>
         <!-- Mensaje error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
         
         <!-- Tabla -->
         <div id="tablaModulo"></div>

@@ -27,9 +27,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaAsistencia').html(response);
                     }
@@ -42,13 +40,11 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarAsistencia')[0].reset();
                         loadAsistencias();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -106,13 +102,30 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/asistencia.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                        $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                         loadAsistencias();
                         $('#formBuscarAsistencia').submit();
+                    },
+                });
+            });
+            // marcar asistencia
+            $(document).on('change', '.btn-asistencia', function () {
+                var id = $(this).closest('tr').find('.id').text();
+                var estado = $('#asistenciaCheck').is(':checked') ;
+
+                $.ajax({
+                    url: 'funciones/asistencia.php',
+                    type: 'POST',
+                    data: {
+                        action: 'marcarAsistencia',
+                        id: id,
+                        estado: estado,
+                    },
+
+                    success: function (response) {
+                        $('#resultados2').html(response);
                     },
                 });
             });
@@ -128,9 +141,6 @@ if (!isset($_SESSION['usuario'])) {
                             pagina: pagina,
                             id_modulo: id_modulo,
                             fecha: fecha
-                        },
-                        beforeSend: function (objeto) {
-                            $("#resultados").html("Mensaje: Cargando...");
                         },
                         success: function (response) {
                             $('#tablaAsistencia').html(response);
@@ -174,12 +184,10 @@ if (!isset($_SESSION['usuario'])) {
                                     id: id,
                                     modulo_id: modulo_id
                                 },
-                                beforeSend: function (objeto) {
-                                    $("#resultados").html("Mensaje: Cargando...");
-                                },
+
                                 success: function (response) {
+                                    $('#resultados').html(response);
                                     loadCronogramas();
-                                    $('#resultado').html(response);
                                 }
                             });
                         } else {
@@ -199,9 +207,6 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                },
                 success: function (response) {
                     $('#tablaAsistencia').html(response);
                 }
@@ -215,9 +220,6 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'verAsistencias',
                     id: id
-                },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
                 },
                 success: function (response) {
                     $('#tablaVerAsistencias').html(response);
@@ -243,7 +245,7 @@ if (!isset($_SESSION['usuario'])) {
                     class="bi bi-calendar-plus"></i> Agregar asistencia de hoy</button>
         </div>
         <!-- mostrar exito/error -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaAsistencia"></div>

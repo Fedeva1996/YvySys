@@ -147,9 +147,9 @@ if (isset($_POST['action'])) {
         $sql = "SELECT * FROM public.pensum_v
         WHERE id_pensum = '$id'
         ORDER by id_pensum_det LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
         $cabecera = pg_query($conn, $sql);
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='head' data-bs-theme='dark'>";
@@ -206,7 +206,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id_det'>" . $fila['id_pensum_det'] . "</td>";
                 echo "<td class='id_cab' style='display:none;'>" . $fila['id_pensum'] . "</td>";

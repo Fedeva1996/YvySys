@@ -52,10 +52,10 @@ if (isset($_POST['action'])) {
         FROM calificaciones
         JOIN materias ON calificaciones.id_materia = materias.id_materia
         WHERE materias.id_curso = $id";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
-            while ($fila = pg_fetch_assoc($resultado)) {
+        if (pg_num_rows($resultados) > 0) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
             }
         }
@@ -89,8 +89,8 @@ if (isset($_POST['action'])) {
                 $paso = 0;
                 $color = "#e57373";
             }
-            $resultado = [$total, $calificacion, $paso, $color];
-            echo json_encode($resultado);
+            $resultados = [$total, $calificacion, $paso, $color];
+            echo json_encode($resultados);
         }
     }
     if ($action == 'buscar') {
@@ -135,7 +135,7 @@ if (isset($_POST['action'])) {
             WHERE cursos.id_curso LIKE '%$curso%'
             AND materias.id_materia LIKE '%$materia%'
             ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
         } else {
             // Consulta para obtener los alumnos
             $sql = "SELECT
@@ -165,10 +165,10 @@ if (isset($_POST['action'])) {
                 WHERE cursos.id_curso LIKE '%$id_curso%'
                 AND materias.id_materia LIKE '%$id_materia%'
                 ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
         }
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -188,7 +188,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_calificacion'] . "</td>";
                 echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";

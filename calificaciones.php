@@ -73,7 +73,7 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#formBuscarCurso').submit();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -279,7 +279,7 @@ if (!isset($_SESSION['usuario'])) {
         </div>
     </div>
     </div>
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 </body>
 
 </html>

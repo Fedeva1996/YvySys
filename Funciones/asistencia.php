@@ -26,11 +26,11 @@ if (isset($_POST['action'])) {
         JOIN docentes ON materias.docente_id = docentes.id_docente
         WHERE ('$date' BETWEEN plan_clase_cab.fecha_ini AND plan_clase_cab.fecha_fin)
         AND materias.descri LIKE '$query%'";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if (pg_num_rows($resultado) > 0) {
-            while ($row = pg_fetch_assoc($resultado)) {
+        if (pg_num_rows($resultados) > 0) {
+            while ($row = pg_fetch_assoc($resultados)) {
                 $id = $row['id_plan_clase'];
                 $id_materia = $row['id_materia'];
                 $materia = $row['materia'];
@@ -68,7 +68,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        
+
     }
     //Editar un registro
     if ($action == 'editar') {
@@ -91,7 +91,28 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        
+
+    }
+    //marcar asistencia
+    if ($action == 'marcarAsistencia') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+        $estado = $_POST['estado'];
+
+        $sql = "UPDATE asistencia_a_det SET estado = $estado WHERE id_asistencia_det = $id";
+        if (@pg_query($conn, $sql) == TRUE) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Asistencia registrada.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        }
+
     }
 
     if ($action == 'listar') {
@@ -125,9 +146,9 @@ if (isset($_POST['action'])) {
             FROM asistencia_alumno_cab_v WHERE fecha = '$fecha' AND modulo_id = $id_modulo
             ORDER by id_asistencia DESC LIMIT $registros_por_pagina OFFSET $offset";
         }
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
@@ -139,7 +160,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_asistencia'] . "</td>";
                 echo "<td class='plan_clase_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";
@@ -198,7 +219,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
     if ($action == 'verAsistencias') {
         include '../db_connect.php';
@@ -210,9 +231,9 @@ if (isset($_POST['action'])) {
             FROM asistencia_alumno_det_v WHERE asistencia_cab_id = $id
             ORDER by id_asistencia_det DESC";
 
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
@@ -221,11 +242,10 @@ if (isset($_POST['action'])) {
                 . "<th>Justificativo</th>"
                 . "<th>Obs</th>"
                 . "<th>Asistencia</th>"
-                . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_asistencia_det'] . "</td>";
                 echo "<td>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
@@ -236,15 +256,13 @@ if (isset($_POST['action'])) {
                     echo "<td> Justificado</td>";
                 }
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
-                if ($fila['estado'] == false) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Ausente</td>";
-                } else if ($fila['estado'] == true) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Presente</td>";
-                }
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-           data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
+
+                $checked = $fila['estado'] != 'f' ? 'checked' : '';
+
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
+                echo "<td><div class='form-check form-switch'>
+                    <input class='form-check-input btn-asistencia' type='checkbox' id='asistenciaCheck' role='switch' $checked>
+                    </div></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
@@ -252,7 +270,7 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 
     // generar eventos
@@ -263,12 +281,12 @@ if (isset($_POST['action'])) {
         $modulo_id = $_POST['modulo_id'];
 
         $sql = "SELECT id_inscripcion_det FROM inscripciones_det WHERE modulo_id = $modulo_id";
-        
-        $resultado = pg_query($conn, $sql);
 
-        if ($resultado) {
-            if (pg_num_rows($resultado) > 0) {
-                while ($fila = pg_fetch_assoc($resultado)) {
+        $resultados = pg_query($conn, $sql);
+
+        if ($resultados) {
+            if (pg_num_rows($resultados) > 0) {
+                while ($fila = pg_fetch_assoc($resultados)) {
                     $inscripcion = $fila['id_inscripcion_det'];
                     $sql2 = "INSERT INTO asistencia_a_det(asistencia_cab_id, inscripcion_det_id) VALUES ($id, $inscripcion)";
                     if (@pg_query($conn, $sql2)) {
@@ -282,7 +300,6 @@ if (isset($_POST['action'])) {
                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>";
                     }
-                    
                 }
             }
         } else if (@!pg_query($conn, $sql)) {
@@ -291,6 +308,6 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        
+
     }
 }

@@ -96,11 +96,11 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM cronograma_v";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='form-select w-100 keep' name='cronograma' id='cronogramaSelect' required>";
                                     echo "<option selected disabled>Seleccione cronograma</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_cronograma'] . "'>" . $fila['descri'] . " > " . $fila['fecha_inicio'] . " al " . $fila['fecha_fin'] . "</option>";
                                     }
                                     echo "</select>";
@@ -229,11 +229,11 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM cronograma_v";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<select class='form-select w-100 keep' name='cronograma' id='editarCronogramaSelect' required>";
                                     echo "<option selected disabled>Seleccione cronograma</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_cronograma'] . "'>" . $fila['descri'] . " > " . $fila['fecha_inicio'] . " al " . $fila['fecha_fin'] . "</option>";
                                     }
                                     echo "</select>";

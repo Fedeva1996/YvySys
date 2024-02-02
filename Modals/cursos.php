@@ -16,12 +16,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM pensum_cab";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Pensum</label>";
                                     echo "<select class='form-select  w-100'  name='id_pensum' required>";
                                     echo "<option selected disabled>Seleccione pensum</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . " » " . $fila['resolucion'] . " » " . $fila['fecha_res'] . "</option>";
                                     }
                                     echo "</select>";
@@ -36,12 +36,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM periodo";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Periodo</label>";
                                     echo "<select class='form-select  w-100'  name='id_periodo' required>";
                                     echo "<option selected disabled>Seleccione periodo</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
                                     }
                                     echo "</select>";
@@ -54,12 +54,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM turno";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Turno</label>";
                                     echo "<select class='form-select  w-100'  name='id_turno' required>";
                                     echo "<option selected disabled>Seleccione turno</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
                                     }
                                     echo "</select>";
@@ -97,12 +97,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM pensum_cab";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Pensum</label>";
                                     echo "<select class='form-select  w-100'  name='id_pensum' required id='editPensum'>";
                                     echo "<option selected disabled>Seleccione pensum</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
                                     }
                                     echo "</select>";
@@ -115,12 +115,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM periodo";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Periodo</label>";
                                     echo "<select class='form-select  w-100'  name='id_periodo' required id='editPeriodo'>";
                                     echo "<option selected disabled>Seleccione periodo</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_periodo'] . "'>" . $fila['ano'] . " | " . $fila['descripcion'] . "</option>";
                                     }
                                     echo "</select>";
@@ -135,12 +135,12 @@
                                 <?php
                                 include 'db_connect.php';
                                 $sql = "SELECT * FROM turno";
-                                $resultado = pg_query($conn, $sql);
-                                if (pg_num_rows($resultado) > 0) {
+                                $resultados = pg_query($conn, $sql);
+                                if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Turno</label>";
                                     echo "<select class='form-select  w-100'  name='id_turno' required id='editTurno>";
                                     echo "<option selected disabled>Seleccione turno</option>";
-                                    while ($fila = pg_fetch_assoc($resultado)) {
+                                    while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_turno'] . "'>" . $fila['descri'] . " | " . $fila['horario'] . "</option>";
                                     }
                                     echo "</select>";

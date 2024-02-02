@@ -97,9 +97,9 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM plan_clase_cab_v ORDER by id_plan_clase LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -112,7 +112,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_clase'] . "</td>";
                 echo "<td class='evento_id' style='display:none;'>" . $fila['evento_id'] . "</td>";
@@ -174,9 +174,9 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM plan_clase_det_v ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -190,7 +190,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_clase_det'] . "</td>";
                 echo "<td class='plan_clase_cab_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";

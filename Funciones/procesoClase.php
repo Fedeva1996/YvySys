@@ -124,7 +124,7 @@ if (isset($_POST['action'])) {
             WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha_p' AND '$fecha_p'
             AND cursos.id_curso LIKE '$curso'
             ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         } else {
             $sql = "SELECT 
@@ -154,11 +154,11 @@ if (isset($_POST['action'])) {
             WHERE procesos_clase_cab.fecha_entrega BETWEEN '$fecha' AND '$fecha'
             AND cursos.id_curso LIKE '$id_curso'
             ORDER by id_procesos_clase_det DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultado = pg_query($conn, $sql);
+            $resultados = pg_query($conn, $sql);
             $cabecera = pg_query($conn, $sql);
         }
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             if ($cab = pg_fetch_assoc($cabecera)) {
                 echo "<!-- cabecera -->";
                 echo "<div class='row g-3'>";
@@ -203,7 +203,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_procesos_clase_det'] . "</td>";
                 echo "<td class='idCab' style='display:none;'>" . $fila['id_procesos_clase'] . "</td>";

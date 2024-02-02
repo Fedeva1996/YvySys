@@ -129,9 +129,9 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * from cronograma_v WHERE descri ILIKE '%$buscar%' ORDER by id_cronograma DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -143,7 +143,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_cronograma'] . "</td>";
                 echo "<td class='curso_id' style='display:none;'>" . $fila['curso_id'] . "</td>";
@@ -203,9 +203,9 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * from evento_v WHERE cronograma_id = '$id' ORDER by id_evento ASC";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -217,7 +217,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_evento'] . "</td>";
                 echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
@@ -282,11 +282,11 @@ if (isset($_POST['action'])) {
 
         // Realizar la consulta a la base de datos
         $sql = "SELECT id_modulo, descri FROM modulos WHERE descri ILIKE '$query%'";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
-        if (pg_num_rows($resultado) > 0) {
-            while ($row = pg_fetch_assoc($resultado)) {
+        if (pg_num_rows($resultados) > 0) {
+            while ($row = pg_fetch_assoc($resultados)) {
                 $id = $row['id_modulo'];
                 $descri = $row['descri'];
                 echo '<div class="suggest-element" data-id-modulo="' . $id . '">' . $descri . '</div>';

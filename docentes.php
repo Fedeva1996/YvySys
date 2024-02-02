@@ -33,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarDocente')[0].reset();
                         loadDocentes();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -83,7 +83,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarExistente')[0].reset();
                         loadDocentes();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
 
                     }
                 });
@@ -127,7 +127,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadDocentes();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -163,7 +163,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadAlumnos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -270,7 +270,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaDocentes"></div>
     </div>
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 
 </body>
 

@@ -102,9 +102,9 @@ if (isset($_POST['action'])) {
         else{
             $sql = "SELECT * FROM periodo WHERE ano = $buscar ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
         }
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -116,7 +116,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_periodo'] . "</td>";
                 echo "<td class='ano'>" . $fila['ano'] . "</td>";

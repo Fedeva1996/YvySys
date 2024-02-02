@@ -119,9 +119,9 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * from curso_v WHERE curso ILIKE '%$buscar%' ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
-        $resultado = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
-        if (pg_num_rows($resultado) > 0) {
+        if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
@@ -136,7 +136,7 @@ if (isset($_POST['action'])) {
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
-            while ($fila = pg_fetch_assoc($resultado)) {
+            while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_curso'] . "</td>";
                 echo "<td class='id_pensum' style='display:none;'>" . $fila['id_pensum'] . "</td>";

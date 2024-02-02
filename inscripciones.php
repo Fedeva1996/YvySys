@@ -35,7 +35,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -86,7 +86,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarInscripcion')[0].reset();
                         loadInscripcion();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
 
                     }
                 });
@@ -116,7 +116,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadInscripcion();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -139,7 +139,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadInscripcion();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -175,7 +175,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadInscripcion();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -217,7 +217,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadInscripcion();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -319,7 +319,7 @@ if (!isset($_SESSION['usuario'])) {
             </form>
         </div>
         <!-- muestra resultasdo error/exito -->
-        <div id="resultado"></div>
+        <div id="resultados"></div>
 
         <!-- Tabla -->
         <div id="tablaInscripcion"></div>

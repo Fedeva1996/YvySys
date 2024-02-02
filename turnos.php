@@ -36,7 +36,7 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#formAgregarTurno')[0].reset();
                         loadTurnos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     }
                 });
             });
@@ -70,7 +70,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                         loadTurnos();
-                        $('#resultado').html(response);
+                        $('#resultados').html(response);
                     },
                 });
             });
@@ -105,7 +105,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                     success: function (response) {
                                     loadTurnos();
-                                    $('#resultado').html(response);
+                                    $('#resultados').html(response);
                                 }
                             });
                         } else {
@@ -210,7 +210,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaTurno"></div>
     </div>
-    <div id="resultado"></div>
+    <div id="resultados"></div>
 </body>
 
 </html>
