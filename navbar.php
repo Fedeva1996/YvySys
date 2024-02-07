@@ -22,6 +22,7 @@
             <li><a class="dropdown-item" href="planesClase.php">Planes de clase</a></li>
             <li><a class="dropdown-item" href="asistencias.php">Asistencias</a></li>
             <li><a class="dropdown-item" href="procesosClase.php">Procesos de clase</a></li>
+            <li><a class="dropdown-item" href="puntuarExamen.php">Puntuar Examen</a></li>
             <li><a class="dropdown-item" href="calificaciones.php">Calificaciones</a></li>
           </ul>
         </li>
