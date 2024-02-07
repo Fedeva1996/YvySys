@@ -1,5 +1,5 @@
 <!-- Formulario para agregar persona-->
-<div class="modal fade" id="modalAgregarPersona" tabindex="-1" aria-labelledby="modalAgregarPersonaLabel"
+<div class="modal fade modal-lg" id="modalAgregarPersona" tabindex="-1" aria-labelledby="modalAgregarPersonaLabel"
     aria-hidden="true" data-bs-theme="dark">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -59,6 +59,7 @@
                                     <option value="docentes">Docente</option>
                                     <option value="alumnos">Alumno</option>
                                     <option value="funcionarios">Funcionario</option>
+                                    <option value="postulantes">Postulantes</option>
                                 </select>
                             </div>
                         </div>
@@ -74,7 +75,7 @@
     </div>
 </div>
 <!-- Modal para editar persona-->
-<div class="modal fade" id="modalEditarPersona" tabindex="-1" aria-labelledby="modalEditarPersonaLabel"
+<div class="modal fade modal-lg" id="modalEditarPersona" tabindex="-1" aria-labelledby="modalEditarPersonaLabel"
     aria-hidden="true" data-bs-theme="dark">
     <div class="modal-dialog">
         <div class="modal-content">

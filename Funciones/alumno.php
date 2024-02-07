@@ -16,25 +16,20 @@ if (isset($_POST['action'])) {
         $direccion = $_POST['direccion'];
         $telefono = $_POST['telefono'];
 
-        $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
-        VALUES ((COALESCE((SELECT MAX(id_persona) + 1 FROM personas), 1), '$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
-        $sql2 = "INSERT INTO alumnos(persona_id) VALUES (SELECT MAX(id_pensum) FROM personas))";
+        $sql2 = "INSERT INTO alumnos(persona_id) VALUES (SELECT insertar_personas(nombre, apellido, ci, fecha_nac, sexo, telefono, correo, nacionalidad, direccion))";
         if (@pg_query($conn, $sql)) {
-            if (@pg_query($conn, $sql2)) {
-                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
-            }
         } else if (@!pg_query($conn, $sql)) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
+
     if ($action == 'agregarExistente') {
         include '../db_connect.php';
 
@@ -120,7 +115,7 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM alumno_v 
-        WHERE estado = 1 
+        WHERE estado = true 
         AND nombre ILIKE '$buscar%' 
         OR apellido ILIKE '$buscar%' 
         OR ci ILIKE '$buscar%' 
@@ -159,7 +154,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='direccion'>" . $fila['direccion'] . "</td>";
                 echo "<td class='telefono'>" . $fila['telefono'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar-persona btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditarPersona'><i class='bi bi-pencil'></i></button>
-                          <button class='btn btn-secondary btn-inscripciones btn-sm'  data-bs-toggle='modal' data-bs-target='#modalInscripciones'><i class='bi bi-journals'> </i></button>
+                          <button class='btn btn-secondary btn-inscripciones btn-sm'  data-bs-toggle='modal' data-bs-target='#modalDetalle' data-id='". $fila['id_alumno'] ."'><i class='bi bi-journals'> </i></button>
                           <button class='btn btn-danger btn-eliminar-alumno btn-sm' ><i class='bi bi-trash'></i> </button></td>";
                 echo "</tr>";
             }
@@ -167,7 +162,7 @@ if (isset($_POST['action'])) {
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM alumno_v WHERE estado = 1";
+            $sql_total = "SELECT COUNT(*) as total FROM alumno_v WHERE estado = true";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -190,62 +185,38 @@ if (isset($_POST['action'])) {
     if ($action == 'inscripciones') {
         include '../db_connect.php';
 
-        // Paginación
-        $registros_por_pagina = 5;
-        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $offset = ($pagina - 1) * $registros_por_pagina;
-
         $id = $_POST['id'];
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT inscripciones.id_inscripcion,
-        alumnos.nombre,
-        alumnos.apellido,
-        alumnos.ci,
-        cursos.descri FROM inscripciones JOIN alumnos ON inscripciones.id_alumno = alumnos.id_alumno
-        JOIN cursos ON inscripciones.id_curso = cursos.id_curso
-        WHERE inscripciones.id_alumno LIKE '%$id%'  ORDER by id_inscripcion DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT id_inscripcion, fecha_inscripcion_f,descri, estado FROM inscripcion_curso_v
+        WHERE id_alumno = $id  ORDER by id_inscripcion DESC";
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>";
             echo "<tr>"
-                . "<th>Nombre</th>"
-                . "<th>Apellido</th>"
-                . "<th>Ci</th>"
+                . "<th>ID</th>"
+                . "<th>Fecha inscripción</th>"
                 . "<th>Curso</th>"
+                . "<th>Estado</th>"
                 . "</tr>";
             echo "</thead>";
             echo "<tbody class='table-group-divider'>";
             ;
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
-                echo "<td class='nombre'>" . $fila['nombre'] . "</td>";
-                echo "<td class='apellido'>" . $fila['apellido'] . "</td>";
-                echo "<td class='ci'>" . $fila['ci'] . "</td>";
-                echo "<td class='curso'>" . $fila['descri'] . "</td>";
+                echo "<td>" . $fila['id_inscripcion'] . "</td>";
+                echo "<td>" . $fila['fecha_inscripcion_f'] . "</td>";
+                echo "<td>" . $fila['descri'] . "</td>";
+                if ($fila['estado'] == false) {
+                    echo "<td style = 'color:#cc3300'>Inactivo</td>";
+                } else if ($fila['estado'] == true) {
+                    echo "<td style = 'color:#99cc33'>Activo</td>";
+                }
             }
             echo "</tbody>";
             echo "</table>";
-
-            // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM alumno_v";
-            $resultado_total = pg_query($conn, $sql_total);
-            $fila_total = pg_fetch_assoc($resultado_total);
-            $total_registros = $fila_total['total'];
-            $total_paginas = ceil($total_registros / $registros_por_pagina);
-
-            echo "<div  class='paginacion' data-bs-theme='dark'>";
-            echo "<nav aria-label='Page navigation example'>";
-            echo "<ul class='pagination'>";
-            for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina' style='border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
-            }
-            echo "</ul>";
-            echo "</nav>";
-            echo "<p style='font-size: 0.875em;'>* Para editar la inscripción, ir a <a href='inscripciones.php'>Incripciones</a></p>";
-            echo "</div>";
         } else {
             echo "No se encontraron registros.";
         }

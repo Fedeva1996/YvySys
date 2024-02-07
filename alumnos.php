@@ -201,17 +201,16 @@ if (!isset($_SESSION['usuario'])) {
             // ver inscripciones del alumno
             $(document).on('click', '.btn-inscripciones', function () {
                 var id = $(this).closest('tr').find('.id').text();
+                
                 $.ajax({
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: {
                         action: 'inscripciones',
                         id: id
-
                     },
-
                     success: function (response) {
-                        $('#tablaInscripciones').html(response);
+                        $('#tablaDetalle').html(response);
                     }
                 });
             });

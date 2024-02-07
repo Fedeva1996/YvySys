@@ -17,24 +17,18 @@ if (isset($_POST['action'])) {
         $telefono = $_POST['telefono'];
         $rol = $_POST['rol'];
 
-        $sql = "INSERT INTO personas(id_persona, nombre, apellido, ci, fecha_nac, sexo, telefono, correo, estado, nacionalidad, direccion) 
-        VALUES ((COALESCE((SELECT MAX(id_persona) + 1 FROM personas), 1)),'$nombre', '$apellido','$ci', '$fecha_nac', '$sexo', '$telefono', '$correo', 1, '$nacionalidad', '$direccion')";
-        $sql2 = "INSERT INTO $rol(persona_id) VALUES (SELECT MAX(id_pensum) FROM personas))";
+        $sql = "INSERT INTO $rol(persona_id) VALUES (SELECT insertar_personas(nombre, apellido, ci, fecha_nac, sexo, telefono, correo, nacionalidad, direccion))";
         if (@pg_query($conn, $sql)) {
-            if (@pg_query($conn, $sql2)) {
-                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
-            }
         } else if (@!pg_query($conn, $sql)) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
 
     // Eliminar un registro
@@ -61,7 +55,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        
+
     }
 
     //Editar un registro
@@ -92,7 +86,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Obtener la lista de registros
@@ -107,7 +101,7 @@ if (isset($_POST['action'])) {
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM persona_v 
-        WHERE estado = 1 
+        WHERE estado = true 
         AND nombre ILIKE '$buscar%' 
         OR apellido ILIKE '$buscar%' 
         OR ci ILIKE '$buscar%'  
@@ -154,7 +148,7 @@ if (isset($_POST['action'])) {
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM persona_v WHERE estado = 1";
+            $sql_total = "SELECT COUNT(*) as total FROM persona_v WHERE estado = true";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -172,6 +166,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 }

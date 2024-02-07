@@ -102,8 +102,8 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-            
-                    success: function (response) {
+
+                                success: function (response) {
                                     loadPersonas();
                                     $('#resultados').html(response);
                                 }
@@ -126,8 +126,8 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-    
-                    success: function (response) {
+
+                        success: function (response) {
                             $('#tablaPersonas').html(response);
                         }
                     });
@@ -163,8 +163,8 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                
-                    success: function (response) {
+
+                success: function (response) {
                     $('#tablaPersonas').html(response);
                 }
             });
@@ -179,8 +179,8 @@ if (!isset($_SESSION['usuario'])) {
                     id: id
 
                 },
-                
-                    success: function (response) {
+
+                success: function (response) {
                     $('#tablaInscripciones').html(response);
                 }
             });
@@ -214,24 +214,11 @@ if (!isset($_SESSION['usuario'])) {
                     Limpiar</button>
             </form>
         </div>
+        <!-- mostrar resultado exito/error -->
+        <div id="resultados"></div>
         <!-- Tabla -->
         <div id="tablaPersonas"></div>
     </div>
-    <div class="modal fade" id="modalInscripciones" tabindex="-1" aria-labelledby="modalInscripcionesLabel"
-        aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Inscripciones</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="tablaInscripciones"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="resultados"></div>
 </body>
 
 </html>

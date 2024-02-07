@@ -187,11 +187,10 @@ if (isset($_POST['action'])) {
                 echo "<td class='fecha_inscripcion'>" . $fila['fecha_inscripcion'] . "</td>";
                 echo "<td class='id_curso' style='display:none;'>" . $fila['id_curso'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] == false) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#cc3300'>Inactivo</td>";
                 } else if ($fila['estado'] == true) {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                     echo "<td style = 'color:#99cc33'>Activo</td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
