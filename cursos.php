@@ -30,9 +30,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarCurso')[0].reset();
                         loadCursos();
@@ -72,9 +70,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/curso.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadCursos();
                         $('#resultados').html(response);
@@ -89,7 +85,7 @@ if (!isset($_SESSION['usuario'])) {
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-title: "Estás seguro de que deseas eliminar este registro?",
+                    title: "Estás seguro de que deseas eliminar este registro?",
                     text: "Una vez eliminado no se podra recuperar!",
                     icon: "warning",
                     showCancelButton: true,
@@ -108,10 +104,8 @@ title: "Estás seguro de que deseas eliminar este registro?",
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+
+                                success: function (response) {
                                     loadCursos();
                                     $('#resultados').html(response);
                                 }
@@ -135,10 +129,8 @@ title: "Estás seguro de que deseas eliminar este registro?",
                             action: 'listar',
                             pagina: pagina
                         },
-                        beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+
+                        success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
@@ -158,10 +150,8 @@ title: "Estás seguro de que deseas eliminar este registro?",
                         url: 'funciones/curso.php',
                         type: 'POST',
                         data: $(this).serialize(),
-                        beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+
+                        success: function (response) {
                             $('#tablaCurso').html(response);
                         }
                     });
@@ -178,10 +168,8 @@ title: "Estás seguro de que deseas eliminar este registro?",
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
-                    success: function (response) {
+
+                success: function (response) {
                     $('#tablaCurso').html(response);
                 }
             });
@@ -194,7 +182,7 @@ title: "Estás seguro de que deseas eliminar este registro?",
         <?php
         include("navbar.php");
         include("Modals/cursos.php")
-        ?>
+            ?>
     </div>
     <div class="container">
         <h2>Cursos</h2>
@@ -220,7 +208,7 @@ title: "Estás seguro de que deseas eliminar este registro?",
         <!-- Tabla -->
         <div id="tablaCurso"></div>
     </div>
-    
+
 </body>
 
 </html>

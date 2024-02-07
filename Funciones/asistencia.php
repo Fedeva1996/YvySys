@@ -177,13 +177,13 @@ if (isset($_POST['action'])) {
                     echo "<td>
                     <button class='btn btn-secondary btn-generar btn-sm'  
                     data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    <button class='btn btn-secondary btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalAsistencias' onclick='loadVerAsistencias(" . $fila['id_asistencia'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button></td>";
                 } else {
                     echo "<td>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    <button class='btn btn-secondary btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalAsistencias' onclick='loadVerAsistencias(" . $fila['id_asistencia'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button></td>";
@@ -308,6 +308,5 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-
     }
 }

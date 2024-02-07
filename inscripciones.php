@@ -30,9 +30,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/alumno.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarAlumno')[0].reset();
                         $('#resultados').html(response);
@@ -52,9 +50,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+        
                     success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
@@ -80,9 +76,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarInscripcion')[0].reset();
                         loadInscripcion();
@@ -111,9 +105,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadInscripcion();
                         $('#resultados').html(response);
@@ -134,9 +126,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadInscripcion();
                         $('#resultados').html(response);
@@ -170,9 +160,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+            
                     success: function (response) {
                                     loadInscripcion();
                                     $('#resultados').html(response);
@@ -212,9 +200,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminarDet',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+            
                     success: function (response) {
                                     loadInscripcion();
                                     $('#resultados').html(response);
@@ -238,9 +224,7 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+    
                     success: function (response) {
                             $('#tablaInscripcion').html(response);
                         }
@@ -259,9 +243,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/inscripcion.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaInscripcion').html(response);
                     }
@@ -277,9 +259,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+                
                     success: function (response) {
                     $('#tablaInscripcion').html(response);
                 }

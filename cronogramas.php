@@ -144,9 +144,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                                    $("#resultados").html("Mensaje: Cargando...");
-                                },
+
                                 success: function (response) {
                                     loadCronogramas();
                                     $('#resultados').html(response);
@@ -186,9 +184,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'generar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                                    $("#resultados").html("Mensaje: Cargando...");
-                                },
+
                                 success: function (response) {
                                     loadCronogramas();
                                     $('#resultados').html(response);

@@ -133,7 +133,7 @@ if (isset($_POST['action'])) {
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                 <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>
-                <button class='btn btn-secondary btn-ver-detalle btn-sm'  
+                <button class='btn btn-secondary btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_plan_clase'] . ",1)'><i class='bi bi-postcard'></i></button></td>";
                 echo "</tr>";
             }
@@ -165,15 +165,8 @@ if (isset($_POST['action'])) {
     if ($action == 'verDetalle') {
         include '../db_connect.php';
 
-        // Paginación
-        $registros_por_pagina = 10;
-        $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $offset = ($pagina - 1) * $registros_por_pagina;
-
-        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
-
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM plan_clase_det_v ORDER by id_plan_clase_det LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * FROM plan_clase_det_v ORDER by id_plan_clase_det";
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
@@ -195,7 +188,11 @@ if (isset($_POST['action'])) {
                 echo "<td class='id'>" . $fila['id_plan_clase_det'] . "</td>";
                 echo "<td class='plan_clase_cab_id' style='display:none;'>" . $fila['plan_clase_cab_id'] . "</td>";
                 echo "<td class='proceso_clase_cab_id' style='display:none;'>" . $fila['proceso_clase_cab_id'] . "</td>";
-                echo "<td class='proceso_clase'>" . $fila['descripcion'] . " > " . $fila['fecha_entrega'] . "</td>";
+                if($fila['proceso_clase_cab_id']==null){
+                    echo "<td class='proceso_clase' style='color:#cc3300'>Aun no asignado</td>";
+                }else {
+                    echo "<td class='proceso_clase'>" . $fila['descripcion'] . " > " . $fila['fecha_entrega'] . "</td>";
+                }
                 echo "<td class='competencia'>" . $fila['competencia'] . "</td>";
                 echo "<td class='indicadores'>" . $fila['indicadores'] . "</td>";
                 echo "<td class='contenido'>" . $fila['contenido'] . "</td>";
@@ -208,26 +205,9 @@ if (isset($_POST['action'])) {
             }
             echo "</tbody>";
             echo "</table>";
-
-            // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM plan_clase_det_v";
-            $resultado_total = pg_query($conn, $sql_total);
-            $fila_total = pg_fetch_assoc($resultado_total);
-            $total_registros = $fila_total['total'];
-            $total_paginas = ceil($total_registros / $registros_por_pagina);
-
-            echo "<div style='margin-left: auto; margin-right: auto;' class='paginacion' data-bs-theme='dark'>";
-            echo "<nav aria-label='Page navigation example'>";
-            echo "<ul class='pagination justify-content-center'>";
-            for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='  border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
-            }
-            echo "</ul>";
-            echo "</nav>";
-            echo "</div>";
         } else {
             echo "No se encontraron registros.";
         }
-        pg_close($conn);
+        
     }
 }

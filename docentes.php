@@ -27,9 +27,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/docente.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarDocente')[0].reset();
                         loadDocentes();
@@ -50,9 +48,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+        
                     success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
@@ -77,9 +73,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/docente.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#formAgregarExistente')[0].reset();
                         loadDocentes();
@@ -122,9 +116,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/docente.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         loadDocentes();
                         $('#resultados').html(response);
@@ -158,9 +150,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+            
                     success: function (response) {
                                     loadAlumnos();
                                     $('#resultados').html(response);
@@ -184,9 +174,7 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+    
                     success: function (response) {
                             $('#tablaDocentes').html(response);
                         }
@@ -208,9 +196,7 @@ if (!isset($_SESSION['usuario'])) {
                     url: 'funciones/docente.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+
                     success: function (response) {
                         $('#tablaDocentes').html(response);
                     }
@@ -226,9 +212,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                beforeSend: function (objeto) {
-                    $("#resultados").html("Mensaje: Cargando...");
-                    },
+                
                     success: function (response) {
                     $('#tablaDocentes').html(response);
                 }

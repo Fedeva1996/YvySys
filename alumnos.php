@@ -48,9 +48,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            beforeSend: function (objeto) {
-                                $("#resultados").html("Mensaje: Cargando...");
-                            },
+                            
                             success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
@@ -150,9 +148,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                                    $("#resultados").html("Mensaje: Cargando...");
-                                },
+
                                 success: function (response) {
                                     loadAlumnos();
                                     $('#resultados').html(response);
@@ -176,9 +172,7 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        beforeSend: function (objeto) {
-                            $("#resultados").html("Mensaje: Cargando...");
-                        },
+
                         success: function (response) {
                             $('#tablaAlumnos').html(response);
                         }

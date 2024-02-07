@@ -27,7 +27,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        
+
     }
     // Agregar un nuevo detalle
     if ($action == 'agregarDet') {
@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        
+
     }
     //Editar un registro
     if ($action == 'editarDet') {
@@ -80,7 +80,44 @@ if (isset($_POST['action'])) {
             </script>
             ";
         }
-        
+
+    }
+    //Generar
+    if ($action == 'generar') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+        $modulo_id = $_POST['modulo_id'];
+
+        $sql = "SELECT id_inscripcion_det FROM inscripciones_det WHERE modulo_id = $modulo_id";
+
+        $resultados = pg_query($conn, $sql);
+
+        if ($resultados) {
+            if (pg_num_rows($resultados) > 0) {
+                while ($fila = pg_fetch_assoc($resultados)) {
+                    $inscripcion = $fila['id_inscripcion_det'];
+                    $sql2 = "INSERT INTO procesos_clase_det(proceso_clase_cab_id, inscripcion_det_id) VALUES ($id, $inscripcion)";
+                    if (@pg_query($conn, $sql2)) {
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Exito!</strong> Asistencias generadas.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    } else {
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Error!</strong> " . pg_last_error($conn) . ".
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    }
+                }
+            }
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
+        }
+
     }
 
     if ($action == 'listar') {
@@ -99,7 +136,7 @@ if (isset($_POST['action'])) {
             FROM 
             proceso_clase_cab_v
             ORDER by id_proceso_clase DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultados = pg_query($conn, $sql);
+        $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
@@ -109,6 +146,7 @@ if (isset($_POST['action'])) {
                 . "<th>Fecha entrega</th>"
                 . "<th>Puntaje total</th>"
                 . "<th>descripción</th>"
+                . "<th>Modulo</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
@@ -120,14 +158,20 @@ if (isset($_POST['action'])) {
                 echo "<td class='fecha_entrega_f'>" . $fila['fecha_entrega_f'] . "</td>";
                 echo "<td class='puntaje'>" . $fila['puntaje'] . "</td>";
                 echo "<td class='descripcion'>" . $fila['descripcion'] . "</td>";
+                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                if ($fila['modulo_id'] == null) {
+                    echo "<td class='docente' style='color:#cc3300'>Aun no asignado</td>";
+                } else {
+                    echo "<td class='docente'>" . $fila['descri'] . " > " . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                }
                 if ($fila['estado'] == "f") {
                     echo "<td>
                     <button class='btn btn-secondary btn-generar btn-sm'  
                     data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-secondary btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 } else {
                     echo "<td>
@@ -135,8 +179,8 @@ if (isset($_POST['action'])) {
                     data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Puntuar</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-secondary btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_proceso_clase'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 }
                 echo "</tr>";
@@ -165,6 +209,52 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
+    }
+    if ($action == 'verDetalle') {
+        include '../db_connect.php';
+
+        $sql = "SELECT *
+            FROM 
+            proceso_clase_det_v";
+        $resultados = pg_query($conn, $sql);
+
+        if (pg_num_rows($resultados) > 0) {
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
+            echo "<thead class='table-dark'>";
+            echo "<tr>"
+                . "<th>ID</th>"
+                . "<th>Alumno</th>"
+                . "<th>Fecha entrega</th>"
+                . "<th>Puntaje hecho</th>"
+                . "<th>estado</th>"
+                . "<th>Acciones</th>"
+                . "</tr>"
+                . "</thead>";
+            echo "<tbody class='table-group-divider'>";
+            while ($fila = pg_fetch_assoc($resultados)) {
+                echo "<tr>";
+                echo "<td class='id'>" . $fila['id_procesos_clase_det'] . "</td>";
+                echo "<td class='proceso_clase_cab_id' style='display:none;'>" . $fila['proceso_clase_cab_id'] . "</td>";
+                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                echo "<td class='fecha_entrega_f'>" . $fila['fecha_entrega_f'] . "</td>";
+                echo "<td class='puntaje_hecho'>" . $fila['puntaje_hecho'] . "</td>";
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
+                if ($fila['estado'] === "f") {
+                    echo "<td style = 'color:#cc3300'>No entregado</td>";
+                } else {
+                    echo "<td style = 'color:#99cc33'>Entregado</td>";
+                }
+                echo "<td>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button></td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+        } else {
+            echo "No se encontraron registros.";
+        }
+
     }
 }

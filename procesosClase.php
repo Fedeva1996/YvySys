@@ -94,6 +94,48 @@ if (!isset($_SESSION['usuario'])) {
                     $('#suggestions').hide();
                 });
             });
+            //generar
+            $(document).on('click', '.btn-generar', function () {
+                // Obtener el ID
+                var id = $(this).closest('tr').find('.id').text();
+                var modulo_id = $(this).closest('tr').find('.modulo_id').text();
+
+                // Confirmar la generación de eventos
+                swal.fire({
+                    title: "Cuidado!",
+                    text: "¿Estás seguro de que deseas generar eventos?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    background: "#212529",
+                    confirmButtonColor: "#d33",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#6e7881',
+                    cancelButtonText: "Cancelar"
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            $.ajax({
+                                url: 'funciones/procesoClase.php',
+                                type: 'POST',
+                                data: {
+                                    action: 'generar',
+                                    id: id,
+                                    modulo_id: modulo_id
+                                },
+
+                                success: function (response) {
+                                    loadProcesosClase();
+                                    $('#resultados').html(response);
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: "No se generaran los eventos de este cronograma!",
+                                background: "#212529"
+                            })
+                        }
+                    });
+            });
             // Editar
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
@@ -124,15 +166,13 @@ if (!isset($_SESSION['usuario'])) {
 
             //paginacion
             $(document).ready(function () {
-                function cargarPagina(pagina, curso, fecha) {
+                function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/procesoClase.php',
                         type: 'POST',
                         data: {
                             action: 'listar',
                             pagina: pagina,
-                            curso: curso,
-                            fecha: fecha
                         },
                         success: function (response) {
                             $('#tablaProcesoClase').html(response);
@@ -149,21 +189,36 @@ if (!isset($_SESSION['usuario'])) {
                 });
 
             });
-            // Cargar tabla
-            function loadProcesosClase() {
-                $.ajax({
-                    url: 'funciones/procesoClase.php',
-                    type: 'POST',
-                    data: {
-                        action: 'listar'
-                    },
-
-                    success: function (response) {
-                        $('#tablaProcesoClase').html(response);
-                    }
-                });
-            }
         });
+        // Cargar tabla
+        function loadProcesosClase() {
+            $.ajax({
+                url: 'funciones/procesoClase.php',
+                type: 'POST',
+                data: {
+                    action: 'listar'
+                },
+
+                success: function (response) {
+                    $('#tablaProcesoClase').html(response);
+                }
+            });
+        }
+        // Cargar tabla eventos
+        function loadDetalle(id) {
+            $.ajax({
+                url: 'funciones/procesoClase.php',
+                type: 'POST',
+                data: {
+                    action: 'verDetalle',
+                    id: id
+                },
+
+                success: function (response) {
+                    $('#tablaDetalle').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
@@ -171,6 +226,7 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/procesosClase.php");
         ?>
     </div>
     <div class="container">
@@ -181,52 +237,6 @@ if (!isset($_SESSION['usuario'])) {
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalReporte'><i
                     class="bi bi-filetype-pdf"></i> Descargar reporte</button>
         </div>
-        <!-- Formulario para buscar por curso -->
-        <div class="modal fade" id="modalBuscarCurso" tabindex="-1" aria-labelledby="modalBuscarCursoLabel"
-            aria-hidden="true" data-bs-theme="dark">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <form id="formBuscarProcesoClase">
-                            <input type="hidden" name="action" value="buscarProcesoClase">
-                            <input type="hidden" name="pagina" value="1">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <?php
-                                        include 'db_connect.php';
-                                        $sql = "SELECT * FROM cursos";
-                                        $resultados = pg_query($conn, $sql);
-                                        if (pg_num_rows($resultados) > 0) {
-                                            echo "<label for='fecha'>Cursos</label>";
-                                            echo "<select class='form-select  w-100'  name='id_curso' required>";
-                                            echo "<option selected disabled>Seleccione curso</option>";
-                                            while ($fila = pg_fetch_assoc($resultados)) {
-                                                echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
-                                            }
-                                            echo "</select>";
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label for="fecha">Fecha</label>
-                                        <input class="input-group-text w-100" type="date" name="fecha_p" required>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit"><i
-                                            class="bi bi-search"></i> Buscar</button>
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cerrar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="input-group mb-2">
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregar'> <i
                     class="bi bi-calendar-plus"></i> Agregar proceso de Clase</button>
@@ -234,258 +244,13 @@ if (!isset($_SESSION['usuario'])) {
             <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarDetalle'> <i
                     class="bi bi-person-add"></i> Agregar entrega</button>
         </div>
+
+        <!-- muestra mensaje exito/error -->
+        <div id="resultados"></div>
         <!-- Tabla -->
         <div id="tablaProcesoClase"></div>
     </div>
-    <!-- Formulario para agregar -->
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarLabel">Agregar procesoClase</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarProcesoClase">
-                        <input type="hidden" name="action" value="agregar">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT 
-                                        materias.id_materia,
-                                        materias.descri as materia,
-                                        cursos.id_curso,
-                                        cursos.descri as curso
-                                        FROM materias
-                                        JOIN cursos ON materias.curso_id = cursos.id_curso";
-                                    $resultados = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultados) > 0) {
-                                        echo "<select class='form-select  w-100' name='id_materia' required>";
-                                        echo "<option selected disabled>Seleccione materia</option>";
-                                        while ($fila = pg_fetch_assoc($resultados)) {
-                                            echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . " | " . $fila['curso'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                                <div class="input-group flex-nowrap mb-3">
-                                    <span class="input-group-text" id="addon-wrapping">Entrega</span>
-                                    <input class="form-control" type="date" name="fecha_entrega" required>
-                                </div>
-                                <div class="mb-3">
-                                    <input class="form-control" type="number" name="puntaje" placeholder="Puntaje">
-                                </div>
-                                <div class="mb-3">
-                                    <input class="form-control" type="text" name="descripcion"
-                                        placeholder="Descripción">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Formulario para agregar det -->
-    <div class="modal fade" id="modalAgregarDetalle" tabindex="-1" aria-labelledby="modalAgregarDetalleLabel"
-        aria-hidden="true" data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalAgregarDetalleLabel">Agregar</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarProcesoClaseDet">
-                        <input class="input-group-text" type="hidden" name="action" value="agregarDet">
-                        <div class="mb-3">
-                            <?php
-                            include 'db_connect.php';
-                            $sql = "SELECT *
-                                    FROM procesos_clase_cab
-                                    JOIN materias ON procesos_clase_cab.materia_id = materias.id_materia";
-                            $resultados = pg_query($conn, $sql);
-                            if (pg_num_rows($resultados) > 0) {
-                                echo "<select id='keep' class='input-group-text w-100' name='id_procesos_clase' required>";
-                                echo "<option selected disabled>Seleccione cabecera</option>";
-                                while ($fila = pg_fetch_assoc($resultados)) {
-                                    echo "<option value='" . $fila['id_procesos_clase'] . "'>" . $fila['descri'] . " |  " . $fila['fecha_entrega'] . "</option>";
-                                }
-                                echo "</select>";
-                            }
-                            ?>
-                        </div>
-                        <div class="mb-3">
-                            <?php
-                            include 'db_connect.php';
-                            $sql = "SELECT *
-                                FROM inscripciones
-                                JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno";
-                            $resultados = pg_query($conn, $sql);
-                            if (pg_num_rows($resultados) > 0) {
-                                echo "<select class='form-select  w-100' name='id_inscripcion' required>";
-                                echo "<option selected disabled>Seleccione cabecera</option>";
-                                while ($fila = pg_fetch_assoc($resultados)) {
-                                    echo "<option value='" . $fila['id_inscripcion'] . "'>" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
-                                }
-                                echo "</select>";
-                            }
-                            ?>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group flex-nowrap mb-3">
-                                    <span class="input-group-text" id="addon-wrapping">Entrega</span>
-                                    <input class="form-control" type="date" name="fecha_entrega" required>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="mb-3">
-                                    <input class="input-group-text w-100" type="number" name="puntaje"
-                                        placeholder="Puntaje" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" type="submit">Guardar cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Formulario para ir a reporte -->
-    <div class="modal fade" id="modalReporte" tabindex="-1" aria-labelledby="modalReporteLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalReporteLabel">Agregar inscripcion</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="reportes/procesosClase.php" method="post" id="formReporteInscripcion">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <?php
-                                    include 'db_connect.php';
-                                    $sql = "SELECT * FROM cursos";
-                                    $resultados = pg_query($conn, $sql);
-                                    if (pg_num_rows($resultados) > 0) {
-                                        echo "<select class='form-select  w-100' id='id_curso' name='id_curso' required>";
-                                        echo "<option selected disabled>Seleccione curso</option>";
-                                        while ($fila = pg_fetch_assoc($resultados)) {
-                                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['descri'] . "</option>";
-                                        }
-                                        echo "</select>";
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="input-group flex-nowrap mb-3">
-                                    <span class="input-group-text" id="addon-wrapping">Fecha</span>
-                                    <input class="form-control" type="date" id="fecha" name="fecha" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                cambios</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal para editar -->
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
-        data-bs-theme="dark">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalEditarLabel">Editar Inscripción</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarProcesoClase">
-                        <input type="hidden" name="action" value="editarDet">
-                        <div class="row">
-                            <input type="hidden" name="id" id="editId">
-                            <div class="mb-3">
-                                <?php
-                                include 'db_connect.php';
-                                $sql = "SELECT *
-                                    FROM procesos_clase_cab
-                                    JOIN materias ON procesos_clase_cab.materia_id = materias.id_materia";
-                                $resultados = pg_query($conn, $sql);
-                                if (pg_num_rows($resultados) > 0) {
-                                    echo "<select id='editIdCab' class='input-group-text w-100' name='id_procesos_clase' required>";
-                                    echo "<option selected disabled>Seleccione cabecera</option>";
-                                    while ($fila = pg_fetch_assoc($resultados)) {
-                                        echo "<option value='" . $fila['id_procesos_clase'] . "'>" . $fila['descri'] . " |  " . $fila['fecha_entrega'] . "</option>";
-                                    }
-                                    echo "</select>";
-                                }
-                                ?>
-                            </div>
-                            <div class="mb-3">
-                                <?php
-                                include 'db_connect.php';
-                                $sql = "SELECT *
-                                FROM inscripciones
-                                JOIN alumnos ON inscripciones.alumno_id = alumnos.id_alumno";
-                                $resultados = pg_query($conn, $sql);
-                                if (pg_num_rows($resultados) > 0) {
-                                    echo "<select id='editIdAl' class='input-group-text w-100' name='id_inscripcion' required>";
-                                    echo "<option selected disabled>Seleccione cabecera</option>";
-                                    while ($fila = pg_fetch_assoc($resultados)) {
-                                        echo "<option value='" . $fila['id_inscripcion'] . "'>" . $fila['nombre'] . " " . $fila['apellido'] . "</option>";
-                                    }
-                                    echo "</select>";
-                                }
-                                ?>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="input-group flex-nowrap mb-3">
-                                        <span class="input-group-text" id="addon-wrapping">Entrega</span>
-                                        <input class="form-control" id="editFechaEntrega" type="date"
-                                            name="fecha_entrega" required>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <input class="input-group-text w-100" id="editPuntaje" type="number"
-                                            name="puntaje" placeholder="Puntaje" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
-                                    cambios</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <div id="resultados"></div>
+
 </body>
 
 </html>

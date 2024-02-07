@@ -156,7 +156,7 @@ if (isset($_POST['action'])) {
                     data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    <button class='btn btn-secondary btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_cronograma'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 } else {
@@ -165,7 +165,7 @@ if (isset($_POST['action'])) {
                     data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Asignar materias</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-ver-eventos btn-sm'  
+                    <button class='btn btn-secondary btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEventos' onclick='loadEventos(" . $fila['id_cronograma'] . ")'><i class='bi bi-postcard'></i></button>
                     <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 }

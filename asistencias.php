@@ -61,9 +61,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            beforeSend: function (objeto) {
-                                $("#resultados").html("Mensaje: Cargando...");
-                            },
+                            
                             success: function (response) {
                                 $('#suggestions').html(response).show();
                             }

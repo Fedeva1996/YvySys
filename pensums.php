@@ -102,9 +102,7 @@ if (!isset($_SESSION['usuario'])) {
                                 "action": "agregarDet",
                                 "datos": datosJSON
                             },
-                            beforeSend: function (objeto) {
-                                $("#resultados").html("Mensaje: Cargando...");
-                            },
+                            
                             success: function (response) {
                                 $('#resultados').html(response);
                             }
@@ -209,9 +207,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                beforeSend: function (objeto) {
-                                    $("#resultados").html("Mensaje: Cargando...");
-                                },
+
                                 success: function (response) {
                                     loadAlumnos();
                                     $('#resultados').html(response);
@@ -235,9 +231,7 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'buscarPensum',
                             curso: curso,
                         },
-                        beforeSend: function (objeto) {
-                            $("#resultados").html("Mensaje: Cargando...");
-                        },
+
                         success: function (response) {
                             $('#tablaPensums').html(response);
                         }
