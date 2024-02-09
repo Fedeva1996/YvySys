@@ -244,10 +244,9 @@ if (!isset($_SESSION['usuario'])) {
                 <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
-                </div>
-                <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadDocentes()" type="reset"><i class="bi bi-eraser"></i>
+                    <button class="btn btn-dark w-25" onclick="loadDocentes()" type="reset"><i class="bi bi-eraser"></i>
                     Limpiar</button>
+                </div>
             </form>
         </div>
 

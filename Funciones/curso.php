@@ -54,15 +54,10 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         } else if (@!pg_query($conn, $sql)) {
-            echo "<script>
-            swal.fire('Error al eliminar: puede que haya inscripciones dependiendo de este alumno, primero borre las matriculaciones! . pg_last_error($conn)', 
-            {
-                icon: 'error',
-            }).then((value) =>{
-                $('.sweetAlerts').empty();
-            });;
-            </script>
-            ";
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> Puede que haya tablas dependiendo de este registro!" . pg_last_error($conn) . ".
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
         }
         
     }
@@ -72,26 +67,19 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $id = $_POST['id'];
-        $pensum_id = $_POST['id_pensum'];
         $periodo_id = $_POST['id_periodo'];
         $turno_id = $_POST['id_turno'];
-        $modalidad_id = $_POST['id_modalidad'];
-        $tipo = $_POST['tipo'];
         $estado = $_POST['estado'];
 
         $sql = "UPDATE
             cursos
-        SET
-            pensum_id = '$pensum_id',
-            periodo_id = '$periodo_id',
-            turno_id = '$turno_id',
-            modalidad_id = '$modalidad_id',
-            descri = (SELECT curso FROM pensum_cab WHERE id_pensum = cursos.pensum_id),
-            tipo = '$tipo',
+            SET
+            periodo_id = $periodo_id,
+            turno_id = $turno_id,
             estado = '$estado'
-        WHERE
-            id_curso='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
+            WHERE
+            id_curso=$id";
+        if (pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo editado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>

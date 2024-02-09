@@ -10,29 +10,29 @@ if (!isset($_SESSION['usuario'])) {
     if ($_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
         header('Location: dashboard.php'); // Redirige al dashboard
         exit();
-    } 
+    }
 }
 ?>
 <html>
 
 <head>
     <title>Periodos</title>
-    <?php 
-    include("head.php"); 
+    <?php
+    include("head.php");
     ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Cargar la tabla al cargar la página
             loadPeriodos();
 
             // Agregar nuevo
-            $('#formAgregarPeriodo').submit(function(e) {
+            $('#formAgregarPeriodo').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/periodo.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         $('#formAgregarPeriodo')[0].reset();
                         loadPeriodos();
                         $('#resultados').html(response);
@@ -41,7 +41,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Editar
-            $(document).on('click', '.btn-editar-periodo', function() {
+            $(document).on('click', '.btn-editar-periodo', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var ano = $(this).closest('tr').find('.ano').text();
                 var descri = $(this).closest('tr').find('.descri').text();
@@ -56,13 +56,13 @@ if (!isset($_SESSION['usuario'])) {
                 $('#formEditarPeriodo').find('input[name="action"]').val('editar');
             });
 
-            $('#formEditarPeriodo').submit(function(e) {
+            $('#formEditarPeriodo').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/periodo.php',
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         loadPeriodos();
                         $('#resultados').html(response);
                     },
@@ -70,21 +70,21 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar-periodo', function() {
+            $(document).on('click', '.btn-eliminar-periodo', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
                 // Confirmar la eliminación con el usuario
                 swal.fire({
-                        title: "Estás seguro de que deseas eliminar este registro?",
-                        text: "Una vez eliminado no se podra recuperar!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Confirmar",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "Cancelar"
-                    })
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             $.ajax({
@@ -94,7 +94,7 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     loadPeriodos();
                                     $('#resultados').html(response);
                                 }
@@ -109,7 +109,7 @@ if (!isset($_SESSION['usuario'])) {
             });
 
             //paginacion
-            $(document).ready(function() {
+            $(document).ready(function () {
                 function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/periodo.php',
@@ -118,12 +118,12 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaPeriodo').html(response);
                         }
                     });
                 }
-                $(document).on('click', '.btn-pagina', function() {
+                $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
                 });
@@ -132,13 +132,13 @@ if (!isset($_SESSION['usuario'])) {
                 cargarPagina(1);
 
                 // Buscar
-                $('#formBuscarPeriodo').submit(function(e) {
+                $('#formBuscarPeriodo').keyup(function (e) {
                     e.preventDefault();
                     $.ajax({
                         url: 'funciones/periodo.php',
                         type: 'POST',
                         data: $(this).serialize(),
-                        success: function(response) {
+                        success: function (response) {
                             $('#tablaPeriodo').html(response);
                         }
                     });
@@ -155,7 +155,7 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#tablaPeriodo').html(response);
                 }
             });
@@ -168,28 +168,47 @@ if (!isset($_SESSION['usuario'])) {
         <?php
         include("navbar.php");
         include("Modals/periodos.php")
-        ?>
+            ?>
     </div>
     <div class="container">
         <h2>Periodos</h2>
         <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarPeriodo'> <i class="bi bi-person-add"></i> Agregar</button>
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalAgregarPeriodo'> <i
+                    class="bi bi-person-add"></i> Agregar</button>
         </div>
         <!-- Formulario para buscar -->
-        <div class="mb-3" data-bs-theme="dark">
+        <div class="input-group mb-3" data-bs-theme="dark">
             <form id="formBuscarPeriodo">
                 <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar" placeholder="Año">
+                    <?php
+                    include 'db_connect.php';
+                    $sql = "SELECT DISTINCT ano FROM periodo";
+                    $resultados = pg_query($conn, $sql);
+                    if (pg_num_rows($resultados) > 0) {
+                        echo "<select class='form-select w-25' name='ano' id='ano' required>";
+                        echo "<option selected disabled>Buscar por año</option>";
+                        while ($fila = pg_fetch_assoc($resultados)) {
+                            echo "<option value='" . $fila['ano'] . "'>" . $fila['ano'] . "</option>";
+                        }
+                        echo "</select>";
+                    } else {
+                        echo "<select class='form-select w-25' name='ano' aria-label='Disabled'>";
+                        echo "<option selected disabled>No hay años</option>";
+                        echo "</select>";
+                    }
+                    ?>
+                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Buscar">
+                    <button class="btn btn-dark w-25" onclick="loadPeriodos()" type="reset"><i
+                    class="bi bi-eraser"></i>Limpiar</button>
                 </div>
-                <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadPeriodos()" type="reset"><i class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
+        <!-- resultado exito/error -->
+        <div id="resultados"></div>
         <!-- Tabla -->
         <div id="tablaPeriodo"></div>
     </div>
-    <div id="resultados"></div>
 </body>
 
 </html>

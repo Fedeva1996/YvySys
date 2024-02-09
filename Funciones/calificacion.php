@@ -26,7 +26,7 @@ if (isset($_POST['action'])) {
         paso = '$paso',
         obs = '$obs' 
         WHERE id_calificacion ='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo editado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>

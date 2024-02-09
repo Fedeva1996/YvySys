@@ -187,12 +187,11 @@ if (!isset($_SESSION['usuario'])) {
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarTurno">
                 <input type="hidden" name="action" value="buscar">
-                <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
+                <div class="input-group mb-2 w-50">
+                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
+                    <button class="btn btn-dark input-group w-25" onclick="loadTurnos()" type="reset"><i
+                    class="bi bi-eraser"></i>Limpiar</button>
                 </div>
-                <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadTurnos()" type="reset"><i
-                        class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
         <!-- Tabla -->

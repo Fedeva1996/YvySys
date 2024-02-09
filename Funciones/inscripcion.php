@@ -126,7 +126,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE inscripciones SET curso_id='$id_curso', estado=$estado WHERE id_inscripcion ='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo editado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>

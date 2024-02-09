@@ -45,8 +45,6 @@ if (!isset($_SESSION['usuario'])) {
                 var id_pensum = $(this).closest('tr').find('.id_pensum').text();
                 var id_periodo = $(this).closest('tr').find('.id_periodo').text();
                 var id_turno = $(this).closest('tr').find('.id_turno').text();
-                var id_modalidad = $(this).closest('tr').find('.id_modalidad').text();
-                var tipo = $(this).closest('tr').find('.tipo').text();
                 var estado = $(this).closest('tr').find('.estado').text();
 
                 $('#editId').val(id);
@@ -54,12 +52,8 @@ if (!isset($_SESSION['usuario'])) {
                 $("select.editPensum selected").val(id_pensum).change();
                 $('#editTurno').val(id_turno);
                 $("select.editTurno selected").val(id_turno).change();
-                $('#editModalidad').val(id_modalidad);
-                $("select.editModalidad selected").val(id_modalidad).change();
                 $('#editPeriodo').val(id_periodo);
                 $("select.editPeriodo selected").val(id_periodo).change();
-                $('#editTipo').val(tipo);
-                $("select.editTipo selected").val(tipo).change();
                 $('#editEstado').val(estado);
                 $("select.editEstado selected").val(estado).change();
             });
@@ -196,10 +190,9 @@ if (!isset($_SESSION['usuario'])) {
                 <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2">
                     <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
+                    <button class="btn btn-dark w-25" onclick="loadCursos()" type="reset"><i
+                    class="bi bi-eraser"></i>Limpiar</button>
                 </div>
-                <button class="btn btn-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
-                <button class="btn btn-dark" onclick="loadCursos()" type="reset"><i
-                        class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
         <!-- Mensaje error/exito -->

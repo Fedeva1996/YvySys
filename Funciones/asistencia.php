@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
 
         $sql = "INSERT INTO asistencias_cab(plan_clase_cab_id, fecha, docente_asis, obs) 
         VALUES ('$plan_clase_cab_id','$fecha','$docente_asis','$obs')";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -78,7 +78,7 @@ if (isset($_POST['action'])) {
         $estado = $_POST['estado'];
 
         $sql = "UPDATE asistencias_det SET estado='$estado' WHERE id_asistencia_det ='$id'";
-        if (@pg_query($conn, $sql) === TRUE) {
+        if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo editado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>

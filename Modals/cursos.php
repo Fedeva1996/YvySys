@@ -100,7 +100,7 @@
                                 $resultados = pg_query($conn, $sql);
                                 if (pg_num_rows($resultados) > 0) {
                                     echo "<label for='fecha'>Pensum</label>";
-                                    echo "<select class='form-select  w-100'  name='id_pensum' required id='editPensum'>";
+                                    echo "<select disabled class='form-select  w-100'  name='id_pensum' required id='editPensum'>";
                                     echo "<option selected disabled>Seleccione pensum</option>";
                                     while ($fila = pg_fetch_assoc($resultados)) {
                                         echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
