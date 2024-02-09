@@ -11,13 +11,12 @@ if (isset($_POST['action'])) {
         $periodo = $_POST['id_periodo'];
         $turno = $_POST['id_turno'];
 
-        $sql = "INSERT INTO cursos(id_curso,
+        $sql = "INSERT INTO cursos(
             pensum_id,
             periodo_id,
             turno_id,
             descri)
             SELECT
-            COALESCE((SELECT MAX(id_curso) + 1 FROM cursos), 1),
                 '$pensum',
                 '$periodo',
                 '$turno',

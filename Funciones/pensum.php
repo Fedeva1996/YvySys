@@ -12,10 +12,9 @@ if (isset($_POST['action'])) {
         $obs = $_POST['obs'];
 
         $sql = "INSERT INTO 
-        pensum_cab(id_pensum, curso, resolucion, fecha_res, modalidad, obs) 
+        pensum_cab(curso, resolucion, fecha_res, modalidad, obs) 
         VALUES 
-        (COALESCE((SELECT MAX(id_pensum) + 1 FROM pensum_cab), 1), 
-         '$curso', 
+        ('$curso', 
          '$resolucion',
          '$fecha_res', 
          '$modalidad',
@@ -31,8 +30,6 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
     // Agregar un nuevo registro
     if ($action == 'agregarDet') {
@@ -79,8 +76,37 @@ if (isset($_POST['action'])) {
                 </div>";
             }
         }
+    }
+    // Agregar un nuevo registro
+    if ($action == 'agregarDetIndividual') {
+        include '../db_connect.php';
 
-        
+        $curso = $_POST['curso'];
+        $resolucion = $_POST['resolucion'];
+        $fecha_res = $_POST['fecha_res'];
+        $modalidad = $_POST['modalidad'];
+        $obs = $_POST['obs'];
+
+        $sql = "INSERT INTO 
+        pensum_det(id_pensum, curso, resolucion, fecha_res, modalidad, obs) 
+        VALUES 
+        (COALESCE((SELECT MAX(id_pensum) + 1 FROM pensum_cab), 1), 
+         '$curso', 
+         '$resolucion',
+         '$fecha_res', 
+         '$modalidad',
+         '$obs')";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo agregado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        }
     }
     //Editar un registro
     if ($action == 'editarDet') {
@@ -104,7 +130,6 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-        
     }
     //Editar un cab
     if ($action == 'editarCab') {
@@ -130,7 +155,7 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-        
+
     }
 
 
@@ -167,14 +192,18 @@ if (isset($_POST['action'])) {
                 echo "</div>";
                 echo "<div class='col'>";
                 echo "<label>Fecha resolución</label>";
-                echo "<input readonly type='text' class='form-control fecha_res' value='" . $cab['fecha_res'] . "'>";
+                if ($cab['fecha_res'] > date('Y-m-d')) {
+                    echo "<input readonly type='text' class='form-control fecha_res' value='" . $cab['fecha_res'] . "'>";
+                } else {
+                    echo "<input readonly type='text' class='form-control fecha_res' value='" . $cab['fecha_res'] . "' style='background-color:#DC3545;'>";
+                }
                 echo "<input class='fecha_res_sf' style='display:none' value='" . $cab['fecha_res_sf'] . "'>";
                 echo "</div>";
                 echo "</div>";
                 echo "<div class='row'>";
                 echo "<div class='col'>";
                 echo "<label>Modalidad</label>";
-                echo "<input readonly type='text' class='form-control modalidad' value='".$cab['modalidad']."'>";
+                echo "<input readonly type='text' class='form-control modalidad' value='" . $cab['modalidad'] . "'>";
                 echo "</div>";
                 echo "<div class='col'>";
                 echo "<label>Obs</label>";
@@ -242,6 +271,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 }

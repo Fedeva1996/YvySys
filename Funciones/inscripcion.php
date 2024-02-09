@@ -33,7 +33,7 @@ if (isset($_POST['action'])) {
         $id_curso = $_POST['id_curso'];
         $fecha = $_POST['fecha'];
 
-        $sql = "INSERT INTO inscripciones_cab(id_inscripcion, alumno_id, curso_id, fecha_inscripcion) VALUES (COALESCE((SELECT MAX(id_inscripcion) + 1 FROM inscripciones_cab), 1),'$id_alumno','$id_curso','$fecha')";
+        $sql = "INSERT INTO inscripciones_cab(alumno_id, curso_id, fecha_inscripcion) VALUES ('$id_alumno','$id_curso','$fecha')";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.

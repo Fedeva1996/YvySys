@@ -43,9 +43,8 @@ if (isset($_POST['action'])) {
 
                 // Insert record
                 $sql = "INSERT INTO plan_examen (
-                    id_plan_examen, examen_id, modulo_id, cronograma_id, fecha, recuperatorio, obs, tipo, puntaje)
+                    examen_id, modulo_id, cronograma_id, fecha, recuperatorio, obs, tipo, puntaje)
                     VALUES (
-                    COALESCE((SELECT MAX(id_plan_examen) + 1 FROM plan_examen), 1),
                     (SELECT insertar_examen('$examen_nombre', '$ruta_sin_puntos')),
                     $modulo, 
                     $cronograma,
