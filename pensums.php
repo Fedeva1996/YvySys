@@ -47,6 +47,7 @@ if (!isset($_SESSION['usuario'])) {
 
                     success: function (response) {
                         $('#tablaPensums').html(response);
+                        loadPensum();
                     }
                 });
             });
@@ -102,9 +103,10 @@ if (!isset($_SESSION['usuario'])) {
                                 "action": "agregarDet",
                                 "datos": datosJSON
                             },
-                            
+
                             success: function (response) {
                                 $('#resultados').html(response);
+                                loadPensum();
                             }
                         });
                     }
@@ -113,21 +115,19 @@ if (!isset($_SESSION['usuario'])) {
 
             // Editar det
             $(document).on('click', '.btn-editar-detalle', function () {
-                var id = $(this).closest('tr').find('.id_det').text();
-                var id_cab = $(this).closest('tr').find('.id_cab').text();
+                var id = $(this).closest('tr').find('.id').text();
+                var id_cab = $(this).closest('tr').find('.pensum_cab_id').text();
                 var descri = $(this).closest('tr').find('.descri').text();
                 var horas_t = $(this).closest('tr').find('.horas_t').text();
                 var horas_p = $(this).closest('tr').find('.horas_p').text();
 
                 $('#editIdDet').val(id);
-                $("#editCab").val(id_cab);
-                $("select.editCab selected").val(id_cab).change();
                 $('#editModulo').val(descri);
                 $('#editHorast').val(horas_t);
                 $('#editHorasp').val(horas_p);
             });
 
-            $('#formEditarPensum').submit(function (e) {
+            $('#formEditarDetalle').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/pensum.php',
@@ -137,22 +137,21 @@ if (!isset($_SESSION['usuario'])) {
                     success: function (response) {
                         $('#resultados').html(response);
                         setTimeout(function () {
-                            location.reload();
-                        }, 2000);
+                            loadPensum();
+                        }, 1000);
+                        loadDetalle(id_cab);
                     },
                 });
             });
             // Editar cab
-            $(document).on('click', '.btn-editar-cabecera', function () {
-                var id = $(this).closest('.head').find('.id').val();
-                var curso = $(this).closest('.head').find('.curso').val();
-                var resolucion = $(this).closest('.head').find('.resolucion').val();
-                var fecha_res = $(this).closest('.head').find('.fecha_res_sf').val();
-                var modalidad = $(this).closest('.head').find('.modalidad').val();
-                var estado = $(this).closest('.head').find('.estado').val();
-                var obs = $(this).closest('.head').find('.obs').val();
-
-                console.log(id, curso, resolucion, fecha_res, modalidad, obs);
+            $(document).on('click', '.btn-editar', function () {
+                var id = $(this).closest('tr').find('.id').text();
+                var curso = $(this).closest('tr').find('.curso').text();
+                var resolucion = $(this).closest('tr').find('.resolucion').text();
+                var fecha_res = $(this).closest('tr').find('.fecha_res_sf').text();
+                var modalidad = $(this).closest('tr').find('.modalidad').text();
+                var estado = $(this).closest('tr').find('.estado').text();
+                var obs = $(this).closest('tr').find('.obs').text();
 
                 $('#editIdCab').val(id);
                 $('#editCursoCab').val(curso);
@@ -165,7 +164,7 @@ if (!isset($_SESSION['usuario'])) {
                 $('#editObs').val(obs);
             });
 
-            $('#formEditarPensumCab').submit(function (e) {
+            $('#formEditarPensum').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/pensum.php',
@@ -174,9 +173,7 @@ if (!isset($_SESSION['usuario'])) {
 
                     success: function (response) {
                         $('#resultados').html(response);
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2000);
+                        loadPensum();
                     },
                 });
             });
@@ -209,8 +206,8 @@ if (!isset($_SESSION['usuario'])) {
                                 },
 
                                 success: function (response) {
-                                    loadAlumnos();
                                     $('#resultados').html(response);
+                                    loadPensum();
                                 }
                             });
                         } else {
@@ -223,13 +220,13 @@ if (!isset($_SESSION['usuario'])) {
             });
             //paginacion
             $(document).ready(function () {
-                function cargarPagina(pagina, curso) {
+                function cargarPagina(pagina) {
                     $.ajax({
                         url: 'funciones/pensum.php',
                         type: 'POST',
                         data: {
-                            action: 'buscarPensum',
-                            curso: curso,
+                            action: 'listar',
+                            pagina: pagina,
                         },
 
                         success: function (response) {
@@ -237,14 +234,41 @@ if (!isset($_SESSION['usuario'])) {
                         }
                     });
                 }
+                cargarPagina(1); // Carga la primera página al cargar la página
                 $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
-                    var curso = $(this).data('curso');
-
-                    cargarPagina(pagina, curso);
+                    cargarPagina(pagina);
                 });
             });
+
         });
+        // Cargar tabla
+        function loadPensum() {
+            $.ajax({
+                url: 'funciones/pensum.php',
+                type: 'POST',
+                data: {
+                    action: 'listar'
+                },
+                success: function (response) {
+                    $('#tablaPensums').html(response);
+                }
+            });
+        }
+        // Cargar tabla eventos
+        function loadDetalle(id) {
+            $.ajax({
+                url: 'funciones/pensum.php',
+                type: 'POST',
+                data: {
+                    action: 'verDetalle',
+                    id: id
+                },
+                success: function (response) {
+                    $('#tablaDetalle').html(response);
+                }
+            });
+        }
     </script>
     <style>
         .row>* {

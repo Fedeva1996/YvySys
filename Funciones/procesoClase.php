@@ -214,9 +214,11 @@ if (isset($_POST['action'])) {
     if ($action == 'verDetalle') {
         include '../db_connect.php';
 
+        $id = $_POST['id'];
+
         $sql = "SELECT *
             FROM 
-            proceso_clase_det_v";
+            proceso_clase_det_v WHERE proceso_clase_cab_id = $id";
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {

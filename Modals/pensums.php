@@ -85,16 +85,16 @@
     </div>
 </div>
 <!-- Formulario para editar pensum cab-->
-<div class="modal fade" id="modalEditarPensumCabecera" tabindex="-1" aria-labelledby="modalEditarPensumCabeceraLabel"
-    aria-hidden="true" data-bs-theme="dark">
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true"
+    data-bs-theme="dark">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalEditarPensumCabeceraLabel">Editar cabecera</h1>
+                <h1 class="modal-title fs-5" id="modalEditarLabel">Editar cabecera</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formEditarPensumCab">
+                <form id="formEditarPensum">
                     <input type="hidden" name="action" value="editarCab">
                     <input type="hidden" name="idCab" id="editIdCab">
                     <div class="row">
@@ -157,33 +157,18 @@
     </div>
 </div>
 <!-- Modal para editar pensum det-->
-<div class="modal fade" id="modalEditarPensumDetalle" tabindex="-1" aria-labelledby="modalEditarPensumDetalleLabel"
+<div class="modal fade" id="modalEditarDetalle" tabindex="-1" aria-labelledby="modalEditarDetalleLabel"
     aria-hidden="true" data-bs-theme="dark">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modalEditarPensumDetalleLabel">Editar Pensum</h1>
+                <h1 class="modal-title fs-5" id="modalEditarDetalleLabel">Editar Pensum</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formEditarPensum">
+                <form id="formEditarDetalle">
                     <input type="hidden" name="action" value="editarDet">
                     <input type="hidden" name="id" id="editIdDet">
-                    <div class="mb-3">
-                        <?php
-                        include 'db_connect.php';
-                        $sql = "SELECT * FROM pensum_cab";
-                        $resultados = pg_query($conn, $sql);
-                        if (pg_num_rows($resultados) > 0) {
-                            echo "<select id='editCab' class='input-group-text w-100' name='id_pensum' required>";
-                            echo "<option selected disabled>Seleccione cabecera</option>";
-                            while ($fila = pg_fetch_assoc($resultados)) {
-                                echo "<option value='" . $fila['id_pensum'] . "'>" . $fila['curso'] . "</option>";
-                            }
-                            echo "</select>";
-                        }
-                        ?>
-                    </div>
                     <div class="mb-3">
                         <input class="input-group-text w-100" type="text" name="modulo" id="editModulo"
                             placeholder="Nombre del modulo" required>
@@ -203,9 +188,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                        <button class="btn btn-outline-primary" data-bs-target="#modalDetalle" data-bs-toggle="modal"
+                            type="submit">Guardar
                             cambios</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-target="#modalDetalle"
+                            data-bs-toggle="modal">Cerrar</button>
                     </div>
                 </form>
             </div>
@@ -252,6 +239,25 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para detalles -->
+<div class="modal fade modal-lg" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true"
+    data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalDetalleLabel">Detalle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabla -->
+                <div id="tablaDetalle"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
