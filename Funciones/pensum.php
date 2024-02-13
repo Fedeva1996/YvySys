@@ -74,24 +74,22 @@ if (isset($_POST['action'])) {
             }
         }
     }
-    // Agregar un nuevo registro
+    // Agregar un nuevo detalle
     if ($action == 'agregarDetIndividual') {
         include '../db_connect.php';
 
-        $curso = $_POST['curso'];
-        $resolucion = $_POST['resolucion'];
-        $fecha_res = $_POST['fecha_res'];
-        $modalidad = $_POST['modalidad'];
-        $obs = $_POST['obs'];
+        $id_cab = $_POST['id'];
+        $modulo = $_POST['modulo'];
+        $horast = $_POST['horast'];
+        $horasp = $_POST['horasp'];
 
         $sql = "INSERT INTO 
-        pensum_det(curso, resolucion, fecha_res, modalidad, obs) 
+        pensum_det(pensum_cab_id, descri, horas_t, horas_p) 
         VALUES 
-        ('$curso', 
-         '$resolucion',
-         '$fecha_res', 
-         '$modalidad',
-         '$obs')";
+        ('$id_cab', 
+         '$modulo',
+         '$horast', 
+         '$horasp')";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.

@@ -113,6 +113,29 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
 
+            // agregar det
+            $(document).on('click', '.btn-agregar-detalle', function () {
+                var id = $(this).attr("value")
+
+                $('#idCab').val(id);
+            });
+
+            $('#formAgregarDetalle').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'funciones/pensum.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+
+                    success: function (response) {
+                        $('#resultados').html(response);
+                        setTimeout(function () {
+                            loadPensum();
+                        }, 1000);
+                    },
+                });
+            });
+
             // Editar det
             $(document).on('click', '.btn-editar-detalle', function () {
                 var id = $(this).closest('tr').find('.id').text();
@@ -135,11 +158,10 @@ if (!isset($_SESSION['usuario'])) {
                     data: $(this).serialize(),
 
                     success: function (response) {
-                        $('#resultados').html(response);
+                        $('#resultados2').html(response);
                         setTimeout(function () {
                             loadPensum();
                         }, 1000);
-                        loadDetalle(id_cab);
                     },
                 });
             });
@@ -266,6 +288,7 @@ if (!isset($_SESSION['usuario'])) {
                 },
                 success: function (response) {
                     $('#tablaDetalle').html(response);
+                    $('#id').val(id);
                 }
             });
         }

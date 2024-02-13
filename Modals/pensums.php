@@ -156,6 +156,47 @@
         </div>
     </div>
 </div>
+<!-- Modal para agregar pensum det-->
+<div class="modal fade" id="modalAgregarDetalle" tabindex="-1" aria-labelledby="modalAgregarDetalleLabel"
+    aria-hidden="true" data-bs-theme="dark">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalAgregarDetalleLabel">Agregar Pensum</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarDetalle">
+                    <input type="hidden" name="action" value="agregarDetIndividual">
+                    <input type="hidden" name="id" id="idCab">
+                    <div class="mb-3">
+                        <input class="input-group-text w-100" type="text" name="modulo" placeholder="Nombre del modulo"
+                            required>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <input class="input-group-text w-100" type="number" name="horast"
+                                    placeholder="Horas teoricas" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <input class="input-group-text w-100" type="number" name="horasp"
+                                    placeholder="Horas practicas" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                            cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal para editar pensum det-->
 <div class="modal fade" id="modalEditarDetalle" tabindex="-1" aria-labelledby="modalEditarDetalleLabel"
     aria-hidden="true" data-bs-theme="dark">
@@ -253,6 +294,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Mensaje error/exito -->
+                <div id="resultados2"></div>
+                <button class="btn btn-secondary btn-agregar-detalle" data-bs-toggle='modal'
+                    data-bs-target='#modalAgregarDetalle' id="id"> <i class="bi bi-person-add"></i> Agregar
+                    detalle</button>
                 <!-- Tabla -->
                 <div id="tablaDetalle"></div>
             </div>
