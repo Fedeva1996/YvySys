@@ -35,10 +35,10 @@ if (!isset($_SESSION['usuario'])) {
                     // Agrega el objeto al array si los campos no están vacíos
                     if (id && inicio && fin) {
                         datos.push({
-                        "id": id,
-                        "inicio": inicio,
-                        "fin": fin
-                    });
+                            "id": id,
+                            "inicio": inicio,
+                            "fin": fin
+                        });
                     }
                 });
                 // Convierte el array a formato JSON
@@ -82,29 +82,39 @@ if (!isset($_SESSION['usuario'])) {
             // Editar
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
-                var id_pensum = $(this).closest('tr').find('.id_pensum').text();
-                var id_periodo = $(this).closest('tr').find('.id_periodo').text();
-                var id_turno = $(this).closest('tr').find('.id_turno').text();
-                var id_modalidad = $(this).closest('tr').find('.id_modalidad').text();
-                var tipo = $(this).closest('tr').find('.tipo').text();
-                var estado = $(this).closest('tr').find('.estado').text();
+                var fecha_ini = $(this).closest('tr').find('.fecha_inicio').text();
+                var fecha_fin = $(this).closest('tr').find('.fecha_fin').text();
 
                 $('#editId').val(id);
-                $('#editPensum').val(id_pensum);
-                $("select.editPensum selected").val(id_pensum).change();
-                $('#editTurno').val(id_turno);
-                $("select.editTurno selected").val(id_turno).change();
-                $('#editModalidad').val(id_modalidad);
-                $("select.editModalidad selected").val(id_modalidad).change();
-                $('#editPeriodo').val(id_periodo);
-                $("select.editPeriodo selected").val(id_periodo).change();
-                $('#editTipo').val(tipo);
-                $("select.editTipo selected").val(tipo).change();
+                $('#editFecha_ini').val(fecha_ini);
+                $('#editFecha_fin').val(fecha_fin);
+            });
+
+            $('#formEditarCronograma').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'funciones/cronograma.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+
+                    success: function (response) {
+                        loadCronogramas();
+                        $('#resultados').html(response);
+                    },
+                });
+            });
+            
+            // Editar det
+            $(document).on('click', '.btn-editar-detalle', function () {
+                var idDet = $(this).closest('tr').find('.id').text();
+                var estado = $(this).closest('tr').find('.estado').text();
+
+                $('#editIdDet').val(idDet);
                 $('#editEstado').val(estado);
                 $("select.editEstado selected").val(estado).change();
             });
 
-            $('#formEditarCronograma').submit(function (e) {
+            $('#formEditarEvento').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: 'funciones/cronograma.php',

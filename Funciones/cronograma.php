@@ -6,7 +6,6 @@ if (isset($_POST['action'])) {
     if ($action == 'agregar') {
         include '../db_connect.php';
 
-
         $curso = $_POST["curso"];
         $fecha_ini = $_POST['fecha_ini'];
         $fecha_fin = $_POST['fecha_fin'];
@@ -32,8 +31,6 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
 
     // Eliminar un registro
@@ -54,7 +51,7 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        
+
     }
     // generar eventos
     if ($action == 'generar') {
@@ -74,46 +71,38 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        
+
     }
 
     //Editar un registro
     if ($action == 'editar') {
         include '../db_connect.php';
 
-        $id = $_POST['id'];
-        $pensum_id = $_POST['id_pensum'];
-        $periodo_id = $_POST['id_periodo'];
-        $turno_id = $_POST['id_turno'];
-        $modalidad_id = $_POST['id_modalidad'];
-        $tipo = $_POST['tipo'];
-        $estado = $_POST['estado'];
+        $id = $_POST["id"];
+        $fecha_ini = $_POST['fecha_ini'];
+        $fecha_fin = $_POST['fecha_fin'];
 
-        $sql = "UPDATE
-            cursos
-        SET
-            pensum_id = '$pensum_id',
-            periodo_id = '$periodo_id',
-            turno_id = '$turno_id',
-            modalidad_id = '$modalidad_id',
-            descri = (SELECT curso FROM pensum_cab WHERE id_pensum = cursos.pensum_id),
-            tipo = '$tipo',
-            estado = '$estado'
-        WHERE
-            id_curso='$id'";
-        if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo editado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+        $sql = "UPDATE cronogramas
+        SET fecha_inicio='$fecha_ini', fecha_fin='$fecha_fin'
+        WHERE id_cronograma = $id;";
+        if ($fecha_ini < $fecha_fin) {
+            if (@pg_query($conn, $sql)) {
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Exito!</strong> Campo agregado.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+            } else if (@!pg_query($conn, $sql)) {
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Error!</strong> " . pg_last_error($conn) . ".
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+            }
         } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <strong>Error!</strong> Fecha de inicio no puede ser despues de la fecha de finalización.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
 
     // Obtener la lista de registros
@@ -148,8 +137,10 @@ if (isset($_POST['action'])) {
                 echo "<td class='id'>" . $fila['id_cronograma'] . "</td>";
                 echo "<td class='curso_id' style='display:none;'>" . $fila['curso_id'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
-                echo "<td class='fecha_inicio'>" . $fila['fecha_inicio'] . "</td>";
-                echo "<td class='fecha_fin'>" . $fila['fecha_fin'] . "</td>";
+                echo "<td class='fecha_inicio' style='display:none;'>" . $fila['fecha_inicio'] . "</td>";
+                echo "<td class='fecha_fin' style='display:none;'>" . $fila['fecha_fin'] . "</td>";
+                echo "<td class='fecha_inicio_f'>" . $fila['fecha_inicio_f'] . "</td>";
+                echo "<td class='fecha_fin_f'>" . $fila['fecha_fin_f'] . "</td>";
                 if ($fila['estado'] == "f") {
                     echo "<td>
                     <button class='btn btn-secondary btn-generar btn-sm'  
@@ -192,8 +183,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-
-        
     }
     // Obtener la lista de registros
     if ($action == 'verEventos') {
@@ -213,6 +202,7 @@ if (isset($_POST['action'])) {
                 . "<th>fecha</th>"
                 . "<th>Tipo</th>"
                 . "<th>Modulo</th>"
+                . "<th>Estado</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
@@ -220,16 +210,23 @@ if (isset($_POST['action'])) {
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_evento'] . "</td>";
+                echo "<td class='cronograma_id' style='display:none;'>" . $fila['cronograma_id'] . "</td>";
                 echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
                 echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
                 echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['descri'] == null) {
                     echo "<td class='modulo'> No asignado</td>";
                 } else {
                     echo "<td class='modulo'>" . $fila['descri'] . "</td>";
                 }
+                if ($fila['estado'] === "t") {
+                    echo "<td class='modulo'> Activa</td>";
+                } else {
+                    echo "<td class='modulo'> Suspendida</td>";
+                }
                 echo "<td>
-                <button class='btn btn-secondary btn-editar btn-sm'  
+                <button class='btn btn-secondary btn-sm btn-editar-detalle'  
                 data-bs-toggle='modal' data-bs-target='#modalEditarEvento'><i class='bi bi-pencil'></i></button></td>";
                 echo "</tr>";
             }
@@ -238,9 +235,30 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-
-        
     }
+    //Editar detalle
+    if ($action == 'editarDet') {
+        include '../db_connect.php';
+
+        $id = $_POST["id"];
+        $estado = $_POST["estado"]; 
+
+        $sql = "UPDATE eventos
+        SET estado='$estado'
+        WHERE id_evento = $id;";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo modificado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else if (@!pg_query($conn, $sql)) {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        }
+    }
+
     // Agregar un nuevo registro
     if ($action == 'asignarModulo') {
         include '../db_connect.php';
@@ -270,8 +288,6 @@ if (isset($_POST['action'])) {
                 </div>";
             }
         }
-
-        
     }
     // autocompletado
     if ($action == 'autocompletar') {
