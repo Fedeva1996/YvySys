@@ -167,7 +167,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='fecha' style='display:none;'>" . $fila['fecha'] . "</td>";
                 echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
                 if ($fila['modulo_id'] == null) {
-                    echo "<td> Aún no asignado <i>(Asignar en cronograma)</i></td>";
+                    echo "<td><span class='badge text-bg-warning'>Aún no asignado</span>  <i>(Asignar en cronograma)</i></td>";
                 } else {
                     echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
                     echo "<td class='modulo'>" . $fila['descri'] . "</td>";

@@ -124,15 +124,13 @@ if (isset($_POST['action'])) {
                 echo "<td class='periodo'>" . $fila['descripcion'] . "</td>";
                 echo "<td class='turno'>" . $fila['turno'] . "</td>";
                 echo "<td class='horario'>" . $fila['horario'] . "</td>";
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === "S") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Sin iniciar</td>";
+                    echo "<td><span class='badge text-bg-warning'>Sin iniciar</span></td>";
                 } else if ($fila['estado'] === "C") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#ffcc00'>En curso</td>";
+                    echo "<td><span class='badge text-bg-info'>En curso</span></td>";
                 } else if ($fila['estado'] === "F") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Finalizado</td>";
+                    echo "<td><span class='badge text-bg-success'>Finalizado</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar-curso btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditarCurso'><i class='bi bi-pencil'></i></button>

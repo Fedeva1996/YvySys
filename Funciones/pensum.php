@@ -198,9 +198,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] == false) {
-                    echo "<td style = 'color:#cc3300'>Inactivo</td>";
+                    echo "<td><span class='badge text-bg-danger'>Inactivo</span></td>";
                 } else if ($fila['estado'] == true) {
-                    echo "<td style = 'color:#99cc33'>Activo</td>";
+                    echo "<td><span class='badge text-bg-success'>Activo</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>

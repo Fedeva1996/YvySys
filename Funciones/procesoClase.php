@@ -160,7 +160,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='descripcion'>" . $fila['descripcion'] . "</td>";
                 echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
                 if ($fila['modulo_id'] == null) {
-                    echo "<td class='docente' style='color:#cc3300'>Aun no asignado</td>";
+                    echo "<td class='docente'><span class='badge text-bg-warning'>Aun no asignado</span></td>";
                 } else {
                     echo "<td class='docente'>" . $fila['descri'] . " > " . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 }
@@ -243,9 +243,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='puntaje_hecho'>" . $fila['puntaje_hecho'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === "f") {
-                    echo "<td style = 'color:#cc3300'>No entregado</td>";
+                    echo "<td><span class='badge text-bg-danger'>No entregado</span></td>";
                 } else {
-                    echo "<td style = 'color:#99cc33'>Entregado</td>";
+                    echo "<td><span class='badge text-bg-success'>Entregado</span></td>";
                 }
                 echo "<td>
                     <button class='btn btn-secondary btn-editar btn-sm'  

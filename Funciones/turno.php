@@ -103,12 +103,11 @@ if (isset($_POST['action'])) {
                 echo "<td class='id'>" . $fila['id_turno'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='horario'>" . $fila['horario'] . "</td>";
+                echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === "0") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#cc3300'>Inactivo</td>";
+                    echo "<td><span class='badge text-bg-danger'>Inactivo</span></td>";
                 } else if ($fila['estado'] === "1") {
-                    echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                    echo "<td style = 'color:#99cc33'>Activo</td>";
+                    echo "<td><span class='badge text-bg-success'>Activo</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar-turno btn-sm'  
         data-bs-toggle='modal' data-bs-target='#modalEditarTurno'><i class='bi bi-pencil'></i></button>

@@ -156,11 +156,11 @@ if (isset($_POST['action'])) {
                 echo "<td class='puntaje_hecho'" . $fila['puntaje_hecho'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === "f" && $fila['puntaje_hecho'] != null) {
-                    echo "<td style = 'color:#cc3300'>No pasó</td>";
+                    echo "<td><span class='badge text-bg-danger'>No pasó</span></td>";
                 } else if ($fila['estado'] === "f" && $fila['puntaje_hecho'] == null) {
-                    echo "<td style = 'color:#ffcc00'>No cargado</td>";
+                    echo "<td><span class='badge text-bg-warning'>No cargado</span></td>";
                 } else if ($fila['estado'] === "t") {
-                    echo "<td style = 'color:#99cc33'>Pasó</td>";
+                    echo "<td><span class='badge text-bg-success'>Pasó</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Puntuar</button></td>";
@@ -222,9 +222,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='puntaje_hecho'>" . $fila['puntaje_hecho'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === "f") {
-                    echo "<td style = 'color:#cc3300'>No entregado</td>";
+                    echo "<td><span class='badge text-bg-danger'>No entregado</span></td>";
                 } else {
-                    echo "<td style = 'color:#99cc33'>Entregado</td>";
+                    echo "<td><span class='badge text-bg-success'>Entregado</span></td>";
                 }
                 echo "<td>
                     <button class='btn btn-secondary btn-editar btn-sm'  

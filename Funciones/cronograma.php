@@ -221,9 +221,9 @@ if (isset($_POST['action'])) {
                     echo "<td class='modulo'>" . $fila['descri'] . "</td>";
                 }
                 if ($fila['estado'] === "t") {
-                    echo "<td class='modulo'> Activa</td>";
+                    echo "<td class='modulo'> <span class='badge text-bg-success'>Activa</span></td>";
                 } else {
-                    echo "<td class='modulo'> Suspendida</td>";
+                    echo "<td class='modulo'> <span class='badge text-bg-danger'>Suspendida</span></td>";
                 }
                 echo "<td>
                 <button class='btn btn-secondary btn-sm btn-editar-detalle'  

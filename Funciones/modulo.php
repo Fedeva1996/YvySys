@@ -121,7 +121,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='curso'>" . $fila['curso'] . " / " . $fila['periodo'] . "</td>";
                 echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
                 if ($fila['docente_id'] == null) {
-                    echo "<td class='docente' style='color:#cc3300'>Aun no asignado</td>";
+                    echo "<td class='docente'><span class='badge text-bg-warning'>Aun no asignado</span></td>";
                 } else {
                     echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 }

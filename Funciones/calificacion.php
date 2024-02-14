@@ -37,197 +37,94 @@ if (isset($_POST['action'])) {
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         }
-
-        
     }
-
-    //Editar un registro
-    if ($action == 'buscarCurso') {
+    if ($action == 'generar') {
         include '../db_connect.php';
 
-        // Consulta para llenar el segundo select
-        $id = $_POST['id_curso'];
-        $sql = "SELECT
-        DISTINCT(materias.descri), materias.id_materia
-        FROM calificaciones
-        JOIN materias ON calificaciones.id_materia = materias.id_materia
-        WHERE materias.id_curso = $id";
-        $resultados = pg_query($conn, $sql);
+        $id = $_POST['id'];
 
-        if (pg_num_rows($resultados) > 0) {
-            while ($fila = pg_fetch_assoc($resultados)) {
-                echo "<option value='" . $fila['id_materia'] . "'>" . $fila['descri'] . "</option>";
-            }
-        }
+        $sql = "SELECT generar_escala($id)";
 
-        
-    }
-    if ($action == 'sumar') {
-        if (isset($_POST['num1']) && isset($_POST['num2']) && isset($_POST['num3'])) {
-            $num1 = intval($_POST['num1']);
-            $num2 = intval($_POST['num2']);
-            $num3 = intval($_POST['num3']);
-            $total = $num1 + $num2 + $num3;
-            if ($total >= 95) {
-                $calificacion = "5";
-                $paso = 1;
-                $color = "#81c784";
-            } elseif ($total < 95 && $total >= 85) {
-                $calificacion = "4";
-                $paso = 1;
-                $color = "#81c784";
-            } elseif ($total < 85 && $total >= 75) {
-                $calificacion = "3";
-                $paso = 1;
-                $color = "#81c784";
-            } elseif ($total < 75 && $total >= 65) {
-                $calificacion = "2";
-                $paso = 1;
-                $color = "#81c784";
-            } else {
-                $calificacion = "1";
-                $paso = 0;
-                $color = "#e57373";
-            }
-            $resultados = [$total, $calificacion, $paso, $color];
-            echo json_encode($resultados);
+        $resultado = pg_query($conn, $sql);
+        if ($resultado) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Escala generada.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
         }
     }
-    if ($action == 'buscar') {
+
+    if ($action == 'listar') {
         include '../db_connect.php';
 
         // Paginación
         $registros_por_pagina = 2;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $id_curso = isset($_POST['curso']) ? $_POST['curso'] : "";
-        $id_materia = isset($_POST['materia']) ? $_POST['materia'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
 
-        $curso = isset($_POST['id_curso']) ? $_POST['id_curso'] : $id_curso;
-        $materia = isset($_POST['id_materia']) ? $_POST['id_materia'] : $id_materia;
-
-        if (isset($_POST['id_curso']) && $_POST['id_materia']) {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT
-            calificaciones.id_calificacion,
-            calificaciones.puntaje_proceso,
-            calificaciones.puntaje_trabajo,
-            calificaciones.puntaje_examen,
-            calificaciones.puntaje_total,
-            calificaciones.calificacion,
-            inscripciones.id_inscripcion,
-            alumnos.id_alumno,
-            alumnos.nombre,
-            alumnos.apellido,
-            alumnos.ci,
-            calificaciones.id_materia,
-            materias.descri AS materia,
-            materias.id_curso,
-            cursos.descri AS curso,
-            calificaciones.obs,
-            calificaciones.paso
-            FROM
-            calificaciones
-            JOIN inscripciones ON calificaciones.id_inscripcion = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.id_alumno = alumnos.id_alumno
-            JOIN materias ON calificaciones.id_materia = materias.id_materia
-            JOIN cursos ON materias.id_curso = cursos.id_curso
-            WHERE cursos.id_curso LIKE '%$curso%'
-            AND materias.id_materia LIKE '%$materia%'
-            ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultados = pg_query($conn, $sql);
-        } else {
-            // Consulta para obtener los alumnos
-            $sql = "SELECT
-                calificaciones.id_calificacion,
-                calificaciones.puntaje_proceso,
-                calificaciones.puntaje_trabajo,
-                calificaciones.puntaje_examen,
-                calificaciones.puntaje_total,
-                calificaciones.calificacion,
-                inscripciones.id_inscripcion,
-                alumnos.id_alumno,
-                alumnos.nombre,
-                alumnos.apellido,
-                alumnos.ci,
-                calificaciones.id_materia,
-                materias.descri AS materia,
-                materias.id_curso,
-                cursos.descri AS curso,
-                calificaciones.obs,
-                calificaciones.paso
-                FROM
-                calificaciones
-                JOIN inscripciones ON calificaciones.id_inscripcion = inscripciones.id_inscripcion
-                JOIN alumnos ON inscripciones.id_alumno = alumnos.id_alumno
-                JOIN materias ON calificaciones.id_materia = materias.id_materia
-                JOIN cursos ON materias.id_curso = cursos.id_curso
-                WHERE cursos.id_curso LIKE '%$id_curso%'
-                AND materias.id_materia LIKE '%$id_materia%'
-                ORDER by id_calificacion DESC LIMIT $registros_por_pagina OFFSET $offset";
-            $resultados = pg_query($conn, $sql);
-        }
+        $sql = "SELECT * FROM calificacion_cab_v
+                ORDER by id_calificacion_cab DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
             echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
-                . "<th>Nombre</th>"
-                . "<th>CI</th>"
                 . "<th>Materia</th>"
                 . "<th>Curso</th>"
-                . "<th>Proceso</th>"
-                . "<th>Trabajos</th>"
-                . "<th>Exámen</th>"
+                . "<th>Sumatoria Procesos</th>"
+                . "<th>Sumatoria Exámenes</th>"
                 . "<th>Total</th>"
-                . "<th>Calificación</th>"
-                . "<th>Pasó</th>"
-                . "<th>Obs</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_calificacion'] . "</td>";
-                echo "<td class='id_alumno' style='display:none;'>" . $fila['id_alumno'] . "</td>";
-                echo "<td class='id_inscripcion' style='display:none;'>" . $fila['id_inscripcion'] . "</td>";
-                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
-                echo "<td class='ci'>" . $fila['ci'] . "</td>";
-                echo "<td class='id_materia' style='display:none;'>" . $fila['id_materia'] . "</td>";
-                echo "<td class='materia'>" . $fila['materia'] . "</td>";
-                echo "<td class='id_curso' style='display:none;'>" . $fila['id_curso'] . "</td>";
+                echo "<td class='id'>" . $fila['id_calificacion_cab'] . "</td>";
+                echo "<td class='modulo_id' style='display:none;'>" . $fila['modulo_id'] . "</td>";
+                echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
+                echo "<td class='curso_id' style='display:none;'>" . $fila['curso_id'] . "</td>";
                 echo "<td class='curso'>" . $fila['curso'] . "</td>";
-                echo "<td class='puntaje_proceso'>" . $fila['puntaje_proceso'] . "</td>";
-                echo "<td class='puntaje_trabajo'>" . $fila['puntaje_trabajo'] . "</td>";
-                echo "<td class='puntaje_examen'>" . $fila['puntaje_examen'] . "</td>";
-                echo "<td class='puntaje_total'>" . $fila['puntaje_total'] . "</td>";
-                echo "<td class='calificacion'>" . $fila['calificacion'] . "</td>";
-                if ($fila['paso'] == '0') {
-                    echo "<td class='paso' style='display:none;'>" . $fila['paso'] . "</td>";
-                    echo "<td style = 'color:#e57373'>No pasó</td>";
+                echo "<td class='sumatoria_procesos'>" . $fila['sumatoria_procesos'] . "</td>";
+                echo "<td class='sumatoria_examenes'>" . $fila['sumatoria_examenes'] . "</td>";
+                if ($fila['total'] == null) {
+                    echo "<td class='total'><span class='badge text-bg-warning'>Falta generar escala</span></td>";
                 } else {
-                    echo "<td class='paso' style='display:none;'>" . $fila['paso'] . "</td>";
-                    echo "<td style = 'color:#81c784'>Pasó</td>";
+                    echo "<td class='total'>" . $fila['total'] . " <span class='badge text-bg-warning'>Volver a generar escala</span></td>";
                 }
-                echo "<td class='obs'>" . $fila['obs'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
-                data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>";
+                if ($fila['estado']) {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-generar btn-sm'  
+                    data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar escala</button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                    <button class='btn btn-secondary btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                } else {
+                    echo "<td>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Calificar</button>
+                    <button class='btn btn-secondary btn-editar btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                    <button class='btn btn-secondary btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
+                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                }
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
 
             // Paginación
-            $sql_total = "SELECT
-            COUNT(calificaciones.id_calificacion) AS total FROM calificaciones
-            JOIN inscripciones ON calificaciones.id_inscripcion = inscripciones.id_inscripcion
-            JOIN alumnos ON inscripciones.id_alumno = alumnos.id_alumno
-            JOIN materias ON calificaciones.id_materia = materias.id_materia
-            JOIN cursos ON materias.id_curso = cursos.id_curso
-            WHERE cursos.id_curso LIKE '%$curso%'
-            AND materias.id_materia LIKE '%$materia%'";
+            $sql_total = "SELECT COUNT(*) as total FROM calificacion_cab_v";
 
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
@@ -238,7 +135,7 @@ if (isset($_POST['action'])) {
             echo "<nav aria-label='Page navigation example'>";
             echo "<ul class='pagination justify-content-center'>";
             for ($i = 1; $i <= $total_paginas; $i++) {
-                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='  border: none;padding: 0;background: none;' data-pagina='$i' data-curso='$GLOBALS[curso]' data-materia='$GLOBALS[materia]'>$i</button></a></li>";
+                echo "<li class='page-item'><a class='page-link'><button class='btn-pagina'  style='  border: none;padding: 0;background: none;' data-pagina='$i'>$i</button></a></li>";
             }
             echo "</ul>";
             echo "</nav>";
@@ -246,6 +143,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 }

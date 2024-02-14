@@ -68,7 +68,7 @@ if (!isset($_SESSION['usuario'])) {
                 });
             });
 
-            // Editar
+            // Editar det
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
                 var idCab = $(this).closest('tr').find('.idCab').text();
