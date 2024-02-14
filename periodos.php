@@ -134,15 +134,23 @@ if (!isset($_SESSION['usuario'])) {
                 // Buscar
                 $('#formBuscarPeriodo').keyup(function (e) {
                     e.preventDefault();
+                    buscar();
+                });
+                $('#selectPeriodo').change(function (e) {
+                    e.preventDefault();
+                    buscar();
+                });
+                function buscar() {
+                    e.preventDefault();
                     $.ajax({
                         url: 'funciones/periodo.php',
                         type: 'POST',
-                        data: $(this).serialize(),
+                        data: $('#formBuscarPeriodo').serialize(),
                         success: function (response) {
                             $('#tablaPeriodo').html(response);
                         }
                     });
-                });
+                }
             });
 
 
@@ -177,16 +185,16 @@ if (!isset($_SESSION['usuario'])) {
                     class="bi bi-person-add"></i> Agregar</button>
         </div>
         <!-- Formulario para buscar -->
-        <div class="input-group mb-3" data-bs-theme="dark">
-            <form id="formBuscarPeriodo">
+        <div class="input-group mb-2" data-bs-theme="dark">
+            <form id="formBuscarPeriodo" class="w-75">
                 <input type="hidden" name="action" value="listar">
-                <div class="input-group mb-2">
+                <div class="input-group mb-2 w-100">
                     <?php
                     include 'db_connect.php';
                     $sql = "SELECT DISTINCT ano FROM periodo";
                     $resultados = pg_query($conn, $sql);
                     if (pg_num_rows($resultados) > 0) {
-                        echo "<select class='form-select w-25' name='ano' id='ano' required>";
+                        echo "<select class='form-select w-25' name='ano' id='selectPeriodo' required>";
                         echo "<option selected disabled>Buscar por año</option>";
                         while ($fila = pg_fetch_assoc($resultados)) {
                             echo "<option value='" . $fila['ano'] . "'>" . $fila['ano'] . "</option>";
@@ -200,7 +208,7 @@ if (!isset($_SESSION['usuario'])) {
                     ?>
                     <input class="input-group-text w-50" type="text" name="buscar" placeholder="Buscar">
                     <button class="btn btn-dark w-25" onclick="loadPeriodos()" type="reset"><i
-                    class="bi bi-eraser"></i>Limpiar</button>
+                            class="bi bi-eraser"></i>Limpiar</button>
                 </div>
             </form>
         </div>

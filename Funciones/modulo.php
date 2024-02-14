@@ -21,7 +21,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Eliminar un registro
@@ -36,14 +36,14 @@ if (isset($_POST['action'])) {
                 <strong>Exito!</strong> Campo eliminado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
-        } else if (@!pg_query($conn, $sql)){
+        } else if (@!pg_query($conn, $sql)) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
             <strong>Error!</strong> " . pg_last_error($conn) . ".
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
 
-        
+
     }
 
     //Editar un registro
@@ -67,7 +67,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Obtener la lista de registros
@@ -77,8 +77,10 @@ if (isset($_POST['action'])) {
         // Paginación
         $registros_por_pagina = 10;
         $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
         $offset = ($pagina - 1) * $registros_por_pagina;
+
+        $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
+        $curso = isset($_POST['curso']) ? "curso_id = " . $_POST['curso'] . " AND " : "";
 
         // Consulta para obtener los alumnos
         $sql = "SELECT * FROM modulo_v 
@@ -86,6 +88,18 @@ if (isset($_POST['action'])) {
         OR curso ILIKE '%$buscar%' 
         ORDER BY id_modulo  
         LIMIT $registros_por_pagina OFFSET $offset";
+        // Consulta para obtener los alumnos
+        if ($buscar == "" && $curso == "") {
+            $sql = "SELECT * FROM modulo_v 
+            ORDER BY id_modulo  
+            LIMIT $registros_por_pagina OFFSET $offset";
+        } else {
+            $sql = "SELECT * FROM modulo_v 
+            WHERE $curso 
+            modulo ILIKE '%$buscar%'
+            ORDER BY id_modulo  
+            LIMIT $registros_por_pagina OFFSET $offset";
+        }
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
@@ -104,11 +118,11 @@ if (isset($_POST['action'])) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_modulo'] . "</td>";
                 echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . " / " . $fila['periodo']. "</td>";
+                echo "<td class='curso'>" . $fila['curso'] . " / " . $fila['periodo'] . "</td>";
                 echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
-                if($fila['docente_id']==null){
+                if ($fila['docente_id'] == null) {
                     echo "<td class='docente' style='color:#cc3300'>Aun no asignado</td>";
-                }else {
+                } else {
                     echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar-modulo btn-sm'  
@@ -139,7 +153,7 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        
+
     }
 
     if ($action == 'autocompletar') {

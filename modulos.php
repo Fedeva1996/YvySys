@@ -48,8 +48,8 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-        
-                    success: function (response) {
+
+                            success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
                         });
@@ -115,8 +115,8 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-            
-                    success: function (response) {
+
+                                success: function (response) {
                                     loadModulos();
                                     $('#resultados').html(response);
                                 }
@@ -140,8 +140,8 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-    
-                    success: function (response) {
+
+                        success: function (response) {
                             $('#tablaModulo').html(response);
                         }
                     });
@@ -158,16 +158,23 @@ if (!isset($_SESSION['usuario'])) {
             // Buscar
             $('#formBuscarModulo').keyup(function (e) {
                 e.preventDefault();
+                buscar();
+            });
+            $('#selectCurso').change(function (e) {
+                e.preventDefault();
+                buscar();
+            });
+            function buscar() {
                 $.ajax({
                     url: 'funciones/modulo.php',
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: $('#formBuscarModulo').serialize(),
 
                     success: function (response) {
                         $('#tablaModulo').html(response);
                     }
                 });
-            });
+            }
         });
         // Cargar tabla
         function loadModulos() {
@@ -177,8 +184,8 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                
-                    success: function (response) {
+
+                success: function (response) {
                     $('#tablaModulo').html(response);
                 }
             });
@@ -191,32 +198,45 @@ if (!isset($_SESSION['usuario'])) {
         <?php
         include("navbar.php");
         include("Modals/modulos.php")
-        ?>
+            ?>
     </div>
     <div class="container">
         <h2>Modulos</h2>
-        <div class="input-group mb-2">
-            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalGenerarModulo'> <i
-                    class="bi bi-node-plus"></i> Generar</button>
-        </div>
         <!-- Formulario para buscar -->
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarModulo">
                 <input type="hidden" name="action" value="listar">
-                <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
-                    <button class="btn btn-dark w-25" onclick="loadModulos()" type="reset"><i
-                    class="bi bi-eraser"></i>Limpiar</button>
+                <div class="input-group mb-2 w-50">
+                    <?php
+                    include 'db_connect.php';
+                    $sql = "SELECT id_curso, curso, descripcion, ano FROM curso_v";
+                    $resultados = pg_query($conn, $sql);
+                    if (pg_num_rows($resultados) > 0) {
+                        echo "<select class='form-select w-50' name='curso' id='selectCurso' required>";
+                        echo "<option selected disabled>Buscar por curso</option>";
+                        while ($fila = pg_fetch_assoc($resultados)) {
+                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['curso'] . " / " . $fila['descripcion'] . " / " . $fila['ano'] . "</option>";
+                        }
+                        echo "</select>";
+                    } else {
+                        echo "<select class='form-select w-50' name='curso' aria-label='Disabled'>";
+                        echo "<option selected disabled>No hay curso</option>";
+                        echo "</select>";
+                    }
+                    ?>
+                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Modulo">
                 </div>
+                <button class="btn btn-dark" onclick="loadModulos()" type="reset"><i
+                        class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
         <!-- Mensaje error/exito -->
         <div id="resultados"></div>
-        
+
         <!-- Tabla -->
         <div id="tablaModulo"></div>
     </div>
-    
+
 </body>
 
 </html>

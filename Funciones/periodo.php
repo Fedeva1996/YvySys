@@ -85,7 +85,7 @@ if (isset($_POST['action'])) {
         $ano = isset($_POST['ano']) ? "ano =".$_POST['ano'] ." AND " : "";
 
         // Consulta para obtener los alumnos
-        if ($buscar == "") {
+        if ($buscar == "" && $ano = "") {
             $sql = "SELECT * FROM periodo ORDER BY id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
         } else {
             $sql = "SELECT * FROM periodo WHERE $ano descripcion ILIKE '%$buscar%' ORDER by id_periodo DESC LIMIT $registros_por_pagina OFFSET $offset";
