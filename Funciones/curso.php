@@ -11,20 +11,10 @@ if (isset($_POST['action'])) {
         $periodo = $_POST['id_periodo'];
         $turno = $_POST['id_turno'];
 
-        $sql = "INSERT INTO cursos(
-            pensum_id,
-            periodo_id,
-            turno_id,
-            descri)
-            SELECT
-                '$pensum',
-                '$periodo',
-                '$turno',
-                curso
-            FROM
-                pensum_cab
-            WHERE
-                id_pensum = '$pensum'";
+        $sql = "SELECT generar_modulos(
+                    (SELECT insertar_curso($pensum, $periodo, $turno, curso)
+                    FROM pensum_cab
+                    WHERE id_pensum = $pensum));";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo agregado.
@@ -37,7 +27,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Eliminar un registro
@@ -58,7 +48,7 @@ if (isset($_POST['action'])) {
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-        
+
     }
 
     //Editar un registro
@@ -90,7 +80,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Obtener la lista de registros
@@ -171,6 +161,6 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
 
-        
+
     }
 }

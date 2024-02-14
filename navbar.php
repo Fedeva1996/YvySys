@@ -28,6 +28,17 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Documental
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="fichaAcademica.php">Ficha Academica</a></li>
+            <li><a class="dropdown-item" href="formulario03.php">Formulario 03</a></li>
+            <li><a class="dropdown-item" href="justificativoAlumnos.php">Justificativo Alumnos</a></li>
+            <li><a class="dropdown-item" href="desmatriculacionAlumnos.php">Desmatriculación Alumnos</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Referencias
           </a>
           <ul class="dropdown-menu">

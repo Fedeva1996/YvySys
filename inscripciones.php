@@ -50,8 +50,8 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-        
-                    success: function (response) {
+
+                            success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
                         });
@@ -160,8 +160,8 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminar',
                                     id: id
                                 },
-            
-                    success: function (response) {
+
+                                success: function (response) {
                                     loadInscripcion();
                                     $('#resultados').html(response);
                                 }
@@ -200,8 +200,8 @@ if (!isset($_SESSION['usuario'])) {
                                     action: 'eliminarDet',
                                     id: id
                                 },
-            
-                    success: function (response) {
+
+                                success: function (response) {
                                     loadInscripcion();
                                     $('#resultados').html(response);
                                 }
@@ -224,8 +224,8 @@ if (!isset($_SESSION['usuario'])) {
                             action: 'listar',
                             pagina: pagina
                         },
-    
-                    success: function (response) {
+
+                        success: function (response) {
                             $('#tablaInscripcion').html(response);
                         }
                     });
@@ -259,8 +259,8 @@ if (!isset($_SESSION['usuario'])) {
                 data: {
                     action: 'listar'
                 },
-                
-                    success: function (response) {
+
+                success: function (response) {
                     $('#tablaInscripcion').html(response);
                 }
             });
@@ -289,12 +289,13 @@ if (!isset($_SESSION['usuario'])) {
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarInscripcion">
                 <input type="hidden" name="action" value="listar">
-                <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar"
+                <div class="input-group mb-2 w-50">
+                    <input class="input-group-text w-50" type="text" name="buscar"
                         placeholder="Nombre, apellido o Ci del alumno">
-                        <button class="btn btn-dark w-25" onclick="loadInscripcion()" type="reset"><i class="bi bi-eraser"></i>
+                    <button class="btn btn-dark w-25" onclick="loadInscripcion()" type="reset"><i
+                            class="bi bi-eraser"></i>
                         Limpiar</button>
-                    </div>
+                </div>
             </form>
         </div>
         <!-- muestra resultasdo error/exito -->

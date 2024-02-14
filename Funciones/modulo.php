@@ -103,12 +103,9 @@ if (isset($_POST['action'])) {
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_modulo'] . "</td>";
-                echo "<td class='id_pensum_det' style='display:none;'>" . $fila['pensum_det_id'] . "</td>";
                 echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
-                echo "<td class='pensum_cab_id' style='display:none;'>" . $fila['pensum_cab_id'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . "</td>";
+                echo "<td class='curso'>" . $fila['curso'] . " / " . $fila['periodo']. "</td>";
                 echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
-                echo "<td class='docente_ci' style='display:none;'>" . $fila['ci'] . "</td>";
                 if($fila['docente_id']==null){
                     echo "<td class='docente' style='color:#cc3300'>Aun no asignado</td>";
                 }else {
