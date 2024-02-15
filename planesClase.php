@@ -165,6 +165,45 @@ if (!isset($_SESSION['usuario'])) {
                         }
                     });
             });
+            // Eliminar detalle
+            $(document).on('click', '.btn-eliminar-detalle', function () {
+                // Obtener el ID del registro a eliminar
+                var id = $(this).closest('tr').find('.id').text();
+
+                // Confirmar la eliminación con el usuario
+                swal.fire({
+                    title: "Estás seguro de que deseas eliminar este registro?",
+                    text: "Una vez eliminado no se podra recuperar!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Confirmar",
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Cancelar"
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            $.ajax({
+                                url: 'funciones/planClase.php',
+                                type: 'POST',
+                                data: {
+                                    action: 'eliminarDet',
+                                    id: id
+                                },
+
+                                success: function (response) {
+                                    loadPlanClase();
+                                    $('#resultados').html(response);
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: "Se mantendra el registro!",
+                                background: "#212529"
+                            })
+                        }
+                    });
+            });
 
             //paginacion
             $(document).ready(function () {

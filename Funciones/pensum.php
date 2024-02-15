@@ -197,9 +197,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='modalidad'>" . $fila['modalidad'] . "</td>";
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                if ($fila['estado'] == false) {
+                if ($fila['estado'] === 'f') {
                     echo "<td><span class='badge text-bg-danger'>Inactivo</span></td>";
-                } else if ($fila['estado'] == true) {
+                } else {
                     echo "<td><span class='badge text-bg-success'>Activo</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  

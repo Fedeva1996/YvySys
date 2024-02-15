@@ -164,7 +164,7 @@ if (isset($_POST['action'])) {
                 } else {
                     echo "<td class='docente'>" . $fila['descri'] . " > " . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
                 }
-                if ($fila['estado'] == "f") {
+                if ($fila['estado'] === 'f') {
                     echo "<td>
                     <button class='btn btn-secondary btn-generar btn-sm'  
                     data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>

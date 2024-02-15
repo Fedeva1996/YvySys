@@ -155,31 +155,50 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        <i class="bi bi-info-circle"></i> <strong>Cuidado!</strong> las fechas no deben sobreponerle, si
-                        sucede, el siguiente modulo ocupara esa fecha.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
                 <form id="formAsignarModulo">
-                    <?php
-                    include 'db_connect.php';
-                    $sql = "SELECT * FROM modulos";
-                    $resultados = pg_query($conn, $sql);
-                    if (pg_num_rows($resultados) > 0) {
-                        while ($fila = pg_fetch_assoc($resultados)) {
-                            echo "<div class='mb-3'>";
-                            echo "<div class='row'>";
-                            echo "<input class='id' hidden value='" . $fila['id_modulo'] . "'>";
-                            echo "<div class='col'><input disabled class='form-control form-control-sm' name='modulo_id' type='text' value='" . $fila['descri'] . "'></div>";
-                            echo "<div class='col'><input class='form-control form-control-sm' name='inicio' type='date'></div>";
-                            echo "<div class='col'><input class='form-control form-control-sm' name='fin' type='date'></div>";
-                            echo "</div>";
-                            echo "</div>";
-                        }
-                    }
-                    ?>
+                    <!-- modulos -->
+                    <label class="form-label">Rango de fechas por modulo:</label>
+                    <div id='formModulos'></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
+                            cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Formulario para generar eventos-->
+<div class="modal fade" id="modalGenerar" tabindex="-1" aria-labelledby="modalGenerarLabel" aria-hidden="true"
+    data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalGenerarLabel">Generar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle"></i> Para seleccionar multiples días, mantener presionado Ctrl en el
+                    teclado + click en cada día.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <form id="formGenerarEventos">
+                    <div class="row">
+                        <input type="hidden" name="id" id="genId">
+                        <div class="mb-2">
+                            <label class="form-label">Días de clase:</label>
+                            <select class="form-select dias" multiple size="6" aria-label="Multiple Size 6 select">
+                                <option value="1">Lunes</option>
+                                <option value="2">Martes</option>
+                                <option value="3">Miercoles</option>
+                                <option value="4">Jueves</option>
+                                <option value="5">Viernes</option>
+                                <option value="6">Sabado</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar
                             cambios</button>

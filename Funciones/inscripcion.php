@@ -46,7 +46,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Agregar una matriculación
@@ -71,7 +71,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     // Eliminar un registro
@@ -93,7 +93,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
     // Eliminar un registro det
     if ($action == 'eliminarDet') {
@@ -114,7 +114,7 @@ if (isset($_POST['action'])) {
                 </div>";
         }
 
-        
+
     }
 
     //Editar un registro
@@ -141,7 +141,7 @@ if (isset($_POST['action'])) {
             ";
         }
 
-        
+
     }
 
     // Obtener la lista de registros
@@ -188,9 +188,9 @@ if (isset($_POST['action'])) {
                 echo "<td class='id_curso' style='display:none;'>" . $fila['id_curso'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
-                if ($fila['estado'] == false) {
+                if ($fila['estado'] === 'f') {
                     echo "<td><span class='badge text-bg-danger'>Inactivo</span></td>";
-                } else if ($fila['estado'] == true) {
+                } else {
                     echo "<td><span class='badge text-bg-success'>Activo</span></td>";
                 }
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
@@ -264,6 +264,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 }

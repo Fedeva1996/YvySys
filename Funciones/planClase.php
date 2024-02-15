@@ -83,6 +83,51 @@ if (isset($_POST['action'])) {
         }
         
     }
+     //eliminar un registro
+     if ($action == 'eliminar') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "DELETE FROM plan_clase_cab WHERE id_plan_clase = '$id'";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
+            </script>
+            ";
+        }
+        
+    }
+
+    //eliminar un registro
+    if ($action == 'eliminarDet') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "DELETE FROM plan_clase_det WHERE id_plan_clase_det = '$id'";
+        if (@pg_query($conn, $sql)) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Exito!</strong> Campo editado.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>;
+            </script>
+            ";
+        }
+        
+    }
 
     // Obtener la lista de registros
     if ($action == 'listar') {
@@ -199,7 +244,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='actividad'>" . $fila['actividad'] . "</td>";
                 echo "<td><button class='btn btn-secondary btn-editar btn-sm'  
                 data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button>
+                <button class='btn btn-danger btn-eliminar-detalle btn-sm' ><i class='bi bi-trash'></i></button>
                 </td>";
                 echo "</tr>";
             }

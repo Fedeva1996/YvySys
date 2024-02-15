@@ -58,8 +58,12 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $id = $_POST['id'];
+        $dias = $_POST['dias'];
+        // Convierte el array de días a una cadena separada por comas
+        $diasStr = implode(',', $dias);
 
-        $sql = "SELECT generar_eventos_para_cronograma($id)";
+        // Utiliza la cadena en la consulta SQL
+        $sql = "SELECT generar_eventos_para_cronograma($id, ARRAY[$diasStr])";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Eventos generados.
@@ -141,10 +145,10 @@ if (isset($_POST['action'])) {
                 echo "<td class='fecha_fin' style='display:none;'>" . $fila['fecha_fin'] . "</td>";
                 echo "<td class='fecha_inicio_f'>" . $fila['fecha_inicio_f'] . "</td>";
                 echo "<td class='fecha_fin_f'>" . $fila['fecha_fin_f'] . "</td>";
-                if ($fila['estado'] == "f") {
+                if ($fila['estado'] === "f") {
                     echo "<td>
                     <button class='btn btn-secondary btn-generar btn-sm'  
-                    data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar</button>
+                    data-bs-toggle='modal' data-bs-target='#modalGenerar'><i class='bi bi-node-plus'></i> Generar</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                     <button class='btn btn-secondary btn-sm'  
@@ -152,8 +156,8 @@ if (isset($_POST['action'])) {
                     <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
                 } else {
                     echo "<td>
-                    <button class='btn btn-secondary btn-editar btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Asignar materias</button>
+                    <button class='btn btn-secondary btn-sm'  
+                    data-bs-toggle='modal' data-bs-target='#modalAsignar' onclick='loadModulos(" . $fila['curso_id'] . ")'><i class='bi bi-calendar3'></i> Asignar materias</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                     <button class='btn btn-secondary btn-sm'  
@@ -184,6 +188,29 @@ if (isset($_POST['action'])) {
             echo "No se encontraron registros.";
         }
     }
+
+    //obtemer lista de modulos por curso
+    if ($action == 'verModulos') {
+        include '../db_connect.php';
+
+        $curso = $_POST['id'];
+
+        $sql = "SELECT * FROM modulos WHERE curso_id = $curso";
+        $resultados = pg_query($conn, $sql);
+        if (pg_num_rows($resultados) > 0) {
+            while ($fila = pg_fetch_assoc($resultados)) {
+                echo "<div class='mb-3'>";
+                echo "<div class='row'>";
+                echo "<input class='id' hidden value='" . $fila['id_modulo'] . "'>";
+                echo "<div class='col'><input disabled class='form-control form-control-sm' name='modulo_id' type='text' value='" . $fila['descri'] . "'></div>";
+                echo "<div class='col'><input class='form-control form-control-sm' name='inicio' type='date' required></div>";
+                echo "<div class='col'><input class='form-control form-control-sm' name='fin' type='date' required></div>";
+                echo "</div>";
+                echo "</div>";
+            }
+        }
+    }
+
     // Obtener la lista de registros
     if ($action == 'verEventos') {
         include '../db_connect.php';
@@ -241,7 +268,7 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $id = $_POST["id"];
-        $estado = $_POST["estado"]; 
+        $estado = $_POST["estado"];
 
         $sql = "UPDATE eventos
         SET estado='$estado'
@@ -268,6 +295,7 @@ if (isset($_POST['action'])) {
         $datos = json_decode($datosJSON, true);
         // Ahora $datos es un array asociativo con la información de cada fila de la tabla
         // Puedes hacer lo que necesites con estos datos
+        $ultimoFin = null;
         foreach ($datos as $detalle) {
             $modulo = $detalle['id'];
             $inicio = $detalle['inicio'];
@@ -276,16 +304,31 @@ if (isset($_POST['action'])) {
             $sql = "UPDATE eventos
             SET modulo_id = $modulo
             WHERE fecha BETWEEN '$inicio' AND '$fin'";
-            if (@pg_query($conn, $sql)) {
-                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Modulo asignado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-            } else if (@!pg_query($conn, $sql)) {
+            if ($ultimoFin < $inicio) {
+                if ($inicio < $fin) {
+                    if (@pg_query($conn, $sql)) {
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Exito!</strong> Modulo asignado.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+                        $ultimoFin = $fin;
+                    } else if (@!pg_query($conn, $sql)) {
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Error!</strong> " . pg_last_error($conn) . ".
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+                    }
+                } else {
+                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Error!</strong> Fecha de inicio no puede ser despues de la fecha de finalización.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+                }
+            } else {
                 echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
+                    <strong>Error!</strong> Una materia no puede iniciar antes que otra termine.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
             }
         }
     }

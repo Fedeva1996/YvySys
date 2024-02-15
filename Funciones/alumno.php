@@ -209,10 +209,10 @@ if (isset($_POST['action'])) {
                 echo "<td>" . $fila['id_inscripcion'] . "</td>";
                 echo "<td>" . $fila['fecha_inscripcion_f'] . "</td>";
                 echo "<td>" . $fila['descri'] . "</td>";
-                if ($fila['estado'] == false) {
-                    echo "<td style = 'color:#cc3300'>Inactivo</td>";
-                } else if ($fila['estado'] == true) {
-                    echo "<td style = 'color:#99cc33'>Activo</td>";
+                if ($fila['estado'] === 'f') {
+                    echo "<td><span class='badge text-bg-danger'>Inactivo/i></td>";
+                } else {
+                    echo "<td><span class='badge text-bg-success'>Activo</i></td>";
                 }
             }
             echo "</tbody>";

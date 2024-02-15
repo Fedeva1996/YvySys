@@ -103,7 +103,7 @@ if (!isset($_SESSION['usuario'])) {
                     },
                 });
             });
-            
+
             // Editar det
             $(document).on('click', '.btn-editar-detalle', function () {
                 var idDet = $(this).closest('tr').find('.id').text();
@@ -170,43 +170,34 @@ if (!isset($_SESSION['usuario'])) {
             });
             //generar
             $(document).on('click', '.btn-generar', function () {
-                // Obtener el ID
                 var id = $(this).closest('tr').find('.id').text();
 
-                // Confirmar la generación de eventos
-                swal.fire({
-                    title: "Cuidado!",
-                    text: "¿Estás seguro de que deseas generar eventos?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    background: "#212529",
-                    confirmButtonColor: "#d33",
-                    confirmButtonText: "Confirmar",
-                    cancelButtonColor: '#6e7881',
-                    cancelButtonText: "Cancelar"
-                })
-                    .then((willDelete) => {
-                        if (willDelete.isConfirmed) {
-                            $.ajax({
-                                url: 'funciones/cronograma.php',
-                                type: 'POST',
-                                data: {
-                                    action: 'generar',
-                                    id: id
-                                },
+                $('#genId').val(id);
+            });
 
-                                success: function (response) {
-                                    loadCronogramas();
-                                    $('#resultados').html(response);
-                                }
-                            });
-                        } else {
-                            swal.fire({
-                                title: "No se generaran los eventos de este cronograma!",
-                                background: "#212529"
-                            })
-                        }
-                    });
+            $('#formGenerarEventos').submit(function (e) {
+                e.preventDefault();
+
+                // Obtener el valor del input oculto (id)
+                var id = $('#genId').val();
+
+                // Obtener los valores seleccionados del select múltiple
+                var selectedDias = $('.dias').val();
+
+                $.ajax({
+                    url: 'funciones/cronograma.php',
+                    type: 'POST',
+                    data: {
+                        action: 'generar',
+                        id: id,
+                        dias: selectedDias
+                    },
+
+                    success: function (response) {
+                        loadCronogramas();
+                        $('#resultados').html(response);
+                    },
+                });
             });
         });
         //paginacion
@@ -301,6 +292,20 @@ if (!isset($_SESSION['usuario'])) {
 
                 success: function (response) {
                     $('#tablaEventos').html(response);
+                }
+            });
+        }
+        // Cargar tabla eventos
+        function loadModulos(id) {
+            $.ajax({
+                url: 'funciones/cronograma.php',
+                type: 'POST',
+                data: {
+                    action: 'verModulos',
+                    id: id
+                },
+                success: function (response) {
+                    $('#formModulos').html(response);
                 }
             });
         }
