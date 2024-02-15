@@ -97,26 +97,27 @@ if (isset($_POST['action'])) {
                 if ($fila['total'] == null) {
                     echo "<td class='total'><span class='badge text-bg-warning'>Falta generar escala</span></td>";
                 } else {
-                    echo "<td class='total'>" . $fila['total'] . " <span class='badge text-bg-warning'>Volver a generar escala</span></td>";
-                }
-                if ($fila['estado']) {
-                    echo "<td>
-                    <button class='btn btn-secondary btn-generar btn-sm'  
-                    data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar escala</button>
-                    <button class='btn btn-secondary btn-editar btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
-                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
-                } else {
-                    echo "<td>
-                    <button class='btn btn-secondary btn-editar btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Calificar</button>
-                    <button class='btn btn-secondary btn-editar btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
-                    <button class='btn btn-secondary btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
-                    <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                    if ($fila['estado'] === 'f') {
+                        echo "<td class='total'>" . $fila['total'] . " puntos <span class='badge text-bg-warning'>Volver a generar escala</span></td>";
+                        echo "<td>
+                        <button class='btn btn-secondary btn-generar btn-sm'  
+                        data-bs-toggle='modal'><i class='bi bi-node-plus'></i> Generar escala</button>
+                        <button class='btn btn-secondary btn-editar btn-sm'  
+                        data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                        <button class='btn btn-secondary btn-sm'  
+                        data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
+                        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                    } else {
+                        echo "<td class='total'>" . $fila['total'] . " puntos</td>";
+                        echo "<td>
+                        <button class='btn btn-secondary btn-editar btn-sm'  
+                        data-bs-toggle='modal' data-bs-target='#modalAsignar'><i class='bi bi-calendar3'></i> Calificar</button>
+                        <button class='btn btn-secondary btn-editar btn-sm'  
+                        data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
+                        <button class='btn btn-secondary btn-sm'  
+                        data-bs-toggle='modal' data-bs-target='#modalDetalle' onclick='loadDetalle(" . $fila['id_calificacion_cab'] . ")'><i class='bi bi-postcard'></i></button>
+                        <button class='btn btn-danger btn-eliminar btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                    }
                 }
                 echo "</tr>";
             }

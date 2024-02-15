@@ -72,7 +72,8 @@ if (!isset($_SESSION['usuario'])) {
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function (response) {
-                        $('#formBuscarCurso').submit();
+                        $('#formBuscarCurso').reset();
+                        loadCalificacion();
                         $('#resultados').html(response);
                     },
                 });
@@ -105,8 +106,8 @@ if (!isset($_SESSION['usuario'])) {
                                 },
 
                                 success: function (response) {
-                                    cargarPagina(1);
                                     $('#resultados').html(response);
+                                    loadCalificacion();
                                 }
                             });
                         } else {
@@ -140,58 +141,21 @@ if (!isset($_SESSION['usuario'])) {
                 });
 
             });
-
-            //actualiza select de materias
-            $(document).ready(function () {
-                $("#id_curso").change(function () {
-                    var valorSelect1 = document.getElementById("id_curso").value;
-                    $.ajax({
-                        url: "funciones/calificacion.php",
-                        type: "POST",
-                        data: {
-                            id_curso: valorSelect1,
-                            action: "buscarCurso"
-                        },
-                        success: function (data) {
-                            $("#id_materia").empty();
-                            $("#id_materia").append(data);
-                        }
-                    });
-                });
-            });
-            $(document).ready(function () {
-                $(".input-number").on("input", function () {
-                    var num1 = parseInt($("#editProceso").val()) || 0;
-                    var num2 = parseInt($("#editTrabajo").val()) || 0;
-                    var num3 = parseInt($("#editExamen").val()) || 0;
-
-                    $.ajax({
-                        type: "POST",
-                        url: "funciones/calificacion.php",
-                        dataType: 'json',
-                        data: {
-                            num1: num1,
-                            num2: num2,
-                            num3: num3,
-                            action: "sumar"
-                        },
-                        success: function (data) {
-                            $("#editTotal").val(data[0]);
-                            $("#editCalificacion").val(data[1]);
-                            $('#editPaso').val(data[2]);
-                            $('#selectPaso').val(data[2]);
-                            changeColor(data[3]);
-                        }
-                    });
-                });
-            });
-
-            function changeColor(colorParam) {
-                let color = colorParam;
-                var optionElement = document.getElementById('selectPaso');
-                optionElement.style.background = color;
-            };
         });
+        // Cargar tabla
+        function loadCalificacion() {
+            $.ajax({
+                url: 'funciones/calificacion.php',
+                type: 'POST',
+                data: {
+                    action: 'listar'
+                },
+
+                success: function (response) {
+                    $('#tablaCalificacion').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
@@ -212,7 +176,7 @@ if (!isset($_SESSION['usuario'])) {
         <!-- Tabla -->
         <div id="tablaCalificacion"></div>
     </div>
-    
+
 </body>
 
 </html>
