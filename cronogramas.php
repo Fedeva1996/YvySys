@@ -29,6 +29,7 @@ if (!isset($_SESSION['usuario'])) {
                 // Recorre cada fila del formulario
                 $(".row").each(function () {
                     let id = $(this).find(".id").val();
+                    let cronograma = $(this).find(".cronograma").val();
                     let inicio = $(this).find("input[name='inicio']").val();
                     let fin = $(this).find("input[name='fin']").val();
 
@@ -36,6 +37,7 @@ if (!isset($_SESSION['usuario'])) {
                     if (id && inicio && fin) {
                         datos.push({
                             "id": id,
+                            "cronograma": cronograma,
                             "inicio": inicio,
                             "fin": fin
                         });
@@ -295,14 +297,15 @@ if (!isset($_SESSION['usuario'])) {
                 }
             });
         }
-        // Cargar tabla eventos
-        function loadModulos(id) {
+        // Cargar eventos
+        function loadModulos(curso, cronograma) {
             $.ajax({
                 url: 'funciones/cronograma.php',
                 type: 'POST',
                 data: {
                     action: 'verModulos',
-                    id: id
+                    curso: curso,
+                    cronograma: cronograma
                 },
                 success: function (response) {
                     $('#formModulos').html(response);

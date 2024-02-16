@@ -157,7 +157,6 @@
             <div class="modal-body">
                 <form id="formAsignarModulo">
                     <!-- modulos -->
-                    <label class="form-label">Rango de fechas por modulo:</label>
                     <div id='formModulos'></div>
                     <div class="modal-footer">
                         <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar

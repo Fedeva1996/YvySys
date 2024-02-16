@@ -63,13 +63,21 @@ if (isset($_POST['action'])) {
         $diasStr = implode(',', $dias);
 
         // Utiliza la cadena en la consulta SQL
-        $sql = "SELECT generar_eventos_para_cronograma($id, ARRAY[$diasStr])";
+        $sql = "DELETE FROM eventos WHERE cronograma_id = $id";
+        $sqlGenerar = "SELECT generar_eventos_para_cronograma($id, ARRAY[$diasStr])";
         if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Eventos generados.
+            if (@pg_query($conn, $sqlGenerar)) {
+                echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Exito!</strong> Eventos generados.
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+            } else if (@!pg_query($conn, $sqlGenerar)) {
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> " . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
-        } else if (@!pg_query($conn, $sql)) {
+            }
+        } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
             <strong>Error!</strong> " . pg_last_error($conn) . ".
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -87,12 +95,12 @@ if (isset($_POST['action'])) {
         $fecha_fin = $_POST['fecha_fin'];
 
         $sql = "UPDATE cronogramas
-        SET fecha_inicio='$fecha_ini', fecha_fin='$fecha_fin'
+        SET fecha_inicio='$fecha_ini', fecha_fin='$fecha_fin', estado = false
         WHERE id_cronograma = $id;";
         if ($fecha_ini < $fecha_fin) {
             if (@pg_query($conn, $sql)) {
                 echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Exito!</strong> Campo agregado.
+                    <strong>Exito!</strong> Campo modificado.
                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                     </div>";
             } else if (@!pg_query($conn, $sql)) {
@@ -157,7 +165,7 @@ if (isset($_POST['action'])) {
                 } else {
                     echo "<td>
                     <button class='btn btn-secondary btn-sm'  
-                    data-bs-toggle='modal' data-bs-target='#modalAsignar' onclick='loadModulos(" . $fila['curso_id'] . ")'><i class='bi bi-calendar3'></i> Asignar materias</button>
+                    data-bs-toggle='modal' data-bs-target='#modalAsignar' onclick='loadModulos(" . $fila['curso_id'] . ", " . $fila['id_cronograma'] . ")'><i class='bi bi-calendar3'></i> Asignar materias</button>
                     <button class='btn btn-secondary btn-editar btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditar'><i class='bi bi-pencil'></i></button>
                     <button class='btn btn-secondary btn-sm'  
@@ -193,15 +201,24 @@ if (isset($_POST['action'])) {
     if ($action == 'verModulos') {
         include '../db_connect.php';
 
-        $curso = $_POST['id'];
+        $curso = $_POST['curso'];
+        $cronograma = $_POST['cronograma'];
 
         $sql = "SELECT * FROM modulos WHERE curso_id = $curso";
         $resultados = pg_query($conn, $sql);
         if (pg_num_rows($resultados) > 0) {
+            echo "<div class=''>";
+            echo "<div class='row'>";
+            echo "<label class='col form-label'>Modulo</label>";
+            echo "<label class='col form-label'>Inicio</label>";
+            echo "<label class='col form-label'>Fin</label>";
+            echo "</div>";
+            echo "</div>";
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<div class='mb-3'>";
                 echo "<div class='row'>";
                 echo "<input class='id' hidden value='" . $fila['id_modulo'] . "'>";
+                echo "<input class='cronograma' hidden value='" . $cronograma . "'>";
                 echo "<div class='col'><input disabled class='form-control form-control-sm' name='modulo_id' type='text' value='" . $fila['descri'] . "'></div>";
                 echo "<div class='col'><input class='form-control form-control-sm' name='inicio' type='date' required></div>";
                 echo "<div class='col'><input class='form-control form-control-sm' name='fin' type='date' required></div>";
@@ -243,7 +260,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['descri'] == null) {
-                    echo "<td class='modulo'> No asignado</td>";
+                    echo "<td class='modulo'> <span class='badge text-bg-warning'>No asignado</span></td>";
                 } else {
                     echo "<td class='modulo'>" . $fila['descri'] . "</td>";
                 }
@@ -298,38 +315,54 @@ if (isset($_POST['action'])) {
         $ultimoFin = null;
         foreach ($datos as $detalle) {
             $modulo = $detalle['id'];
+            $cronograma = $detalle['cronograma'];
             $inicio = $detalle['inicio'];
             $fin = $detalle['fin'];
 
             $sql = "UPDATE eventos
             SET modulo_id = $modulo
-            WHERE fecha BETWEEN '$inicio' AND '$fin'";
-            if ($ultimoFin < $inicio) {
-                if ($inicio < $fin) {
+            WHERE fecha BETWEEN '$inicio' AND '$fin'
+            AND cronograma_id = $cronograma";
+            $sqlCronograma = "SELECT fecha_inicio, fecha_fin FROM cronogramas WHERE id_cronograma = $cronograma";
+            $resultadoCronograma = pg_query($conn, $sqlCronograma);
+            if (@$resultadoCronograma) {
+                $filaCronograma = pg_fetch_assoc($resultadoCronograma);
+
+                $fechaInicio = $filaCronograma['fecha_inicio'];
+                $fechaFin = $filaCronograma['fecha_fin'];
+
+                if ($fechaInicio > $inicio || $fechaFin < $fin) {
+                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Error!</strong> Fechas fuera del rango del cronograma.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    break;
+                } else if ($ultimoFin > $inicio) {
+                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Error!</strong> Materia nueva inicia antes de que finalice la anterior.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                } else {
                     if (@pg_query($conn, $sql)) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Exito!</strong> Modulo asignado.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                    </div>";
+                            <strong>Exito!</strong> Módulo asignado.
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>";
                         $ultimoFin = $fin;
-                    } else if (@!pg_query($conn, $sql)) {
+                    } else {
                         echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Error!</strong> " . pg_last_error($conn) . ".
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                    </div>";
+                            <strong>Error!</strong> " . pg_last_error($conn) . ".
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>";
                     }
-                } else {
-                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Error!</strong> Fecha de inicio no puede ser despues de la fecha de finalización.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                    </div>";
                 }
             } else {
                 echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Error!</strong> Una materia no puede iniciar antes que otra termine.
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                    </div>";
+                <strong>Error!</strong> Desconocido, " . pg_last_error($conn) . ".
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
             }
+
         }
     }
     // autocompletado
