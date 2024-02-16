@@ -22,62 +22,6 @@ if (!isset($_SESSION['usuario'])) {
     <script>
         //buscar
         $(document).ready(function () {
-            $('#formBuscarCurso').submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: 'funciones/calificacion.php',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        $('#tablaCalificacion').html(response);
-                    }
-                });
-            });
-
-            // Editar
-            $(document).on('click', '.btn-editar', function () {
-                var id = $(this).closest('tr').find('.id').text();
-                var alumno = $(this).closest('tr').find('.alumno').text();
-                var puntaje_proceso = $(this).closest('tr').find('.puntaje_proceso').text();
-                var puntaje_trabajo = $(this).closest('tr').find('.puntaje_trabajo').text();
-                var puntaje_examen = $(this).closest('tr').find('.puntaje_examen').text();
-                var calificacion = $(this).closest('tr').find('.calificacion').text();
-                var paso = $(this).closest('tr').find('.paso').text();
-                var obs = $(this).closest('tr').find('.obs').text();
-                if (paso == 1) {
-                    var color = "#81c784";
-                } else {
-                    var color = "#e57373";
-                }
-                $('#editId').val(id);
-                $('#editNombre').val(alumno);
-                $('#editProceso').val(puntaje_proceso);
-                $('#editTrabajo').val(puntaje_trabajo);
-                $('#editExamen').val(puntaje_examen);
-                $('#editTotal').val(Number(puntaje_proceso) + Number(puntaje_trabajo) + Number(puntaje_examen));
-                $('#editCalificacion').val(calificacion);
-                $('#editPaso').val(paso);
-                $('#selectPaso').val(paso);
-                $("select.selectPaso selected").val(paso).change();
-                changeColor(color);
-                $('#editObs').val(obs);
-
-                // Asignar el valor de action al formulario de edición
-                $('#formEditarCalificacion').find('input[name="action"]').val('editar');
-            });
-            $('#formEditarCalificacion').submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: 'funciones/calificacion.php',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        $('#formBuscarCurso').reset();
-                        loadCalificacion();
-                        $('#resultados').html(response);
-                    },
-                });
-            });
             //generar
             $(document).on('click', '.btn-generar', function () {
                 // Obtener el ID
@@ -156,6 +100,21 @@ if (!isset($_SESSION['usuario'])) {
                 }
             });
         }
+        // Cargar tabla eventos
+        function loadDetalle(id) {
+            $.ajax({
+                url: 'funciones/calificacion.php',
+                type: 'POST',
+                data: {
+                    action: 'verDetalle',
+                    id: id
+                },
+
+                success: function (response) {
+                    $('#tablaDetalle').html(response);
+                }
+            });
+        }
     </script>
 </head>
 
@@ -163,6 +122,7 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
+        include("Modals/calificaciones.php");
         ?>
     </div>
     <div class="container">

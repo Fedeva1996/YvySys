@@ -92,3 +92,19 @@
         </div>
     </div>
 </div>
+<!-- Modal para detalles -->
+<div class="modal fade modal-lg" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true"
+    data-bs-theme="dark">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalDetalleLabel">Detalle</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabla -->
+                <div id="tablaDetalle"></div>
+            </div>
+        </div>
+    </div>
+</div>

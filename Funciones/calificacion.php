@@ -2,42 +2,6 @@
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    //Editar un registro
-    if ($action == 'editar') {
-        include '../db_connect.php';
-
-        $id = $_POST['id'];
-        $proceso = $_POST['proceso'];
-        $trabajo = $_POST['trabajo'];
-        $examen = $_POST['examen'];
-        $total = $_POST['total'];
-        $calificación = $_POST['calificacion'];
-        $paso = $_POST['paso'];
-        $obs = $_POST['obs'];
-
-        $sql = "UPDATE
-        calificaciones
-        SET
-        puntaje_proceso = '$proceso',
-        puntaje_trabajo = '$trabajo',
-        puntaje_examen = '$examen',
-        puntaje_total = '$total',
-        calificacion = '$calificación',
-        paso = '$paso',
-        obs = '$obs' 
-        WHERE id_calificacion ='$id'";
-        if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo editado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        } else {
-            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        }
-    }
     if ($action == 'generar') {
         include '../db_connect.php';
 
@@ -141,6 +105,47 @@ if (isset($_POST['action'])) {
             echo "</ul>";
             echo "</nav>";
             echo "</div>";
+        } else {
+            echo "No se encontraron registros.";
+        }
+
+    }
+
+    if ($action == 'verDetalle') {
+        include '../db_connect.php';
+
+        $id = $_POST['id'];
+
+        $sql = "SELECT * FROM calificacion_det_v WHERE calificaciones_cab_id = $id";
+        $resultados = pg_query($conn, $sql);
+        if (pg_num_rows($resultados) > 0) {
+            echo "<table class='table table-hover table-dark table-sm' style='margin-left: auto; margin-right: auto;'>";
+            echo "<thead class='table-dark'>"
+                . "<tr>"
+                . "<th>Id</th>"
+                . "<th>Alumno</th>"
+                . "<th>Procesos</th>"
+                . "<th>Examenes</th>"
+                . "<th>Total hecho</th>"
+                . "<th>Calificación</th>"
+                . "<th>Estado</th>"
+                . "</tr>"
+                . "</thead>";
+            echo "<tbody class='table-group-divider'>";
+            while ($fila = pg_fetch_assoc($resultados)) {
+                echo "<tr>";
+                echo "<td class='id'>" . $fila['id_calificacion_det'] . "</td>";
+                echo "<td class='calificaciones_cab_id' style='display:none;'>" . $fila['calificaciones_cab_id'] . "</td>";
+                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
+                echo "<td class='procesos'>" . $fila['procesos'] . "</td>";
+                echo "<td class='examenes'>" . $fila['examenes'] . "</td>";
+                echo "<td class='total_hecho'>" . $fila['total_hecho'] . "</td>";
+                echo "<td class='calificacion'>" . $fila['calificacion'] . "</td>";
+                echo "<td class='estado'>" . $fila['estado'] . "</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
         } else {
             echo "No se encontraron registros.";
         }
