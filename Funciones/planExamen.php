@@ -88,8 +88,98 @@ if (isset($_POST['action'])) {
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
         </div>";
         }
+    }
 
-        
+    // Editar registro
+    if ($action == 'editar') {
+        include '../db_connect.php';
+
+        $examen_nombre = isset($_FILES['examen']['name']) ? $_FILES['examen']['name'] : $_POST['examenAnterior'];
+        $carpeta = "../Examenes/";
+        // Reemplazar espacios con guiones bajos
+        $examen_nombre = str_replace(' ', '_', $examen_nombre);
+
+        $directorio_archivo = $carpeta . basename($examen_nombre);
+
+        // Verificar si ya existe un archivo con el mismo nombre
+        $counter = 1;
+        while (file_exists($directorio_archivo)) {
+            $nombre_sin_extension = pathinfo($examen_nombre, PATHINFO_FILENAME);
+            $nuevo_nombre = $nombre_sin_extension . '_' . $counter . '.' . pathinfo($examen_nombre, PATHINFO_EXTENSION);
+            $directorio_archivo = $carpeta . basename($nuevo_nombre);
+            $counter++;
+        }
+
+        $id = $_POST['id'];
+        $idExamen = $_POST['idExamen'];
+        $modulo = $_POST['modulo'];
+        $cronograma = $_POST['cronograma'];
+        $fecha = $_POST['fecha'];
+        $fecha_recuperatorio = $_POST['fecha_recuperatorio'];
+        $puntaje = $_POST['puntaje'];
+        $obs = $_POST['obs'];
+        $tipo = $_POST['tipo'];
+
+        // Select file type
+        $fileType = strtolower(pathinfo($directorio_archivo, PATHINFO_EXTENSION));
+        // Valid file extensions
+        $extensions_arr = array("pdf", "doc", "docx");
+
+        // Check extension
+        if (in_array($fileType, $extensions_arr)) {
+            if ($fecha_recuperatorio > $fecha) {
+                // Elimina los '../' de la variable $directorio_archivo
+                $ruta_sin_puntos = str_replace('../', '', $directorio_archivo);
+
+                $sql = "UPDATE plan_examen
+                SET modulo_id=$modulo, fecha=$fecha, recuperatorio=$fecha_recuperatorio, obs=$obs, tipo=$tipo, puntaje=$puntaje, cronograma_id=$cronograma
+                WHERE id_plan_examen = $id";
+
+                $sql2 = "UPDATE examen
+                SET directorio=$ruta_sin_puntos, nombre=$examen_nombre
+                WHERE id_examen=$idExamen";
+
+                $result = pg_query($conn, $sql);
+
+                if ($result) {
+                    if (pg_query($conn, $sql2)) {
+                        // Upload file
+                        if (move_uploaded_file($_FILES['examen']['tmp_name'], $directorio_archivo)) {
+                            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                            <strong>Éxito!</strong> Campo agregado.
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>";
+                        } else {
+                            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                            <strong>Error!</strong> No se pudo cargar el archivo.
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>";
+                        }
+                    } else {
+                        echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Error!</strong> No se modificar el archivo.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
+                    }
+                } else {
+                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                    <strong>Error!</strong> Puede que el nombre del archivo contenga algun caracter no valido (ã, ẽ, ĩ, õ, ũ, ỹ, g̃, '), pruebe cambiar el nombre del archivo e intentelo de nuevo.
+                    " . pg_last_error($conn) . ".
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+                <strong>Error!</strong> La fecha recuperatoria no puede ser anterior a la fecha original.
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>";
+            }
+        } else {
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
+            <strong>Error!</strong> El archivo debe ser un PDF.
+            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>";
+        }
     }
 
     // Obtener la lista de registros
@@ -152,8 +242,11 @@ if (isset($_POST['action'])) {
                 //eliminar examen de base de datos
                 $sql_select2 = "DELETE FROM examen WHERE directorio = '$ruta_archivo_a_eliminar'";
                 $resultado_select2 = pg_query($conn, $sql_select2);
-                if ($resultado_select2) {
-
+                if ($resultado_select2 && unlink($ruta_archivo_a_eliminar)) {
+                    echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
+                        <strong>Exito!</strong> Archivo eliminado.
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>";
                 } else {
                     echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                         <strong>Error!</strong> " . pg_last_error($conn) . ".
@@ -173,7 +266,7 @@ if (isset($_POST['action'])) {
             </div>";
         }
 
-        
+
     }
     // Obtener la lista de registros
     if ($action == 'listar') {
@@ -224,7 +317,7 @@ if (isset($_POST['action'])) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_plan_examen'] . "</td>";
                 echo "<td class='examen' style='display:none;'>" . $fila['examen_id'] . "</td>";
-                echo "<td class='directorio'><a target='_blank' href='" . $fila['directorio'] . "' >" . $fila['directorio'] . "</a></td>";
+                echo "<td class='directorio'><a target='_blank' href='" . $fila['directorio'] . "' >" . $fila['nombre'] . "</a></td>";
                 echo "<td class='cronograma' style='display:none;'>" . $fila['cronograma_id'] . "</td>";
                 echo "<td class='curso'>" . $fila['curso'] . " > " . $fila['fecha_inicio'] . " al " . $fila['fecha_fin'] . "</td>";
                 echo "<td class='modulo' style='display:none;'>" . $fila['modulo_id'] . "</td>";
@@ -233,7 +326,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='recuperatorio' style='display:none;'>" . $fila['recuperatorio'] . "</td>";
                 echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
                 echo "<td class='recuperatorio_f'>" . $fila['recuperatorio_f'] . "</td>";
-                echo "<td class='tipo' style='display:none;'>". $fila['tipo']."</td>";
+                echo "<td class='tipo' style='display:none;'>" . $fila['tipo'] . "</td>";
                 switch ($fila['tipo']) {
                     case 'P':
                         echo "<td>Parcial</td>";
@@ -274,6 +367,6 @@ if (isset($_POST['action'])) {
         } else {
             echo "No se encontraron registros.";
         }
-        
+
     }
 }

@@ -215,11 +215,14 @@
             <div class="modal-body">
                 <form id="formEditarPlanExamen">
                     <input type="hidden" name="action" value="editar">
-                    <input type="hidden" id="editarId">
+                    <input type="hidden" name="id" id="editarId">
+                    <input type="hidden" name="idExamen" id="editarIdExamen">
+                    <input type="hidden" name="examenAnterior" id="editarDirectorio">
+                    
                     <div class="row">
                         <div class="input-group mb-3">
-                            <input type="file" class="form-control" id="editarExamen" name="examen" required>
-                            <label class="input-group-text" for="examen">PDF</label>
+                            <input type="file" class="form-control" name="examen" hidden>
+                            <span class="input-group-text">Clic para editar <i class="bi bi-arrow-right"></i></span><label class="input-group-text" for="examen" id="editarDirectorioTexto"></label>
                         </div>
                     </div>
                     <!-- Modifica tu código PHP para agregar identificadores a los selects -->
@@ -288,7 +291,8 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <input class="input-group-text w-100" type="text" name="obs" id="editarObs" placeholder="Observaciones">
+                        <input class="input-group-text w-100" type="text" name="obs" id="editarObs"
+                            placeholder="Observaciones">
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-outline-primary" data-bs-dismiss="modal" type="submit">Guardar

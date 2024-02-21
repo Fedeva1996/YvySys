@@ -58,6 +58,7 @@ if (!isset($_SESSION['usuario'])) {
             // Editar
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
+                var idExamen = $(this).closest('tr').find('.examen').text();
                 var directorio = $(this).closest('tr').find('.directorio').text();
                 var cronograma = $(this).closest('tr').find('.cronograma').text();
                 var modulo = $(this).closest('tr').find('.modulo').text();
@@ -68,7 +69,9 @@ if (!isset($_SESSION['usuario'])) {
                 var obs = $(this).closest('tr').find('.obs').text();
 
                 $('#editarId').val(id);
+                $('#editarIdExamen').val(id);
                 $('#editarDirectorio').val(directorio);
+                $('#editarDirectorioTexto').text(directorio);
                 $('#editarCronogramaSelect').val(cronograma).change();
                 $('#editarModuloSelect').val(modulo).change();
                 $('#editarFecha').val(fecha);
@@ -76,6 +79,10 @@ if (!isset($_SESSION['usuario'])) {
                 $('#editarTipo').val(tipo).change();
                 $('#editarPuntaje').val(puntaje);
                 $('#editarPbs').val(obs);
+
+                // Mostrar el nombre del archivo cargado
+                var nombreArchivo = directorio.split('\\').pop();
+                $('#nombreDirectorio').text(nombreArchivo);
             });
 
             $('#formEditarPlanExamen').submit(function (e) {
