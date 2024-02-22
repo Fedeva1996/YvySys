@@ -221,37 +221,23 @@ if (isset($_POST['action'])) {
 
                     //eliminar examen de base de datos
                     $sql_select2 = "DELETE FROM examen WHERE directorio = '$ruta_archivo_a_eliminar'";
-                    $resultado_select2 = pg_query($conn, $sql_select2);
-                    if ($resultado_select2) {
+                    $resultado_select2 = @pg_query($conn, $sql_select2);
+                    if ($resultado_select2 && unlink($ruta_archivo_a_eliminar)) {
                         echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                        <strong>Exito!</strong> Campo eliminado.
+                        <strong>Exito!</strong> Archivo eliminado.
                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>";
                     } else {
                         echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                        <strong>Error!</strong> " . pg_last_error($conn) . ".
+                        <strong>Error!</strong> Hay campos dependiendo de este registro. " . pg_last_error($conn) . ".
                         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>";
                     }
                 } else if (@!pg_query($conn, $sql)) {
                     echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                    <strong>Error!</strong> " . pg_last_error($conn) . ".
+                    <strong>Error!</strong>  Hay campos dependiendo de este registro. " . pg_last_error($conn) . ".
                     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                     </div>";
-                }
-                //eliminar examen de base de datos
-                $sql_select2 = "DELETE FROM examen WHERE directorio = '$ruta_archivo_a_eliminar'";
-                $resultado_select2 = pg_query($conn, $sql_select2);
-                if ($resultado_select2 && unlink($ruta_archivo_a_eliminar)) {
-                    echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                        <strong>Exito!</strong> Archivo eliminado.
-                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                        </div>";
-                } else {
-                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                        <strong>Error!</strong> " . pg_last_error($conn) . ".
-                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                        </div>";
                 }
             } else {
                 echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
