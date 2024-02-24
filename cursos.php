@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Cursos</title>
+    <title>Cursos - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {
@@ -188,8 +188,8 @@ if (!isset($_SESSION['usuario'])) {
         <div class="mb-3" data-bs-theme="dark">
             <form id="formBuscarCurso">
                 <input type="hidden" name="action" value="listar">
-                <div class="input-group mb-2">
-                    <input class="input-group-text w-25" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
+                <div class="input-group mb-2 w-50">
+                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
                     <button class="btn btn-dark w-25" onclick="loadCursos()" type="reset"><i
                     class="bi bi-eraser"></i>Limpiar</button>
                 </div>

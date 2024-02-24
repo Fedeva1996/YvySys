@@ -16,81 +16,55 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Modulos - Yvy Marãe'ỹ</title>
+    <title>Ficha Academica - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {
-            // Generar modulos de curso
-            $('#formGenerarModulos').submit(function (e) {
+            // Cargar la tabla al cargar la página
+            loadFichaAcademica();
+
+            // Agregar nuevo
+            $('#formGenerarFichaAcademica').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: 'funciones/modulo.php',
+                    url: 'funciones/fichaAcademica.php',
                     type: 'POST',
                     data: $(this).serialize(),
 
                     success: function (response) {
-                        $('#formGenerarModulos')[0].reset();
-                        loadModulos();
+                        $('#formGenerarFichaAcademica')[0].reset();
+                        loadFichaAcademica();
                         $('#resultados').html(response);
                     }
                 });
             });
-            //autocompletar
-            $(document).ready(function () {
-                $('#ci-input').keyup(function () {
-                    var query = $(this).val();
 
-                    if (query !== '') {
-                        $.ajax({
-                            url: 'funciones/modulo.php',
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                action: 'autocompletar'
-                            },
-
-                            success: function (response) {
-                                $('#suggestions').html(response).show();
-                            }
-                        });
-                    } else {
-                        $('#suggestions').hide();
-                    }
-                });
-
-                $(document).on('click', '.suggest-element', function () {
-                    var value = $(this).text();
-                    var id = $(this).data('id-persona');
-                    $('#ci-input').val(value);
-                    $('#id_docente').val(id);
-                    $('#suggestions').hide();
-                });
-            });
             // Editar
-            $(document).on('click', '.btn-editar-modulo', function () {
+            $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
-                var id_persona = $(this).closest('tr').find('.docente_ci').text();
+                var id_pensum = $(this).closest('tr').find('.id_pensum').text();
 
                 $('#editId').val(id);
-                $("#ci-input").val(id_persona);
+                $('#editPensum').val(id_pensum);
+                $("select.editPensum selected").val(id_pensum).change();
             });
 
-            $('#formEditarModulo').submit(function (e) {
+            $('#formEditarfichaAcademica').submit(function (e) {
                 e.preventDefault();
                 $.ajax({
-                    url: 'funciones/modulo.php',
+                    url: 'funciones/fichaAcademica.php',
                     type: 'POST',
                     data: $(this).serialize(),
 
                     success: function (response) {
-                        loadModulos();
+                        loadFichaAcademica();
                         $('#resultados').html(response);
                     },
                 });
             });
 
             // Eliminar
-            $(document).on('click', '.btn-eliminar-modulo', function () {
+            $(document).on('click', '.btn-eliminar', function () {
                 // Obtener el ID del registro a eliminar
                 var id = $(this).closest('tr').find('.id').text();
 
@@ -109,7 +83,7 @@ if (!isset($_SESSION['usuario'])) {
                     .then((willDelete) => {
                         if (willDelete.isConfirmed) {
                             $.ajax({
-                                url: 'funciones/modulo.php',
+                                url: 'funciones/fichaAcademica.php',
                                 type: 'POST',
                                 data: {
                                     action: 'eliminar',
@@ -117,7 +91,7 @@ if (!isset($_SESSION['usuario'])) {
                                 },
 
                                 success: function (response) {
-                                    loadModulos();
+                                    loadFichaAcademica();
                                     $('#resultados').html(response);
                                 }
                             });
@@ -134,7 +108,7 @@ if (!isset($_SESSION['usuario'])) {
             $(document).ready(function () {
                 function cargarPagina(pagina) {
                     $.ajax({
-                        url: 'funciones/modulo.php',
+                        url: 'funciones/fichaAcademica.php',
                         type: 'POST',
                         data: {
                             action: 'listar',
@@ -142,11 +116,10 @@ if (!isset($_SESSION['usuario'])) {
                         },
 
                         success: function (response) {
-                            $('#tablaModulo').html(response);
+                            $('#tablafichaAcademica').html(response);
                         }
                     });
                 }
-
                 $(document).on('click', '.btn-pagina', function () {
                     var pagina = $(this).data('pagina');
                     cargarPagina(pagina);
@@ -154,39 +127,78 @@ if (!isset($_SESSION['usuario'])) {
 
                 // Cargar la primera página al cargar el documento
                 cargarPagina(1);
-            });
-            // Buscar
-            $('#formBuscarModulo').keyup(function (e) {
-                e.preventDefault();
-                buscar();
-            });
-            $('#selectCurso').change(function (e) {
-                e.preventDefault();
-                buscar();
-            });
-            function buscar() {
-                $.ajax({
-                    url: 'funciones/modulo.php',
-                    type: 'POST',
-                    data: $('#formBuscarModulo').serialize(),
 
-                    success: function (response) {
-                        $('#tablaModulo').html(response);
+                // Buscar
+                $('#formBuscarfichaAcademica').keyup(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: 'funciones/fichaAcademica.php',
+                        type: 'POST',
+                        data: $(this).serialize(),
+
+                        success: function (response) {
+                            $('#tablafichaAcademica').html(response);
+                        }
+                    });
+                });
+            });
+            //autocompletar alumno
+            $(document).ready(function () {
+                $('#ci-input').keyup(function () {
+                    var query = $(this).val();
+
+                    if (query !== '') {
+                        $.ajax({
+                            url: 'funciones/fichaAcademica.php',
+                            method: 'POST',
+                            data: {
+                                query: query,
+                                action: 'autocompletar'
+                            },
+
+                            success: function (response) {
+                                $('#suggestions').html(response).show();
+                            }
+                        });
+                    } else {
+                        $('#suggestions').hide();
                     }
                 });
-            }
+
+                $(document).on('click', '.suggest-element', function () {
+                    var value = $(this).text();
+                    var id = $(this).data('id_alumno');
+                    $('#ci-input').val(value);
+                    $('#id_alumno').val(id);
+                    $('#suggestions').hide();
+                });
+            });
+
         });
         // Cargar tabla
-        function loadModulos() {
+        function loadFichaAcademica() {
             $.ajax({
-                url: 'funciones/modulo.php',
+                url: 'funciones/fichaAcademica.php',
                 type: 'POST',
                 data: {
                     action: 'listar'
                 },
 
                 success: function (response) {
-                    $('#tablaModulo').html(response);
+                    $('#tablafichaAcademica').html(response);
+                }
+            });
+        }
+        function loadCurso(id) {
+            $.ajax({
+                url: 'funciones/fichaAcademica.php',
+                type: 'POST',
+                data: {
+                    action: 'selectCurso',
+                    alumnoId: id
+                },
+                success: function (response) {
+                    $('#cursoSelect').html(response);
                 }
             });
         }
@@ -197,44 +209,31 @@ if (!isset($_SESSION['usuario'])) {
     <div class="mb-2">
         <?php
         include("navbar.php");
-        include("Modals/modulos.php")
+        include("Modals/fichaAcademica.php")
             ?>
     </div>
     <div class="container">
-        <h2>Modulos</h2>
+        <h2>fichaAcademica</h2>
+        <div class="input-group mb-2">
+            <button class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modalGenerar'> <i
+                    class="bi bi-node-plus"></i> Generar</button>
+        </div>
         <!-- Formulario para buscar -->
         <div class="mb-3" data-bs-theme="dark">
-            <form id="formBuscarModulo">
+            <form id="formBuscarfichaAcademica">
                 <input type="hidden" name="action" value="listar">
                 <div class="input-group mb-2 w-50">
-                    <?php
-                    include 'db_connect.php';
-                    $sql = "SELECT id_curso, descri, descripcion, promo FROM curso_v";
-                    $resultados = pg_query($conn, $sql);
-                    if (pg_num_rows($resultados) > 0) {
-                        echo "<select class='form-select w-50' name='curso' id='selectCurso' required>";
-                        echo "<option selected disabled>Buscar por curso</option>";
-                        while ($fila = pg_fetch_assoc($resultados)) {
-                            echo "<option value='" . $fila['id_curso'] . "'>" . $fila['curso'] . " / " . $fila['descripcion'] . " / " . $fila['ano'] . "</option>";
-                        }
-                        echo "</select>";
-                    } else {
-                        echo "<select class='form-select w-50' name='curso' aria-label='Disabled'>";
-                        echo "<option selected disabled>No hay curso</option>";
-                        echo "</select>";
-                    }
-                    ?>
-                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Modulo">
+                    <input class="input-group-text w-50" type="text" name="buscar" placeholder="Nombre, apellido o Ci">
+                    <button class="btn btn-dark w-25" onclick="loadFichaAcademica()" type="reset"><i
+                            class="bi bi-eraser"></i>Limpiar</button>
                 </div>
-                <button class="btn btn-dark" onclick="loadModulos()" type="reset"><i
-                        class="bi bi-eraser"></i>Limpiar</button>
             </form>
         </div>
         <!-- Mensaje error/exito -->
         <div id="resultados"></div>
 
         <!-- Tabla -->
-        <div id="tablaModulo"></div>
+        <div id="tablafichaAcademica"></div>
     </div>
 
 </body>

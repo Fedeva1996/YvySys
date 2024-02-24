@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Periodos</title>
+    <title>Periodos - Yvy Marãe'ỹ</title>
     <?php
     include("head.php");
     ?>

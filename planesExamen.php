@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Planes de Examen</title>
+    <title>Planes de Examen - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {

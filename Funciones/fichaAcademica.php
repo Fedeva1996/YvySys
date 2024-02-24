@@ -6,12 +6,16 @@ if (isset($_POST['action'])) {
     if ($action == 'generar') {
         include '../db_connect.php';
 
-        $id_pensum = $_POST['pensum'];
+        $pensum = $_POST['id_pensum'];
+        $periodo = $_POST['id_periodo'];
+        $turno = $_POST['id_turno'];
 
-        $sql = "SELECT generar_modulos($id_pensum)";
+        $sql = "INSERT INTO ficha_academica(
+            inscripcion_id)
+            VALUES (?)";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Materias generadas.
+                <strong>Exito!</strong> Campo agregado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
         } else if (@!pg_query($conn, $sql)) {
@@ -30,7 +34,7 @@ if (isset($_POST['action'])) {
 
         $id = $_POST['id'];
 
-        $sql = "DELETE FROM modulos WHERE id_modulo='$id'";
+        $sql = "";
         if (@pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Exito!</strong> Campo eliminado.
@@ -38,11 +42,10 @@ if (isset($_POST['action'])) {
                 </div>";
         } else if (@!pg_query($conn, $sql)) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-            <strong>Error!</strong> " . pg_last_error($conn) . ".
+            <strong>Error!</strong> Puede que haya tablas dependiendo de este registro!" . pg_last_error($conn) . ".
             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
             </div>";
         }
-
 
     }
 
@@ -51,16 +54,17 @@ if (isset($_POST['action'])) {
         include '../db_connect.php';
 
         $id = $_POST['id'];
-        $id_docente = $_POST['docente'];
+        $periodo_id = $_POST['id_periodo'];
+        $turno_id = $_POST['id_turno'];
+        $estado = $_POST['estado'];
 
-
-        $sql = "UPDATE modulos SET docente_id='$id_docente' WHERE id_modulo='$id'";
-        if (@pg_query($conn, $sql)) {
+        $sql = "";
+        if (pg_query($conn, $sql)) {
             echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Docente asignado.
+                <strong>Exito!</strong> Campo editado.
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 </div>";
-        } else if (@!pg_query($conn, $sql)) {
+        } else {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
                 <strong>Error!</strong> " . pg_last_error($conn) . ".
                 <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -80,26 +84,9 @@ if (isset($_POST['action'])) {
         $offset = ($pagina - 1) * $registros_por_pagina;
 
         $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
-        $curso = isset($_POST['curso']) ? "curso_id = " . $_POST['curso'] . " AND " : "";
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * FROM modulo_v 
-        WHERE modulo ILIKE '%$buscar%' 
-        OR curso ILIKE '%$buscar%' 
-        ORDER BY id_modulo  
-        LIMIT $registros_por_pagina OFFSET $offset";
-        // Consulta para obtener los alumnos
-        if ($buscar == "" && $curso == "") {
-            $sql = "SELECT * FROM modulo_v 
-            ORDER BY id_modulo  
-            LIMIT $registros_por_pagina OFFSET $offset";
-        } else {
-            $sql = "SELECT * FROM modulo_v 
-            WHERE $curso 
-            modulo ILIKE '%$buscar%'
-            ORDER BY id_modulo  
-            LIMIT $registros_por_pagina OFFSET $offset";
-        }
+        $sql = "SELECT * from ficha_academica_v WHERE descri ILIKE '%$buscar%' OR ci ILIKE '%$buscar%' ORDER by id_ficha_academica DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
@@ -107,40 +94,29 @@ if (isset($_POST['action'])) {
             echo "<thead class='table-dark'>"
                 . "<tr>"
                 . "<th>Id</th>"
-                . "<th>Materia</th>"
                 . "<th>Curso</th>"
-                . "<th>Docente</th>"
-                . "<th>Año</th>"
+                . "<th>Alumno</th>"
+                . "<th>Fecha</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
             echo "<tbody class='table-group-divider'>";
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
-                echo "<td class='id'>" . $fila['id_modulo'] . "</td>";
-                echo "<td class='modulo'>" . $fila['modulo'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . " / " . $fila['periodo'] . "</td>";
-                echo "<td class='docente_id' style='display:none;'>" . $fila['docente_id'] . "</td>";
-                if ($fila['docente_id'] == null) {
-                    echo "<td class='docente'><span class='badge text-bg-warning'>Aun no asignado</span></td>";
-                } else {
-                    echo "<td class='docente'>" . $fila['nombre'] . " " . $fila['apellido'] . "</td>";
-                }
-                if ($fila['ano'] == null) {
-                    echo "<td class='ano'><span class='badge text-bg-danger'>No asignado</span></td>";
-                } else {
-                    echo "<td class='ano'>" . $fila['ano'] . "</td>";
-                }
-                echo "<td><button class='btn btn-secondary btn-editar-modulo btn-sm'  
-            data-bs-toggle='modal' data-bs-target='#modalEditarModulo'><i class='bi bi-person-plus'></i></button>
-            <button class='btn btn-danger btn-eliminar-modulo btn-sm' ><i class='bi bi-trash'></i></button></td>";
+                echo "<td class='id'>" . $fila['id_ficha_academica'] . "</td>";
+                echo "<td class='inscripcion_id' style='display:none;'>" . $fila['inscripcion_id'] . "</td>";
+                echo "<td class='inscripcion_cab_id' style='display:none;'>" . $fila['inscripcion_cab_id'] . "</td>";
+                echo "<td class='descri'>" . $fila['descri'] . "</td>";
+                echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . " - " . $fila['ci'] . "</td>";
+                echo "<td class='fecha'>" . $fila['fecha'] . "</td>";
+                echo "<td><button class='btn btn-secondary btn-editar-curso btn-sm'  
+        data-bs-toggle='modal' data-bs-target='#modalEditarCurso'><i class='bi bi-download'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
-
             // Paginación
-            $sql_total = "SELECT COUNT(*) as total FROM modulos";
+            $sql_total = "SELECT COUNT(*) as total FROM cursos";
             $resultado_total = pg_query($conn, $sql_total);
             $fila_total = pg_fetch_assoc($resultado_total);
             $total_registros = $fila_total['total'];
@@ -161,7 +137,6 @@ if (isset($_POST['action'])) {
 
 
     }
-
     if ($action == 'autocompletar') {
         include '../db_connect.php';
 
@@ -169,19 +144,36 @@ if (isset($_POST['action'])) {
         $query = $_POST['query'];
 
         // Realizar la consulta a la base de datos
-        $sql = "SELECT id_docente, nombre, apellido FROM docente_v WHERE ci LIKE '$query%'";
+        $sql = "SELECT id_alumno, nombre, apellido FROM alumno_v WHERE ci LIKE '$query%'";
         $resultados = pg_query($conn, $sql);
 
         // Generar la lista de sugerencias
         if (pg_num_rows($resultados) > 0) {
             while ($row = pg_fetch_assoc($resultados)) {
-                $id = $row['id_docente'];
+                $id = $row['id_alumno'];
                 $nombre = $row['nombre'];
                 $apellido = $row['apellido'];
-                echo '<div class="suggest-element" data-id-persona="' . $id . '">' . $nombre . ' ' . $apellido . '</div>';
+                echo '<div class="suggest-element" onclick="loadCurso('.$id.')" data-id_alumno="' . $id . '">' . $nombre . ' ' . $apellido . '</div>';
             }
         } else {
             echo '<div class="suggest-element">No se encontraron sugerencias</div>';
+        }
+    }
+    // Obtener la lista de registros
+    if ($action == 'selectCurso') {
+        include '../db_connect.php';
+
+        $alumno = $_POST['alumnoId'];
+        $sql = "SELECT id_inscripcion, descri FROM inscripcion_curso_v WHERE id_alumno = $alumno";
+        $resultados = pg_query($conn, $sql);
+
+        if (pg_num_rows($resultados) > 0) {
+            echo "<option selected disabled>Seleccione módulo</option>";
+            while ($fila = pg_fetch_assoc($resultados)) {
+                echo "<option value='" . $fila['id_inscripcion'] . "'>" . $fila['descri'] . "</option>";
+            }
+        } else {
+            echo "<option selected disabled>No hay módulos</option>";
         }
     }
 }

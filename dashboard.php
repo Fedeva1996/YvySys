@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Dashboard</title>
+    <title>Dashboard - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
 </head>
 

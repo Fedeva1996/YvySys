@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Alumnos</title>
+    <title>Alumnos - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
     <script>
         $(document).ready(function () {
@@ -48,7 +48,7 @@ if (!isset($_SESSION['usuario'])) {
                                 query: query,
                                 action: 'autocompletar'
                             },
-                            
+
                             success: function (response) {
                                 $('#suggestions').html(response).show();
                             }
@@ -201,7 +201,7 @@ if (!isset($_SESSION['usuario'])) {
             // ver inscripciones del alumno
             $(document).on('click', '.btn-inscripciones', function () {
                 var id = $(this).closest('tr').find('.id').text();
-                
+
                 $.ajax({
                     url: 'funciones/alumno.php',
                     type: 'POST',

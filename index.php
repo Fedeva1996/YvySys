@@ -16,7 +16,7 @@ if (isset($_SESSION['usuario'])) {
   <meta name="author" content="">
   <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-  <title>Acceso</title>
+  <title>Acceso - Yvy Marãe'ỹ</title>
 
   <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
 

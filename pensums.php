@@ -17,7 +17,7 @@ if (!isset($_SESSION['usuario'])) {
 <html>
 
 <head>
-    <title>Pensums</title>
+    <title>Pensums - Yvy Marãe'ỹ</title>
     <?php include("head.php"); ?>
     <script>
         const agregarFila = () => {

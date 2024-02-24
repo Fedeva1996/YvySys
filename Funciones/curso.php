@@ -95,7 +95,7 @@ if (isset($_POST['action'])) {
         $buscar = isset($_POST['buscar']) ? $_POST['buscar'] : "";
 
         // Consulta para obtener los alumnos
-        $sql = "SELECT * from curso_v WHERE curso ILIKE '%$buscar%' ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
+        $sql = "SELECT * from curso_v WHERE descri ILIKE '%$buscar%' ORDER by id_curso DESC LIMIT $registros_por_pagina OFFSET $offset";
         $resultados = pg_query($conn, $sql);
 
         if (pg_num_rows($resultados) > 0) {
@@ -119,8 +119,8 @@ if (isset($_POST['action'])) {
                 echo "<td class='id_pensum' style='display:none;'>" . $fila['id_pensum'] . "</td>";
                 echo "<td class='id_turno' style='display:none;'>" . $fila['id_turno'] . "</td>";
                 echo "<td class='id_periodo' style='display:none;'>" . $fila['id_periodo'] . "</td>";
-                echo "<td class='curso'>" . $fila['curso'] . "</td>";
-                echo "<td class='ano'>" . $fila['ano'] . "</td>";
+                echo "<td class='descri'>" . $fila['descri'] . "</td>";
+                echo "<td class='promo'>" . $fila['promo'] . "</td>";
                 echo "<td class='periodo'>" . $fila['descripcion'] . "</td>";
                 echo "<td class='turno'>" . $fila['turno'] . "</td>";
                 echo "<td class='horario'>" . $fila['horario'] . "</td>";

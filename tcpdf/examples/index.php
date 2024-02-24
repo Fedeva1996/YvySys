@@ -6,7 +6,7 @@ echo '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>';
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
 
 <head>
-<title>TCPDF Examples</title>
+<title>TCPDF Examples - Yvy Marãe'ỹ</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="description" content="TCPDF is a PHP class for generating PDF documents on the fly" />
 <meta name="author" content="Nicola Asuni" />

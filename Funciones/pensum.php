@@ -175,6 +175,7 @@ if (isset($_POST['action'])) {
                 . "<th>Resolución</th>"
                 . "<th>Fecha resolución</th>"
                 . "<th>Modalidad</th>"
+                . "<th>Tipo</th>"
                 . "<th>Obs</th>"
                 . "<th>Estado</th>"
                 . "<th>Acciones</th>"
@@ -195,6 +196,7 @@ if (isset($_POST['action'])) {
                     echo "<td class='fecha_res' style='color:#DC3545;'>" . $fila['fecha_res'] . "</td>";
                 }
                 echo "<td class='modalidad'>" . $fila['modalidad'] . "</td>";
+                echo "<td class='tipo'>" . $fila['tipo'] . "</td>";
                 echo "<td class='obs'>" . $fila['obs'] . "</td>";
                 echo "<td class='estado' style='display:none;'>" . $fila['estado'] . "</td>";
                 if ($fila['estado'] === 'f') {
@@ -251,6 +253,7 @@ if (isset($_POST['action'])) {
                 . "<th>Modulo</th>"
                 . "<th>Horas teoricas</th>"
                 . "<th>Horas practicas</th>"
+                . "<th>Año</th>"
                 . "<th>Acciones</th>"
                 . "</tr>"
                 . "</thead>";
@@ -262,6 +265,7 @@ if (isset($_POST['action'])) {
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='horas_t'>" . $fila['horas_t'] . "</td>";
                 echo "<td class='horas_p'>" . $fila['horas_p'] . "</td>";
+                echo "<td class='ano'>" . $fila['ano'] . "</td>";
                 echo "<td>
                     <button class='btn btn-secondary btn-editar-detalle btn-sm'  
                     data-bs-toggle='modal' data-bs-target='#modalEditarDetalle'><i class='bi bi-pencil'></i></button></td>";
