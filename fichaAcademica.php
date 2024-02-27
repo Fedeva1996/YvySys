@@ -23,22 +23,6 @@ if (!isset($_SESSION['usuario'])) {
             // Cargar la tabla al cargar la página
             loadFichaAcademica();
 
-            // Agregar nuevo
-            $('#formGenerarFichaAcademica').submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: 'funciones/fichaAcademica.php',
-                    type: 'POST',
-                    data: $(this).serialize(),
-
-                    success: function (response) {
-                        $('#formGenerarFichaAcademica')[0].reset();
-                        loadFichaAcademica();
-                        $('#resultados').html(response);
-                    }
-                });
-            });
-
             // Editar
             $(document).on('click', '.btn-editar', function () {
                 var id = $(this).closest('tr').find('.id').text();
@@ -103,6 +87,23 @@ if (!isset($_SESSION['usuario'])) {
                         }
                     });
             });
+
+            //descargar
+            $(document).on('click', '.btn-descargar', function () {
+                var id = $(this).closest('tr').find('.inscripcion_cab_id').text();
+                $.ajax({
+                    url: 'reportes/fichaAcademica.php',
+                    type: 'POST',
+                    data: {
+                        id
+                    },
+
+                    success: function (response) {
+                        $('#resultados').html(response);
+                    },
+                });
+            });
+
 
             //paginacion
             $(document).ready(function () {

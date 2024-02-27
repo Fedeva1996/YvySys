@@ -2,32 +2,6 @@
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
 
-    // Agregar un nuevo registro
-    if ($action == 'generar') {
-        include '../db_connect.php';
-
-        $pensum = $_POST['id_pensum'];
-        $periodo = $_POST['id_periodo'];
-        $turno = $_POST['id_turno'];
-
-        $sql = "INSERT INTO ficha_academica(
-            inscripcion_id)
-            VALUES (?)";
-        if (@pg_query($conn, $sql)) {
-            echo "<div class='alert alert-success alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Exito!</strong> Campo agregado.
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        } else if (@!pg_query($conn, $sql)) {
-            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert' id='alert'>
-                <strong>Error!</strong> " . pg_last_error($conn) . ".
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        }
-
-
-    }
-
     // Eliminar un registro
     if ($action == 'eliminar') {
         include '../db_connect.php';
@@ -104,13 +78,11 @@ if (isset($_POST['action'])) {
             while ($fila = pg_fetch_assoc($resultados)) {
                 echo "<tr>";
                 echo "<td class='id'>" . $fila['id_ficha_academica'] . "</td>";
-                echo "<td class='inscripcion_id' style='display:none;'>" . $fila['inscripcion_id'] . "</td>";
                 echo "<td class='inscripcion_cab_id' style='display:none;'>" . $fila['inscripcion_cab_id'] . "</td>";
                 echo "<td class='descri'>" . $fila['descri'] . "</td>";
                 echo "<td class='alumno'>" . $fila['nombre'] . " " . $fila['apellido'] . " - " . $fila['ci'] . "</td>";
-                echo "<td class='fecha'>" . $fila['fecha'] . "</td>";
-                echo "<td><button class='btn btn-secondary btn-editar-curso btn-sm'  
-        data-bs-toggle='modal' data-bs-target='#modalEditarCurso'><i class='bi bi-download'></i></button></td>";
+                echo "<td class='fecha_f'>" . $fila['fecha_f'] . "</td>";
+                echo "<td><button class='btn btn-secondary btn-descargar btn-sm'><i class='bi bi-download'></i></button></td>";
                 echo "</tr>";
             }
             echo "</tbody>";

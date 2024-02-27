@@ -8,19 +8,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formGenerarFichaAcademica">
+                <form id="formGenerarFichaAcademica" method="post" action="reportes/fichaAcademica.php" target=''_blank>
                     <input type="hidden" name="action" value="generar">
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
                                 <input class="input-group-text w-100" type="text" id="ci-input"
                                     placeholder="Ci del alumno" autocomplete="off" required>
-                                <input type="hidden" id="id_alumno" name="id_alumno">
+                                <input type="hidden" id="id_alumno" name="alumno">
                                 <div id="suggestions"></div>
                             </div>
                             <div class="mb-3">
                                 <label for='curso'>Curso</label>
-                                <select class='form-select  w-100' name='curso' id="cursoSelect" required>
+                                <select class='form-select  w-100' name='inscripcion' id="cursoSelect" required>
                                     <option selected disabled>Seleccione curso</option>
                                 </select>
                             </div>
